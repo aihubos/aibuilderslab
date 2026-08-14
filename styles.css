@@ -2863,6 +2863,10 @@ p {
     white-space: nowrap;
   }
 
+  .nav-admin-button {
+    width: auto;
+  }
+
   .nav-download,
   .community-actions {
     flex: 0 0 auto;
