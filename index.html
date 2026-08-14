@@ -41,6 +41,13 @@
       type="image/avif"
       fetchpriority="high"
     />
+    <link
+      rel="preload"
+      as="image"
+      href="assets/ai-builders-lab-symbol-transparent.avif"
+      type="image/avif"
+      fetchpriority="high"
+    />
     <link rel="stylesheet" href="styles.css" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
@@ -90,13 +97,16 @@
           rel="noopener noreferrer"
           aria-label="Report Hub 사이트 새 창으로 열기"
         >
-          <img
-            src="assets/report-hub-banner.png"
-            width="950"
-            height="215"
-            decoding="async"
-            alt="Report Hub"
-          />
+          <picture>
+            <source srcset="assets/report-hub-banner.avif" type="image/avif" />
+            <img
+              src="assets/report-hub-banner.png"
+              width="950"
+              height="215"
+              decoding="async"
+              alt="Report Hub"
+            />
+          </picture>
         </a>
       </div>
     </header>
@@ -127,14 +137,21 @@
           </div>
 
           <div class="hero-mark" data-reveal>
-            <img
-              class="hero-symbol"
-              src="assets/ai-builders-lab-symbol-transparent.png"
-              width="620"
-              height="520"
-              decoding="async"
-              alt="AI 빌더스 랩의 파란 리본형 A 심볼"
-            />
+            <picture>
+              <source
+                srcset="assets/ai-builders-lab-symbol-transparent.avif"
+                type="image/avif"
+              />
+              <img
+                class="hero-symbol"
+                src="assets/ai-builders-lab-symbol-transparent.png"
+                width="620"
+                height="520"
+                fetchpriority="high"
+                decoding="async"
+                alt="AI 빌더스 랩의 파란 리본형 A 심볼"
+              />
+            </picture>
           </div>
         </div>
       </section>
