@@ -68,7 +68,7 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260814-calendar-admin" />
+    <link rel="stylesheet" href="styles.css?v=20260814-admin-password" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
@@ -156,10 +156,6 @@
               </a>
             </div>
           </div>
-
-          <button class="nav-admin-button" type="button" data-admin-open>
-            관리자
-          </button>
 
           <div class="community-actions" aria-label="AI 빌더스 랩 참여 채널">
             <a
@@ -1027,6 +1023,32 @@
       </section>
     </main>
 
+    <dialog class="admin-auth-dialog" aria-labelledby="admin-auth-title" data-admin-auth>
+      <form class="admin-auth-form" data-admin-auth-form>
+        <header class="admin-auth-header">
+          <div>
+            <p>일정 관리자</p>
+            <h2 id="admin-auth-title">비밀번호를 입력해주세요.</h2>
+          </div>
+          <button type="button" class="calendar-admin-close" data-admin-auth-close>닫기</button>
+        </header>
+        <label class="admin-auth-field">
+          <span>관리자 비밀번호</span>
+          <input
+            type="password"
+            name="password"
+            inputmode="numeric"
+            autocomplete="current-password"
+            minlength="6"
+            maxlength="20"
+            required
+          />
+        </label>
+        <button type="submit" class="button button-primary admin-auth-submit">관리자 모드 열기</button>
+        <p class="admin-auth-status" role="alert" aria-live="polite" data-admin-auth-status></p>
+      </form>
+    </dialog>
+
     <dialog class="calendar-admin-dialog" aria-labelledby="calendar-admin-title" data-calendar-admin>
       <div class="calendar-admin-shell">
         <header class="calendar-admin-header">
@@ -1050,7 +1072,7 @@
               <input type="text" name="title" maxlength="40" required placeholder="예: 1기 1회차" />
             </label>
             <label>
-              <span>참여자 아이디</span>
+              <span>참여자 아이디 (수정 가능)</span>
               <input type="text" name="participantIds" maxlength="80" required placeholder="여러 명은 쉼표로 구분" />
             </label>
             <label>
@@ -1112,9 +1134,10 @@
             <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent 공식 저장소</a>입니다.
           </p>
         </details>
+        <button class="footer-admin-link" type="button" data-admin-open>일정 관리</button>
       </div>
     </footer>
 
-    <script src="script.js?v=20260814-calendar-admin" defer></script>
+    <script src="script.js?v=20260814-admin-password" defer></script>
   </body>
 </html>

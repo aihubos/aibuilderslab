@@ -76,7 +76,9 @@
   --community-daangn-height: 34px;
   --calendar-day-booking-height: 188px;
   --admin-dialog-width: 720px;
+  --admin-auth-width: 420px;
   --modal-backdrop: rgba(0, 12, 61, 0.42);
+  --footer-admin-muted: rgba(255, 255, 255, 0.44);
   --motion-lift-small: -2px;
   --nav-height: 72px;
   --header-height: var(--nav-height);
@@ -619,25 +621,6 @@ p {
 
 .nav-download-toggle:hover,
 .nav-download-toggle[aria-expanded="true"] {
-  background: var(--header-hover);
-  color: var(--header-accent);
-}
-
-.nav-admin-button {
-  width: 100%;
-  min-height: 48px;
-  padding-inline: var(--space-4);
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--header-muted);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-}
-
-.nav-admin-button:hover {
   background: var(--header-hover);
   color: var(--header-accent);
 }
@@ -2205,7 +2188,8 @@ p {
   line-height: 1.35;
 }
 
-.calendar-admin-dialog {
+.calendar-admin-dialog,
+.admin-auth-dialog {
   width: min(calc(100% - (var(--space-4) * 2)), var(--admin-dialog-width));
   max-height: calc(100dvh - (var(--space-8) * 2));
   padding: 0;
@@ -2217,8 +2201,80 @@ p {
   box-shadow: 0 24px 64px rgba(0, 12, 61, 0.16);
 }
 
-.calendar-admin-dialog::backdrop {
+.admin-auth-dialog {
+  width: min(calc(100% - (var(--space-4) * 2)), var(--admin-auth-width));
+}
+
+.calendar-admin-dialog::backdrop,
+.admin-auth-dialog::backdrop {
   background: var(--modal-backdrop);
+}
+
+.admin-auth-form {
+  padding: var(--space-6);
+}
+
+.admin-auth-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.admin-auth-header p {
+  margin-bottom: var(--space-1);
+  color: var(--brand-blue-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.admin-auth-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.admin-auth-field {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+.admin-auth-field span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.admin-auth-field input {
+  width: 100%;
+  min-height: 48px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.admin-auth-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: var(--space-4);
+  border: 1px solid var(--brand-blue-strong);
+  border-radius: var(--radius-pill);
+  background: var(--brand-blue-strong);
+  color: var(--accent-foreground);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-auth-status {
+  min-height: var(--space-6);
+  margin: var(--space-3) 0 0;
+  color: var(--calendar-sunday);
+  font-size: 0.875rem;
 }
 
 .calendar-admin-shell {
@@ -2250,6 +2306,7 @@ p {
 
 .calendar-admin-close,
 .calendar-admin-existing button {
+  flex: 0 0 auto;
   min-height: 44px;
   padding-inline: var(--space-4);
   border: 1px solid var(--border-light);
@@ -2257,6 +2314,7 @@ p {
   background: var(--surface-elevated);
   color: var(--text-secondary);
   font-weight: 650;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -2466,6 +2524,22 @@ p {
   color: var(--brand-blue-light);
   text-decoration: underline;
   text-underline-offset: var(--space-1);
+}
+
+.footer-admin-link {
+  justify-self: end;
+  min-height: 44px;
+  padding-inline: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--footer-admin-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.footer-admin-link:hover {
+  color: var(--brand-white);
 }
 
 [data-reveal] {
@@ -2854,17 +2928,12 @@ p {
   }
 
   .site-nav > a,
-  .nav-download-toggle,
-  .nav-admin-button {
+  .nav-download-toggle {
     flex: 0 0 auto;
     min-height: 44px;
     padding-inline: var(--space-3);
     background: transparent;
     white-space: nowrap;
-  }
-
-  .nav-admin-button {
-    width: auto;
   }
 
   .nav-download,
@@ -2889,8 +2958,7 @@ p {
   .site-nav > a:hover,
   .site-nav > a[aria-current="true"],
   .nav-download-toggle:hover,
-  .nav-download-toggle[aria-expanded="true"],
-  .nav-admin-button:hover {
+  .nav-download-toggle[aria-expanded="true"] {
     background: transparent;
   }
 

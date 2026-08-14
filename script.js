@@ -72,20 +72,22 @@ const TRAINING_SLOTS = Object.freeze([
 // 공개 캘린더에는 실명이나 연락처 대신 신청자가 사용하는 아이디만 입력합니다.
 const DEFAULT_CALENDAR_BOOKINGS = Object.freeze({
   "2026-08-17": Object.freeze([
-    { id: "cohort-1-session-1", slot: "morning", title: "1기 1회차", participantIds: ["3만원"] },
+    { id: "cohort-1-session-1", slot: "morning", title: "1기 1회차", participantIds: ["삼만원님"] },
   ]),
   "2026-08-20": Object.freeze([
-    { id: "cohort-1-session-2", slot: "morning", title: "1기 2회차", participantIds: ["3만원"] },
+    { id: "cohort-1-session-2", slot: "morning", title: "1기 2회차", participantIds: ["삼만원님"] },
   ]),
   "2026-08-24": Object.freeze([
-    { id: "cohort-1-session-3", slot: "morning", title: "1기 3회차", participantIds: ["3만원"] },
+    { id: "cohort-1-session-3", slot: "morning", title: "1기 3회차", participantIds: ["삼만원님"] },
   ]),
   "2026-08-27": Object.freeze([
-    { id: "cohort-1-session-4", slot: "morning", title: "1기 4회차", participantIds: ["3만원"] },
+    { id: "cohort-1-session-4", slot: "morning", title: "1기 4회차", participantIds: ["삼만원님"] },
   ]),
 });
 
 const BOOKINGS_STORAGE_KEY = "ai-builders-calendar-bookings";
+const ADMIN_SESSION_KEY = "ai-builders-admin-unlocked";
+const ADMIN_PASSWORD_HASH = "3f44b2fbb0aaffb68530a82cd4e4da9498b9337ae9c805b600efff12624c2cc7";
 
 function cloneDefaultBookings() {
   return JSON.parse(JSON.stringify(DEFAULT_CALENDAR_BOOKINGS));
@@ -104,7 +106,11 @@ function normalizeCalendarBookings(value) {
         slot: TRAINING_SLOTS.some((slot) => slot.key === booking.slot) ? booking.slot : "morning",
         title: String(booking.title || "교육 일정").slice(0, 40),
         participantIds: Array.isArray(booking.participantIds)
-          ? booking.participantIds.map((id) => String(id).trim()).filter(Boolean).slice(0, 3)
+          ? booking.participantIds
+              .map((id) => String(id).trim())
+              .map((id) => (id === "3만원" ? "삼만원님" : id))
+              .filter(Boolean)
+              .slice(0, 3)
           : [],
       }))
       .filter((booking) => booking.participantIds.length);
@@ -118,7 +124,10 @@ function loadCalendarBookings() {
   try {
     const saved = localStorage.getItem(BOOKINGS_STORAGE_KEY);
     if (!saved) return cloneDefaultBookings();
-    return normalizeCalendarBookings(JSON.parse(saved)) || cloneDefaultBookings();
+    const normalized = normalizeCalendarBookings(JSON.parse(saved)) || cloneDefaultBookings();
+    const serialized = JSON.stringify(normalized);
+    if (serialized !== saved) localStorage.setItem(BOOKINGS_STORAGE_KEY, serialized);
+    return normalized;
   } catch (error) {
     return cloneDefaultBookings();
   }
@@ -591,6 +600,10 @@ calendarTabs.forEach((tab, index) => {
 });
 
 const calendarAdminDialog = document.querySelector("[data-calendar-admin]");
+const adminAuthDialog = document.querySelector("[data-admin-auth]");
+const adminAuthForm = document.querySelector("[data-admin-auth-form]");
+const adminAuthCloseButton = document.querySelector("[data-admin-auth-close]");
+const adminAuthStatus = document.querySelector("[data-admin-auth-status]");
 const adminOpenButtons = [...document.querySelectorAll("[data-admin-open]")];
 const adminCloseButton = document.querySelector("[data-admin-close]");
 const bookingForm = document.querySelector("[data-booking-form]");
@@ -602,6 +615,26 @@ const adminStatus = document.querySelector("[data-admin-status]");
 
 function setAdminStatus(message) {
   if (adminStatus) adminStatus.textContent = message;
+}
+
+function openCalendarAdmin() {
+  renderAdminBookingList();
+  setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
+  calendarAdminDialog?.showModal();
+  bookingForm?.elements.title.focus();
+}
+
+function setAdminAuthStatus(message) {
+  if (adminAuthStatus) adminAuthStatus.textContent = message;
+}
+
+async function hashAdminPassword(value) {
+  if (!window.crypto?.subtle) return "";
+  const encoded = new TextEncoder().encode(value);
+  const digest = await window.crypto.subtle.digest("SHA-256", encoded);
+  return [...new Uint8Array(digest)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function persistCalendarBookings() {
@@ -691,15 +724,42 @@ function refreshCalendarAfterAdminChange(monthKey = "2026-08") {
 adminOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
     setMenu(false);
-    renderAdminBookingList();
-    setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
-    calendarAdminDialog?.showModal();
-    bookingForm?.elements.title.focus();
+    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
+      openCalendarAdmin();
+      return;
+    }
+    adminAuthForm?.reset();
+    setAdminAuthStatus("");
+    adminAuthDialog?.showModal();
+    adminAuthForm?.elements.password.focus();
   });
 });
 
+adminAuthCloseButton?.addEventListener("click", () => adminAuthDialog?.close());
 adminCloseButton?.addEventListener("click", () => calendarAdminDialog?.close());
 bookingNewButton?.addEventListener("click", resetBookingForm);
+
+adminAuthForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const passwordInput = adminAuthForm.elements.password;
+  const submittedHash = await hashAdminPassword(passwordInput.value);
+
+  if (!submittedHash) {
+    setAdminAuthStatus("이 브라우저에서는 관리자 확인 기능을 사용할 수 없습니다.");
+    return;
+  }
+
+  if (submittedHash !== ADMIN_PASSWORD_HASH) {
+    setAdminAuthStatus("비밀번호가 맞지 않습니다.");
+    passwordInput.value = "";
+    passwordInput.focus();
+    return;
+  }
+
+  sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+  adminAuthDialog?.close();
+  openCalendarAdmin();
+});
 
 bookingForm?.addEventListener("submit", (event) => {
   event.preventDefault();
