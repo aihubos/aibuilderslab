@@ -68,17 +68,17 @@ document.documentElement.classList.add("js");
 const THEME_STORAGE_KEY = "ai-builders-theme";
 const THEMES = Object.freeze({
   default: { label: "기본 블루", themeColor: "#FFFFFF" },
-  "neon-yellow": { label: "네온 옐로우", themeColor: "#FEFFF8" },
-  "ultra-violet": { label: "울트라 바이올렛", themeColor: "#FEFCFF" },
-  "pale-green": { label: "옅은 그린", themeColor: "#FBFEFC" },
-  "carmine-pastel": { label: "카민 파스텔", themeColor: "#FFFCFB" },
-  dark: { label: "다크 모드", themeColor: "#07101F" },
+  "neon-yellow": { label: "네온 옐로우", themeColor: "#FFFFFF" },
+  "ultra-violet": { label: "울트라 바이올렛", themeColor: "#FFFFFF" },
+  "pale-green": { label: "옅은 그린", themeColor: "#FFFFFF" },
+  "carmine-pastel": { label: "카민 파스텔", themeColor: "#FFFFFF" },
+  dark: { label: "다크 포인트", themeColor: "#FFFFFF" },
 });
 
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const navLinks = [...document.querySelectorAll("[data-site-nav] > a")];
-const mobileBreakpoint = window.matchMedia("(max-width: 1199px)");
+const mobileBreakpoint = window.matchMedia("(max-width: 1279px)");
 const downloadMenu = document.querySelector("[data-download-menu]");
 const downloadToggle = document.querySelector("[data-download-toggle]");
 const downloadPanel = document.querySelector("[data-download-panel]");

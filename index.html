@@ -30,8 +30,8 @@
     <link
       rel="preload"
       as="image"
-      href="assets/ai-builders-lab-logo.avif"
-      type="image/avif"
+      href="assets/ai-builders-lab-logo-transparent.png"
+      type="image/png"
       fetchpriority="high"
     />
     <link
@@ -66,55 +66,23 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260814-themes-downloads" />
+    <link rel="stylesheet" href="styles.css?v=20260814-header-assets" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 바로가기</a>
 
     <header class="site-header" data-header>
-      <div class="community-strip" aria-label="AI 빌더스 랩 참여 채널">
-        <div class="community-strip-inner">
-          <span class="community-strip-label">빌더와 연결하기</span>
-          <a
-            href="https://open.kakao.com/me/aibuilderslab"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-community="kakao"
-          >
-            <span aria-hidden="true">K</span><strong>개인 카카오톡</strong>
-          </a>
-          <a
-            href="https://open.kakao.com/o/grZIANIi"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-community="kakao"
-          >
-            <span aria-hidden="true">K</span><strong>단체방</strong>
-          </a>
-          <a
-            href="https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-community="daangn"
-          >
-            <span aria-hidden="true">D</span><strong>당근 모임</strong>
-          </a>
-        </div>
-      </div>
       <div class="nav-shell">
         <a class="brand" href="#top" aria-label="AI 빌더스 랩 처음으로">
-          <picture>
-            <source srcset="assets/ai-builders-lab-logo.avif" type="image/avif" />
-            <img
-              src="assets/ai-builders-lab-logo.png"
-              width="600"
-              height="200"
-              fetchpriority="high"
-              decoding="async"
-              alt="AI 빌더스 랩"
-            />
-          </picture>
+          <img
+            src="assets/ai-builders-lab-logo-transparent.png"
+            width="1200"
+            height="400"
+            fetchpriority="high"
+            decoding="async"
+            alt="AI 빌더스 랩"
+          />
         </a>
 
         <button
@@ -179,6 +147,38 @@
               </a>
             </div>
           </div>
+
+          <div class="community-actions" aria-label="AI 빌더스 랩 참여 채널">
+            <a
+              href="https://open.kakao.com/me/aibuilderslab"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-community="kakao"
+              aria-label="개인 카카오톡 새 창으로 열기"
+            >
+              <img src="assets/kakao-openchat-icon.png" width="216" height="216" alt="" />
+              <strong>개인</strong>
+            </a>
+            <a
+              href="https://open.kakao.com/o/grZIANIi"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-community="kakao"
+              aria-label="카카오톡 단체방 새 창으로 열기"
+            >
+              <img src="assets/kakao-openchat-icon.png" width="216" height="216" alt="" />
+              <strong>단체방</strong>
+            </a>
+            <a
+              href="https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-community="daangn"
+              aria-label="당근 모임 새 창으로 열기"
+            >
+              <img src="assets/daangn-logo.png" width="1560" height="787" alt="당근" />
+            </a>
+          </div>
         </nav>
 
         <a
@@ -211,7 +211,6 @@
             data-theme-toggle
           >
             <span class="theme-current-swatch" aria-hidden="true"></span>
-            <span class="theme-toggle-text" aria-hidden="true">테마</span>
           </button>
           <div
             class="theme-panel"
