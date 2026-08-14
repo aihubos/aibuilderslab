@@ -18,7 +18,7 @@ await mkdir(clientRoot, { recursive: true });
 await mkdir(serverRoot, { recursive: true });
 await mkdir(metadataRoot, { recursive: true });
 
-for (const file of [...requiredFiles, "robots.txt"]) {
+for (const file of [...requiredFiles, "robots.txt", "CNAME", ".nojekyll"]) {
   await cp(resolve(projectRoot, file), resolve(clientRoot, file));
 }
 

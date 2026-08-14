@@ -1,15 +1,25 @@
 "use strict";
 
 const CONTACT_LINKS = Object.freeze({
-  freeIntro: "",
-  paidWorkshop: "",
-  oneToOneInterest: "",
+  freeIntro: "https://open.kakao.com/o/grZIANIi",
+  kakaoProfile: "https://open.kakao.com/me/aibuilderslab",
+  paidWorkshop:
+    "https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr",
+  oneToOneInterest: "tel:+821030657890",
 });
 
 const CALENDAR_MONTHS = Object.freeze([
   { key: "2026-08", year: 2026, monthIndex: 7, label: "2026년 8월" },
   { key: "2026-09", year: 2026, monthIndex: 8, label: "2026년 9월" },
 ]);
+
+const HOLIDAYS = Object.freeze({
+  "2026-08-15": { label: "광복절", short: "광복절" },
+  "2026-08-17": { label: "광복절 대체공휴일", short: "대체휴일" },
+  "2026-09-24": { label: "추석 연휴", short: "추석연휴" },
+  "2026-09-25": { label: "추석", short: "추석" },
+  "2026-09-26": { label: "추석 연휴", short: "추석연휴" },
+});
 
 const SCHEDULE_BY_DAY = Object.freeze({
   0: {
@@ -19,27 +29,27 @@ const SCHEDULE_BY_DAY = Object.freeze({
   },
   1: {
     type: "knowledge",
-    short: "헤르메스·지식",
+    short: "Hermes 설치",
     detail:
-      "헤르메스 설치, Second Brain, LLM Wiki. 오전·오후·저녁 세션을 모두 운영하며, 각 3시간, 20,000원, 스터디카페, 커피 또는 음료 제공.",
+      "Hermes Agent를 설치하고 첫 실행까지 확인하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
   },
   2: {
-    type: "knowledge",
-    short: "헤르메스·지식",
+    type: "build",
+    short: "Hermes 자동화",
     detail:
-      "헤르메스 설치, Second Brain, LLM Wiki. 오전·오후·저녁 세션을 모두 운영하며, 각 3시간, 20,000원, 스터디카페, 커피 또는 음료 제공.",
+      "Hermes를 활용해 반복 작업 하나를 자동화하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
   },
   3: {
-    type: "build",
-    short: "자동화·코딩",
+    type: "knowledge",
+    short: "LLM Wiki",
     detail:
-      "자동화 구축과 바이브 코딩 입문. 오전·오후·저녁 세션을 모두 운영하며, 각 3시간, 20,000원, 스터디카페, 커피 또는 음료 제공.",
+      "내 자료를 담을 LLM Wiki 기본 구조를 만들고 활용하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
   },
   4: {
     type: "build",
-    short: "자동화·코딩",
+    short: "대시보드",
     detail:
-      "자동화 구축과 바이브 코딩 입문. 오전·오후·저녁 세션을 모두 운영하며, 각 3시간, 20,000원, 스터디카페, 커피 또는 음료 제공.",
+      "바이브 코딩으로 나만의 대시보드 초안을 만드는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
   },
   5: {
     type: "chat",
@@ -48,8 +58,8 @@ const SCHEDULE_BY_DAY = Object.freeze({
   },
   6: {
     type: "intro",
-    short: "무료 입문",
-    detail: "오전 10:00~12:00 헤르메스 설치 입문반. 교육비 무료.",
+    short: "Hermes 무료",
+    detail: "10:00~12:00 Hermes Agent 설치 입문반. 교육비 무료.",
   },
 });
 
@@ -223,8 +233,10 @@ function createCalendar(monthConfig) {
   const grid = makeElement("ol", "calendar-grid");
   grid.setAttribute("aria-label", `${monthConfig.label} 정기 운영 계획 달력`);
 
-  ["월", "화", "수", "목", "금", "토", "일"].forEach((weekday) => {
+  ["월", "화", "수", "목", "금", "토", "일"].forEach((weekday, index) => {
     const label = makeElement("li", "calendar-weekday", weekday);
+    if (index === 5) label.classList.add("is-saturday");
+    if (index === 6) label.classList.add("is-sunday");
     label.setAttribute("aria-hidden", "true");
     grid.append(label);
   });
@@ -247,7 +259,14 @@ function createCalendar(monthConfig) {
     const date = new Date(monthConfig.year, monthConfig.monthIndex, dayNumber);
     const weekday = date.getDay();
     const schedule = SCHEDULE_BY_DAY[weekday];
+    const dateKey = [
+      monthConfig.year,
+      String(monthConfig.monthIndex + 1).padStart(2, "0"),
+      String(dayNumber).padStart(2, "0"),
+    ].join("-");
+    const holiday = HOLIDAYS[dateKey];
     const day = makeElement("li", "calendar-day");
+    day.dataset.date = dateKey;
     const isToday =
       today.getFullYear() === monthConfig.year &&
       today.getMonth() === monthConfig.monthIndex &&
@@ -255,6 +274,8 @@ function createCalendar(monthConfig) {
 
     if (schedule.type !== "none") day.dataset.scheduleType = schedule.type;
     if (weekday === 0) day.classList.add("is-sunday");
+    if (weekday === 6) day.classList.add("is-saturday");
+    if (holiday) day.classList.add("is-holiday");
     if (isToday) {
       day.classList.add("is-today");
       day.setAttribute("aria-current", "date");
@@ -262,10 +283,11 @@ function createCalendar(monthConfig) {
 
     day.setAttribute(
       "aria-label",
-      `${monthConfig.year}년 ${monthConfig.monthIndex + 1}월 ${dayNumber}일. ${schedule.detail}`,
+      `${monthConfig.year}년 ${monthConfig.monthIndex + 1}월 ${dayNumber}일. ${holiday ? `${holiday.label}. ` : ""}${schedule.detail}`,
     );
 
     day.append(makeElement("span", "calendar-date", String(dayNumber)));
+    if (holiday) day.append(makeElement("span", "calendar-holiday", holiday.short));
     day.append(makeElement("span", "calendar-event", schedule.short));
     grid.append(day);
   }
@@ -307,7 +329,6 @@ calendarTabs.forEach((tab, index) => {
   });
 });
 
-const contactStatus = document.getElementById("contact-status");
 const contactButtons = [...document.querySelectorAll("[data-contact-key]")];
 
 contactButtons.forEach((button) => {
@@ -316,16 +337,13 @@ contactButtons.forEach((button) => {
 
   if (configuredUrl) {
     button.href = configuredUrl;
-    button.querySelector("span").textContent = "신청 페이지 열기";
+    if (configuredUrl.startsWith("https://")) {
+      button.target = "_blank";
+      button.rel = "noopener noreferrer";
+    }
     return;
   }
 
-  button.setAttribute("aria-describedby", "contact-status");
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    if (!contactStatus) return;
-    contactStatus.textContent =
-      "신청 링크를 준비하고 있습니다. 실제 연락처가 확정되면 이 버튼에 바로 연결합니다.";
-    contactStatus.focus({ preventScroll: true });
-  });
+  button.removeAttribute("href");
+  button.setAttribute("aria-disabled", "true");
 });
