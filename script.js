@@ -70,20 +70,61 @@ const TRAINING_SLOTS = Object.freeze([
 ]);
 
 // 공개 캘린더에는 실명이나 연락처 대신 신청자가 사용하는 아이디만 입력합니다.
-const CALENDAR_BOOKINGS = Object.freeze({
+const DEFAULT_CALENDAR_BOOKINGS = Object.freeze({
   "2026-08-17": Object.freeze([
-    { slot: "morning", course: "Hermes Agent·LLM Wiki", participantIds: ["3만원"] },
+    { id: "cohort-1-session-1", slot: "morning", title: "1기 1회차", participantIds: ["3만원"] },
   ]),
   "2026-08-20": Object.freeze([
-    { slot: "morning", course: "자동화·바이브 코딩", participantIds: ["3만원"] },
+    { id: "cohort-1-session-2", slot: "morning", title: "1기 2회차", participantIds: ["3만원"] },
   ]),
   "2026-08-24": Object.freeze([
-    { slot: "morning", course: "Hermes Agent·LLM Wiki", participantIds: ["3만원"] },
+    { id: "cohort-1-session-3", slot: "morning", title: "1기 3회차", participantIds: ["3만원"] },
   ]),
   "2026-08-27": Object.freeze([
-    { slot: "morning", course: "자동화·바이브 코딩", participantIds: ["3만원"] },
+    { id: "cohort-1-session-4", slot: "morning", title: "1기 4회차", participantIds: ["3만원"] },
   ]),
 });
+
+const BOOKINGS_STORAGE_KEY = "ai-builders-calendar-bookings";
+
+function cloneDefaultBookings() {
+  return JSON.parse(JSON.stringify(DEFAULT_CALENDAR_BOOKINGS));
+}
+
+function normalizeCalendarBookings(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const normalized = {};
+
+  Object.entries(value).forEach(([dateKey, bookings]) => {
+    if (!/^2026-(08|09)-\d{2}$/.test(dateKey) || !Array.isArray(bookings)) return;
+    const validBookings = bookings
+      .filter((booking) => booking && typeof booking === "object")
+      .map((booking) => ({
+        id: String(booking.id || `booking-${dateKey}-${booking.slot || "morning"}`),
+        slot: TRAINING_SLOTS.some((slot) => slot.key === booking.slot) ? booking.slot : "morning",
+        title: String(booking.title || "교육 일정").slice(0, 40),
+        participantIds: Array.isArray(booking.participantIds)
+          ? booking.participantIds.map((id) => String(id).trim()).filter(Boolean).slice(0, 3)
+          : [],
+      }))
+      .filter((booking) => booking.participantIds.length);
+    if (validBookings.length) normalized[dateKey] = validBookings;
+  });
+
+  return normalized;
+}
+
+function loadCalendarBookings() {
+  try {
+    const saved = localStorage.getItem(BOOKINGS_STORAGE_KEY);
+    if (!saved) return cloneDefaultBookings();
+    return normalizeCalendarBookings(JSON.parse(saved)) || cloneDefaultBookings();
+  } catch (error) {
+    return cloneDefaultBookings();
+  }
+}
+
+let calendarBookings = loadCalendarBookings();
 
 document.documentElement.classList.add("js");
 
@@ -100,7 +141,7 @@ const THEMES = Object.freeze({
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const navLinks = [...document.querySelectorAll("[data-site-nav] > a")];
-const mobileBreakpoint = window.matchMedia("(max-width: 1279px)");
+const mobileBreakpoint = window.matchMedia("(max-width: 1439px)");
 const downloadMenu = document.querySelector("[data-download-menu]");
 const downloadToggle = document.querySelector("[data-download-toggle]");
 const downloadPanel = document.querySelector("[data-download-panel]");
@@ -421,7 +462,7 @@ function createCalendar(monthConfig) {
       String(dayNumber).padStart(2, "0"),
     ].join("-");
     const holiday = HOLIDAYS[dateKey];
-    const bookings = CALENDAR_BOOKINGS[dateKey] || [];
+    const bookings = calendarBookings[dateKey] || [];
     const day = makeElement("li", "calendar-day");
     day.dataset.date = dateKey;
     const isToday =
@@ -442,7 +483,7 @@ function createCalendar(monthConfig) {
     const bookingDescription = bookings
       .map((booking) => {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
-        return `${slot?.label || booking.slot} ${slot?.time || ""}, ${booking.course}, 참여자 ${booking.participantIds.join(", ")}`;
+        return `${slot?.label || booking.slot} ${slot?.time || ""}, ${booking.title}, 참여자 ${booking.participantIds.join(", ")}`;
       })
       .join(". ");
     day.setAttribute(
@@ -452,7 +493,7 @@ function createCalendar(monthConfig) {
 
     day.append(makeElement("span", "calendar-date", String(dayNumber)));
     if (holiday) day.append(makeElement("span", "calendar-holiday", holiday.short));
-    day.append(makeElement("span", "calendar-event", schedule.short));
+    day.append(makeElement("span", "calendar-event", bookings[0]?.title || schedule.short));
 
     if (bookings.length) {
       day.append(makeElement("span", "calendar-booking-badge", "등록"));
@@ -484,9 +525,9 @@ function createCalendar(monthConfig) {
   const bookingSummary = makeElement("section", "calendar-booking-summary");
   bookingSummary.setAttribute("aria-label", `${monthConfig.label} 교육 등록 현황`);
   bookingSummary.append(makeElement("h5", "calendar-booking-title", "교육 등록 현황"));
-  const monthBookings = Object.entries(CALENDAR_BOOKINGS).filter(([dateKey]) =>
-    dateKey.startsWith(monthConfig.key),
-  );
+  const monthBookings = Object.entries(calendarBookings)
+    .filter(([dateKey]) => dateKey.startsWith(monthConfig.key))
+    .sort(([dateA], [dateB]) => dateA.localeCompare(dateB));
 
   if (monthBookings.length) {
     const bookingList = makeElement("ul", "calendar-booking-list");
@@ -496,7 +537,7 @@ function createCalendar(monthConfig) {
         const item = makeElement("li", "calendar-booking-item");
         item.append(makeElement("time", "calendar-booking-date", `${Number(dateKey.slice(5, 7))}월 ${Number(dateKey.slice(8, 10))}일`));
         item.append(makeElement("span", "calendar-booking-time", `${slot.label} ${slot.time}`));
-        item.append(makeElement("strong", "calendar-booking-course", booking.course));
+        item.append(makeElement("strong", "calendar-booking-course", booking.title));
         item.append(makeElement("span", "calendar-booking-participant", `참여자 ${booking.participantIds.join(", ")}`));
         bookingList.append(item);
       });
@@ -511,7 +552,11 @@ function createCalendar(monthConfig) {
   panel.replaceChildren(title, grid, bookingSummary);
 }
 
-CALENDAR_MONTHS.forEach(createCalendar);
+function renderCalendars() {
+  CALENDAR_MONTHS.forEach(createCalendar);
+}
+
+renderCalendars();
 
 const calendarTabs = [...document.querySelectorAll("[data-calendar-tab]")];
 const calendarPanels = [...document.querySelectorAll("[data-calendar-panel]")];
@@ -543,6 +588,191 @@ calendarTabs.forEach((tab, index) => {
 
     selectCalendar(calendarTabs[nextIndex].dataset.calendarTab, true);
   });
+});
+
+const calendarAdminDialog = document.querySelector("[data-calendar-admin]");
+const adminOpenButtons = [...document.querySelectorAll("[data-admin-open]")];
+const adminCloseButton = document.querySelector("[data-admin-close]");
+const bookingForm = document.querySelector("[data-booking-form]");
+const bookingNewButton = document.querySelector("[data-booking-new]");
+const bookingCopyButton = document.querySelector("[data-booking-copy]");
+const bookingResetButton = document.querySelector("[data-booking-reset]");
+const adminBookingList = document.querySelector("[data-admin-booking-list]");
+const adminStatus = document.querySelector("[data-admin-status]");
+
+function setAdminStatus(message) {
+  if (adminStatus) adminStatus.textContent = message;
+}
+
+function persistCalendarBookings() {
+  try {
+    localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(calendarBookings));
+    return true;
+  } catch (error) {
+    setAdminStatus("브라우저 저장 공간을 사용할 수 없어 변경 내용을 저장하지 못했습니다.");
+    return false;
+  }
+}
+
+function getSortedBookings() {
+  return Object.entries(calendarBookings)
+    .flatMap(([date, bookings]) => bookings.map((booking) => ({ date, ...booking })))
+    .sort((bookingA, bookingB) => {
+      const dateComparison = bookingA.date.localeCompare(bookingB.date);
+      if (dateComparison !== 0) return dateComparison;
+      const slotA = TRAINING_SLOTS.findIndex((slot) => slot.key === bookingA.slot);
+      const slotB = TRAINING_SLOTS.findIndex((slot) => slot.key === bookingB.slot);
+      return slotA - slotB;
+    });
+}
+
+function resetBookingForm() {
+  if (!bookingForm) return;
+  bookingForm.reset();
+  bookingForm.elements.bookingId.value = "";
+  bookingForm.elements.date.value = "2026-08-17";
+  bookingForm.elements.slot.value = "morning";
+  bookingForm.elements.title.focus();
+  setAdminStatus("새 일정을 입력할 수 있습니다.");
+}
+
+function renderAdminBookingList() {
+  if (!adminBookingList) return;
+  adminBookingList.replaceChildren();
+  const bookings = getSortedBookings();
+
+  if (!bookings.length) {
+    adminBookingList.append(
+      makeElement("li", "calendar-admin-empty", "등록된 일정이 없습니다."),
+    );
+    return;
+  }
+
+  bookings.forEach((booking) => {
+    const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
+    const item = makeElement("li", "calendar-admin-booking-item");
+    const information = makeElement("div", "calendar-admin-booking-info");
+    information.append(makeElement("strong", "", booking.title));
+    information.append(
+      makeElement(
+        "span",
+        "",
+        `${booking.date} · ${slot.label} ${slot.time} · ${booking.participantIds.join(", ")}`,
+      ),
+    );
+    const actions = makeElement("div", "calendar-admin-booking-actions");
+    const editButton = makeElement("button", "", "수정");
+    editButton.type = "button";
+    editButton.dataset.bookingEdit = booking.id;
+    const deleteButton = makeElement("button", "", "삭제");
+    deleteButton.type = "button";
+    deleteButton.dataset.bookingDelete = booking.id;
+    actions.append(editButton, deleteButton);
+    item.append(information, actions);
+    adminBookingList.append(item);
+  });
+}
+
+function removeBookingById(bookingId) {
+  const nextBookings = {};
+  Object.entries(calendarBookings).forEach(([date, bookings]) => {
+    const remaining = bookings.filter((booking) => booking.id !== bookingId);
+    if (remaining.length) nextBookings[date] = remaining;
+  });
+  calendarBookings = nextBookings;
+}
+
+function refreshCalendarAfterAdminChange(monthKey = "2026-08") {
+  renderCalendars();
+  selectCalendar(monthKey);
+  renderAdminBookingList();
+}
+
+adminOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setMenu(false);
+    renderAdminBookingList();
+    setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
+    calendarAdminDialog?.showModal();
+    bookingForm?.elements.title.focus();
+  });
+});
+
+adminCloseButton?.addEventListener("click", () => calendarAdminDialog?.close());
+bookingNewButton?.addEventListener("click", resetBookingForm);
+
+bookingForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(bookingForm);
+  const bookingId = String(formData.get("bookingId") || `booking-${Date.now()}`);
+  const date = String(formData.get("date") || "");
+  const title = String(formData.get("title") || "").trim();
+  const slot = String(formData.get("slot") || "morning");
+  const participantIds = String(formData.get("participantIds") || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (!/^2026-(08|09)-\d{2}$/.test(date) || !title || !participantIds.length) {
+    setAdminStatus("교육 제목, 참여자 아이디, 교육 일자를 모두 입력해주세요.");
+    return;
+  }
+
+  removeBookingById(bookingId);
+  const sameDateBookings = calendarBookings[date] || [];
+  calendarBookings[date] = sameDateBookings.filter((booking) => booking.slot !== slot);
+  calendarBookings[date].push({ id: bookingId, slot, title, participantIds });
+  if (!persistCalendarBookings()) return;
+
+  refreshCalendarAfterAdminChange(date.slice(0, 7));
+  bookingForm.elements.bookingId.value = bookingId;
+  setAdminStatus(`${title} 일정을 이 브라우저에 저장했습니다.`);
+});
+
+adminBookingList?.addEventListener("click", (event) => {
+  const editButton = event.target.closest("[data-booking-edit]");
+  const deleteButton = event.target.closest("[data-booking-delete]");
+
+  if (editButton) {
+    const booking = getSortedBookings().find((item) => item.id === editButton.dataset.bookingEdit);
+    if (!booking) return;
+    bookingForm.elements.bookingId.value = booking.id;
+    bookingForm.elements.title.value = booking.title;
+    bookingForm.elements.participantIds.value = booking.participantIds.join(", ");
+    bookingForm.elements.date.value = booking.date;
+    bookingForm.elements.slot.value = booking.slot;
+    bookingForm.elements.title.focus();
+    setAdminStatus(`${booking.title} 일정을 수정하고 있습니다.`);
+  }
+
+  if (deleteButton) {
+    const booking = getSortedBookings().find((item) => item.id === deleteButton.dataset.bookingDelete);
+    if (!booking || !window.confirm(`${booking.title} 일정을 삭제할까요?`)) return;
+    removeBookingById(booking.id);
+    if (!persistCalendarBookings()) return;
+    refreshCalendarAfterAdminChange(booking.date.slice(0, 7));
+    resetBookingForm();
+    setAdminStatus(`${booking.title} 일정을 삭제했습니다.`);
+  }
+});
+
+bookingCopyButton?.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(calendarBookings, null, 2));
+    setAdminStatus("공개 반영용 데이터를 클립보드에 복사했습니다.");
+  } catch (error) {
+    setAdminStatus("복사하지 못했습니다. HTTPS 공개 사이트에서 다시 시도해주세요.");
+  }
+});
+
+bookingResetButton?.addEventListener("click", () => {
+  if (!window.confirm("이 브라우저에서 수정한 일정을 모두 지우고 기본 일정으로 복원할까요?")) return;
+  calendarBookings = cloneDefaultBookings();
+  if (!persistCalendarBookings()) return;
+  refreshCalendarAfterAdminChange();
+  resetBookingForm();
+  setAdminStatus("기본 일정으로 복원했습니다.");
 });
 
 const contactButtons = [...document.querySelectorAll("[data-contact-key]")];

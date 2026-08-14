@@ -75,6 +75,8 @@
   --community-daangn-width: 68px;
   --community-daangn-height: 34px;
   --calendar-day-booking-height: 188px;
+  --admin-dialog-width: 720px;
+  --modal-backdrop: rgba(0, 12, 61, 0.42);
   --motion-lift-small: -2px;
   --nav-height: 72px;
   --header-height: var(--nav-height);
@@ -617,6 +619,25 @@ p {
 
 .nav-download-toggle:hover,
 .nav-download-toggle[aria-expanded="true"] {
+  background: var(--header-hover);
+  color: var(--header-accent);
+}
+
+.nav-admin-button {
+  width: 100%;
+  min-height: 48px;
+  padding-inline: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--header-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-admin-button:hover {
   background: var(--header-hover);
   color: var(--header-accent);
 }
@@ -2184,6 +2205,210 @@ p {
   line-height: 1.35;
 }
 
+.calendar-admin-dialog {
+  width: min(calc(100% - (var(--space-4) * 2)), var(--admin-dialog-width));
+  max-height: calc(100dvh - (var(--space-8) * 2));
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  box-shadow: 0 24px 64px rgba(0, 12, 61, 0.16);
+}
+
+.calendar-admin-dialog::backdrop {
+  background: var(--modal-backdrop);
+}
+
+.calendar-admin-shell {
+  padding: var(--space-5);
+}
+
+.calendar-admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.calendar-admin-header p {
+  margin-bottom: var(--space-1);
+  color: var(--brand-blue-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.calendar-admin-header h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.calendar-admin-close,
+.calendar-admin-existing button {
+  min-height: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.calendar-admin-close:hover,
+.calendar-admin-existing button:hover {
+  border-color: var(--brand-blue-light);
+  color: var(--brand-blue-strong);
+}
+
+.calendar-admin-notice {
+  margin: var(--space-5) 0 0;
+  padding: var(--space-4);
+  border-left: 4px solid var(--brand-blue);
+  background: var(--surface-blue);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.calendar-admin-form {
+  margin-top: var(--space-6);
+}
+
+.calendar-admin-fields {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.calendar-admin-fields label {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.calendar-admin-fields label > span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.calendar-admin-fields input,
+.calendar-admin-fields select {
+  width: 100%;
+  min-height: 48px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.calendar-admin-fields input:hover,
+.calendar-admin-fields select:hover {
+  border-color: var(--brand-blue-light);
+}
+
+.calendar-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+.calendar-admin-actions .button {
+  min-height: 48px;
+  padding-inline: var(--space-5);
+  border: 1px solid var(--brand-blue-strong);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.calendar-admin-actions .button-primary {
+  background: var(--brand-blue-strong);
+  color: var(--accent-foreground);
+}
+
+.calendar-admin-actions .button-secondary {
+  background: var(--surface-elevated);
+  color: var(--brand-blue-strong);
+}
+
+.calendar-admin-existing {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-light);
+}
+
+.calendar-admin-existing > header {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.calendar-admin-existing h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.calendar-admin-existing > header > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.calendar-admin-existing ul {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border-light);
+  list-style: none;
+}
+
+.calendar-admin-booking-item {
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.calendar-admin-booking-info strong,
+.calendar-admin-booking-info span {
+  display: block;
+}
+
+.calendar-admin-booking-info span {
+  margin-top: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
+.calendar-admin-booking-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.calendar-admin-booking-actions button {
+  min-height: 40px;
+}
+
+.calendar-admin-empty,
+.calendar-admin-status {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+}
+
+.calendar-admin-empty {
+  padding-block: var(--space-4);
+}
+
+.calendar-admin-status {
+  min-height: var(--space-6);
+  margin: var(--space-4) 0 0;
+}
+
 .site-footer {
   padding-block: var(--space-16);
   background: var(--brand-navy-deep);
@@ -2473,6 +2698,20 @@ p {
   .contact-channel-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .calendar-admin-shell {
+    padding: var(--space-8);
+  }
+
+  .calendar-admin-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calendar-admin-existing > header,
+  .calendar-admin-booking-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
 }
 
 @media (min-width: 900px) {
@@ -2546,7 +2785,7 @@ p {
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
   .section-shell,
   .nav-shell {
     width: min(100% - (var(--space-12) * 2), var(--content-width));
@@ -2615,10 +2854,18 @@ p {
   }
 
   .site-nav > a,
-  .nav-download-toggle {
+  .nav-download-toggle,
+  .nav-admin-button {
+    flex: 0 0 auto;
     min-height: 44px;
     padding-inline: var(--space-3);
     background: transparent;
+    white-space: nowrap;
+  }
+
+  .nav-download,
+  .community-actions {
+    flex: 0 0 auto;
   }
 
   .site-nav > a::after {
@@ -2638,7 +2885,8 @@ p {
   .site-nav > a:hover,
   .site-nav > a[aria-current="true"],
   .nav-download-toggle:hover,
-  .nav-download-toggle[aria-expanded="true"] {
+  .nav-download-toggle[aria-expanded="true"],
+  .nav-admin-button:hover {
     background: transparent;
   }
 
