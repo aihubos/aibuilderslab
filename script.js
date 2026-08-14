@@ -120,7 +120,7 @@ document.addEventListener("pointerdown", (event) => {
 mobileBreakpoint.addEventListener("change", syncMenuForViewport);
 syncMenuForViewport();
 
-const observedSectionIds = ["about", "stages", "tools", "operations", "contact"];
+const observedSectionIds = ["top", "about", "stages", "tools", "operations", "contact"];
 const observedSections = observedSectionIds
   .map((id) => document.getElementById(id))
   .filter(Boolean);
@@ -134,9 +134,10 @@ if ("IntersectionObserver" in window) {
 
       if (!visibleEntries.length) return;
       const activeId = visibleEntries[0].target.id;
+      const navigationId = activeId === "top" ? "about" : activeId;
 
       navLinks.forEach((link) => {
-        const isCurrent = link.getAttribute("href") === `#${activeId}`;
+        const isCurrent = link.getAttribute("href") === `#${navigationId}`;
         if (isCurrent) {
           link.setAttribute("aria-current", "true");
         } else {
