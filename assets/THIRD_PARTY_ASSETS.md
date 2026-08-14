@@ -35,7 +35,7 @@
 
 ## 상단 다운로드 메뉴 링크
 
-- Hermes Agent 공식 설치 안내: https://hermes-agent.nousresearch.com/docs/getting-started/quickstart/
+- Hermes Agent 공식 홈페이지: https://hermes-agent.nousresearch.com/
 - Codex 공식 홈페이지: https://openai.com/codex/
 - Telegram 공식 앱: https://telegram.org/apps
 - Discord 공식 다운로드: https://discord.com/download
