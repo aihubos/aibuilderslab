@@ -21,36 +21,23 @@ const HOLIDAYS = Object.freeze({
   "2026-09-26": { label: "추석 연휴", short: "추석연휴" },
 });
 
+const WEEKDAY_WORKSHOP = Object.freeze({
+  type: "workshop",
+  short: "주제별 실습",
+  detail:
+    "주제별 소수정예 실습. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공. 주제는 신청 시 선택합니다.",
+});
+
 const SCHEDULE_BY_DAY = Object.freeze({
   0: {
     type: "none",
     short: "정기 일정 없음",
     detail: "일요일은 정기 일정이 없습니다.",
   },
-  1: {
-    type: "knowledge",
-    short: "Hermes 설치",
-    detail:
-      "Hermes Agent를 설치하고 첫 실행까지 확인하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
-  },
-  2: {
-    type: "build",
-    short: "Hermes 자동화",
-    detail:
-      "Hermes를 활용해 반복 작업 하나를 자동화하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
-  },
-  3: {
-    type: "knowledge",
-    short: "LLM Wiki",
-    detail:
-      "내 자료를 담을 LLM Wiki 기본 구조를 만들고 활용하는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
-  },
-  4: {
-    type: "build",
-    short: "대시보드",
-    detail:
-      "바이브 코딩으로 나만의 대시보드 초안을 만드는 세션. 09:00~12:00, 14:00~17:00, 18:00~21:00. 1회 2만원, 3시간, 스터디카페, 커피 또는 음료 제공.",
-  },
+  1: WEEKDAY_WORKSHOP,
+  2: WEEKDAY_WORKSHOP,
+  3: WEEKDAY_WORKSHOP,
+  4: WEEKDAY_WORKSHOP,
   5: {
     type: "chat",
     short: "자유 커피챗",
@@ -58,9 +45,64 @@ const SCHEDULE_BY_DAY = Object.freeze({
   },
   6: {
     type: "intro",
-    short: "AI 무료입문",
+    short: "무료 AI 입문",
     detail: "10:00~12:00 무료 AI 입문 모임. Hermes Agent 시연과 STIC 실습. 교육비 무료, 음료 비용은 개인 결제.",
   },
+});
+
+const COHORT_ONE = Object.freeze({
+  name: "AI 빌더스 랩 1기",
+  status: "모집 중",
+  price: 80000,
+  duration: "2주 · 총 4회 · 총 12시간",
+  capacity: "최소 2명, 최대 3명",
+  applicationKey: "paidWorkshop",
+  sessions: Object.freeze([
+    Object.freeze({
+      id: "cohort-1-session-1",
+      date: "2026-08-17",
+      day: "월요일",
+      slot: "morning",
+      label: "AI 빌더스 랩 1기 · 1회차",
+      shortLabel: "1기 · 1회차",
+      courseTitle: "나만의 AI 작업환경 구축",
+      summary: "Hermes Agent와 LLM Wiki",
+      participantIds: Object.freeze(["삼만원님"]),
+    }),
+    Object.freeze({
+      id: "cohort-1-session-2",
+      date: "2026-08-20",
+      day: "목요일",
+      slot: "morning",
+      label: "AI 빌더스 랩 1기 · 2회차",
+      shortLabel: "1기 · 2회차",
+      courseTitle: "나만의 자동화 구축",
+      summary: "Hermes를 활용한 반복 작업 자동화",
+      participantIds: Object.freeze(["삼만원님"]),
+    }),
+    Object.freeze({
+      id: "cohort-1-session-3",
+      date: "2026-08-24",
+      day: "월요일",
+      slot: "morning",
+      label: "AI 빌더스 랩 1기 · 3회차",
+      shortLabel: "1기 · 3회차",
+      courseTitle: "바이브 코딩 입문 및 실습",
+      summary: "대시보드 화면 초안 제작",
+      participantIds: Object.freeze(["삼만원님"]),
+    }),
+    Object.freeze({
+      id: "cohort-1-session-4",
+      date: "2026-08-27",
+      day: "목요일",
+      slot: "morning",
+      label: "AI 빌더스 랩 1기 · 4회차",
+      shortLabel: "1기 · 4회차",
+      courseTitle: "나만의 대시보드 완성",
+      summary: "자동화 연결, 모바일 확인과 최종 테스트",
+      participantIds: Object.freeze(["삼만원님"]),
+    }),
+  ]),
 });
 
 const TRAINING_SLOTS = Object.freeze([
@@ -70,27 +112,40 @@ const TRAINING_SLOTS = Object.freeze([
 ]);
 
 // 공개 캘린더에는 실명이나 연락처 대신 신청자가 사용하는 아이디만 입력합니다.
-const DEFAULT_CALENDAR_BOOKINGS = Object.freeze({
-  "2026-08-17": Object.freeze([
-    { id: "cohort-1-session-1", slot: "morning", title: "1기 1회차", participantIds: ["삼만원님"] },
-  ]),
-  "2026-08-20": Object.freeze([
-    { id: "cohort-1-session-2", slot: "morning", title: "1기 2회차", participantIds: ["삼만원님"] },
-  ]),
-  "2026-08-24": Object.freeze([
-    { id: "cohort-1-session-3", slot: "morning", title: "1기 3회차", participantIds: ["삼만원님"] },
-  ]),
-  "2026-08-27": Object.freeze([
-    { id: "cohort-1-session-4", slot: "morning", title: "1기 4회차", participantIds: ["삼만원님"] },
-  ]),
-});
+const DEFAULT_CALENDAR_BOOKINGS = Object.freeze(
+  Object.fromEntries(
+    COHORT_ONE.sessions.map((session) => [
+      session.date,
+      Object.freeze([
+        Object.freeze({
+          id: session.id,
+          slot: session.slot,
+          type: "cohort",
+          title: session.label,
+          courseTitle: session.courseTitle,
+          participantIds: session.participantIds,
+        }),
+      ]),
+    ]),
+  ),
+);
 
 const BOOKINGS_STORAGE_KEY = "ai-builders-calendar-bookings";
 const ADMIN_SESSION_KEY = "ai-builders-admin-unlocked";
 const ADMIN_PASSWORD_HASH = "3f44b2fbb0aaffb68530a82cd4e4da9498b9337ae9c805b600efff12624c2cc7";
+const RECRUIT_DIALOG_DISMISSED_KEY = "ai-builders-cohort-1-dismissed-at";
+const RECRUIT_DIALOG_SESSION_KEY = "ai-builders-cohort-1-auto-shown";
+const RECRUIT_DIALOG_DELAY_MS = 3000;
+const RECRUIT_DIALOG_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 function cloneDefaultBookings() {
   return JSON.parse(JSON.stringify(DEFAULT_CALENDAR_BOOKINGS));
+}
+
+function findCohortSession(booking) {
+  return COHORT_ONE.sessions.find((session) => session.id === booking.id)
+    || COHORT_ONE.sessions.find((session) => session.date === booking.date && session.slot === booking.slot)
+    || null;
 }
 
 function normalizeCalendarBookings(value) {
@@ -101,19 +156,37 @@ function normalizeCalendarBookings(value) {
     if (!/^2026-(08|09)-\d{2}$/.test(dateKey) || !Array.isArray(bookings)) return;
     const validBookings = bookings
       .filter((booking) => booking && typeof booking === "object")
-      .map((booking) => ({
-        id: String(booking.id || `booking-${dateKey}-${booking.slot || "morning"}`),
-        slot: TRAINING_SLOTS.some((slot) => slot.key === booking.slot) ? booking.slot : "morning",
-        title: String(booking.title || "교육 일정").slice(0, 40),
-        participantIds: Array.isArray(booking.participantIds)
-          ? booking.participantIds
-              .map((id) => String(id).trim())
-              .map((id) => (id === "3만원" ? "삼만원님" : id))
-              .filter(Boolean)
-              .slice(0, 3)
-          : [],
-      }))
-      .filter((booking) => booking.participantIds.length);
+      .map((booking) => {
+        const slot = TRAINING_SLOTS.some((item) => item.key === booking.slot) ? booking.slot : "morning";
+        const candidate = {
+          id: String(booking.id || `booking-${dateKey}-${slot}`),
+          slot,
+          date: dateKey,
+          title: String(booking.title || "교육 일정").slice(0, 40),
+          courseTitle: String(booking.courseTitle || "").trim().slice(0, 40),
+          type: booking.type === "cohort" || booking.type === "workshop" ? booking.type : "",
+          participantIds: Array.isArray(booking.participantIds)
+            ? booking.participantIds
+                .map((id) => String(id).trim())
+                .map((id) => (id === "3만원" ? "삼만원님" : id))
+                .filter(Boolean)
+                .slice(0, 3)
+            : [],
+        };
+        const cohortSession = findCohortSession(candidate);
+        if (cohortSession) {
+          candidate.type = "cohort";
+          if (!candidate.courseTitle) candidate.courseTitle = cohortSession.courseTitle;
+          if (candidate.title === "1기 1회차" || candidate.title === "교육 일정" || /^1기 [1-4]회차$/.test(candidate.title)) {
+            candidate.title = cohortSession.label;
+          }
+        } else if (!candidate.type) {
+          candidate.type = "workshop";
+        }
+        return candidate;
+      })
+      .filter((booking) => booking.participantIds.length)
+      .map(({ date, ...booking }) => booking);
     if (validBookings.length) normalized[dateKey] = validBookings;
   });
 
@@ -489,10 +562,14 @@ function createCalendar(monthConfig) {
       day.setAttribute("aria-current", "date");
     }
 
+    const hasCohortBooking = bookings.some((booking) => booking.type === "cohort");
+    if (hasCohortBooking) day.dataset.scheduleType = "cohort";
+
     const bookingDescription = bookings
       .map((booking) => {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
-        return `${slot?.label || booking.slot} ${slot?.time || ""}, ${booking.title}, 참여자 ${booking.participantIds.join(", ")}`;
+        const courseTitle = booking.courseTitle ? `, ${booking.courseTitle}` : "";
+        return `${slot?.label || booking.slot} ${slot?.time || ""}, ${booking.title}${courseTitle}, 참여자 ${booking.participantIds.join(", ")}`;
       })
       .join(". ");
     day.setAttribute(
@@ -503,6 +580,9 @@ function createCalendar(monthConfig) {
     day.append(makeElement("span", "calendar-date", String(dayNumber)));
     if (holiday) day.append(makeElement("span", "calendar-holiday", holiday.short));
     day.append(makeElement("span", "calendar-event", bookings[0]?.title || schedule.short));
+    if (bookings[0]?.courseTitle) {
+      day.append(makeElement("span", "calendar-course", bookings[0].courseTitle));
+    }
 
     if (bookings.length) {
       day.append(makeElement("span", "calendar-booking-badge", "등록"));
@@ -546,7 +626,12 @@ function createCalendar(monthConfig) {
         const item = makeElement("li", "calendar-booking-item");
         item.append(makeElement("time", "calendar-booking-date", `${Number(dateKey.slice(5, 7))}월 ${Number(dateKey.slice(8, 10))}일`));
         item.append(makeElement("span", "calendar-booking-time", `${slot.label} ${slot.time}`));
-        item.append(makeElement("strong", "calendar-booking-course", booking.title));
+        const courseBlock = makeElement("div", "calendar-booking-copy");
+        courseBlock.append(makeElement("strong", "calendar-booking-course", booking.title));
+        if (booking.courseTitle) {
+          courseBlock.append(makeElement("span", "calendar-booking-topic", booking.courseTitle));
+        }
+        item.append(courseBlock);
         item.append(makeElement("span", "calendar-booking-participant", `참여자 ${booking.participantIds.join(", ")}`));
         bookingList.append(item);
       });
@@ -686,6 +771,9 @@ function renderAdminBookingList() {
     const item = makeElement("li", "calendar-admin-booking-item");
     const information = makeElement("div", "calendar-admin-booking-info");
     information.append(makeElement("strong", "", booking.title));
+    if (booking.courseTitle) {
+      information.append(makeElement("span", "", booking.courseTitle));
+    }
     information.append(
       makeElement(
         "span",
@@ -767,6 +855,7 @@ bookingForm?.addEventListener("submit", (event) => {
   const bookingId = String(formData.get("bookingId") || `booking-${Date.now()}`);
   const date = String(formData.get("date") || "");
   const title = String(formData.get("title") || "").trim();
+  const courseTitle = String(formData.get("courseTitle") || "").trim().slice(0, 40);
   const slot = String(formData.get("slot") || "morning");
   const participantIds = String(formData.get("participantIds") || "")
     .split(",")
@@ -781,8 +870,21 @@ bookingForm?.addEventListener("submit", (event) => {
 
   removeBookingById(bookingId);
   const sameDateBookings = calendarBookings[date] || [];
+  const nextBooking = {
+    id: bookingId,
+    slot,
+    title,
+    courseTitle,
+    type: "workshop",
+    participantIds,
+  };
+  const cohortSession = findCohortSession({ ...nextBooking, date });
+  if (cohortSession) {
+    nextBooking.type = "cohort";
+    if (!nextBooking.courseTitle) nextBooking.courseTitle = cohortSession.courseTitle;
+  }
   calendarBookings[date] = sameDateBookings.filter((booking) => booking.slot !== slot);
-  calendarBookings[date].push({ id: bookingId, slot, title, participantIds });
+  calendarBookings[date].push(nextBooking);
   if (!persistCalendarBookings()) return;
 
   refreshCalendarAfterAdminChange(date.slice(0, 7));
@@ -799,6 +901,7 @@ adminBookingList?.addEventListener("click", (event) => {
     if (!booking) return;
     bookingForm.elements.bookingId.value = booking.id;
     bookingForm.elements.title.value = booking.title;
+    bookingForm.elements.courseTitle.value = booking.courseTitle || "";
     bookingForm.elements.participantIds.value = booking.participantIds.join(", ");
     bookingForm.elements.date.value = booking.date;
     bookingForm.elements.slot.value = booking.slot;
@@ -853,3 +956,71 @@ contactButtons.forEach((button) => {
   button.removeAttribute("href");
   button.setAttribute("aria-disabled", "true");
 });
+
+const recruitDialog = document.querySelector("[data-recruit-dialog]");
+const recruitOpenButtons = [...document.querySelectorAll("[data-recruit-open]")];
+const recruitCloseButton = document.querySelector("[data-recruit-close]");
+const recruitCurriculumLink = document.querySelector("[data-recruit-curriculum]");
+let recruitDialogTrigger = null;
+
+function canAutoOpenRecruitDialog() {
+  if (sessionStorage.getItem(RECRUIT_DIALOG_SESSION_KEY) === "true") return false;
+  const dismissedAt = Number(localStorage.getItem(RECRUIT_DIALOG_DISMISSED_KEY) || 0);
+  if (!dismissedAt) return true;
+  return Date.now() - dismissedAt >= RECRUIT_DIALOG_COOLDOWN_MS;
+}
+
+function restoreRecruitDialogFocus() {
+  if (recruitDialogTrigger && typeof recruitDialogTrigger.focus === "function") {
+    recruitDialogTrigger.focus();
+  }
+  recruitDialogTrigger = null;
+}
+
+function closeRecruitDialog({ remember = true } = {}) {
+  if (!recruitDialog?.open) return;
+  if (remember) {
+    localStorage.setItem(RECRUIT_DIALOG_DISMISSED_KEY, String(Date.now()));
+  }
+  recruitDialog.close();
+}
+
+function openRecruitDialog({ manual = false } = {}) {
+  if (!recruitDialog || recruitDialog.open) return;
+  if (!manual && !canAutoOpenRecruitDialog()) return;
+  recruitDialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (!manual) sessionStorage.setItem(RECRUIT_DIALOG_SESSION_KEY, "true");
+  document.body.classList.add("is-recruit-open");
+  recruitDialog.showModal();
+  recruitCloseButton?.focus();
+}
+
+function scheduleRecruitDialog() {
+  window.setTimeout(() => openRecruitDialog({ manual: false }), RECRUIT_DIALOG_DELAY_MS);
+}
+
+recruitOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => openRecruitDialog({ manual: true }));
+});
+
+recruitCloseButton?.addEventListener("click", () => closeRecruitDialog({ remember: true }));
+
+recruitCurriculumLink?.addEventListener("click", () => {
+  closeRecruitDialog({ remember: true });
+});
+
+recruitDialog?.addEventListener("click", (event) => {
+  if (event.target === recruitDialog) closeRecruitDialog({ remember: true });
+});
+
+recruitDialog?.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  closeRecruitDialog({ remember: true });
+});
+
+recruitDialog?.addEventListener("close", () => {
+  document.body.classList.remove("is-recruit-open");
+  restoreRecruitDialogFocus();
+});
+
+scheduleRecruitDialog();

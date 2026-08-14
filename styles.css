@@ -77,6 +77,9 @@
   --calendar-day-booking-height: 188px;
   --admin-dialog-width: 720px;
   --admin-auth-width: 420px;
+  --recruit-dialog-width: 760px;
+  --recruit-dialog-max-height: 85dvh;
+  --recruit-banner-min-height: 56px;
   --modal-backdrop: rgba(0, 12, 61, 0.42);
   --footer-admin-muted: rgba(255, 255, 255, 0.44);
   --motion-lift-small: -2px;
@@ -728,7 +731,7 @@ p {
 .hero {
   position: relative;
   min-height: 100svh;
-  padding-top: var(--header-height);
+  padding-top: 0;
   overflow: clip;
   background: var(--surface-base);
 }
@@ -1334,6 +1337,22 @@ p {
   max-width: var(--reading-width);
 }
 
+.cohort-flow {
+  margin: 0 0 var(--space-8);
+  padding-left: var(--space-4);
+  border-left: 4px solid var(--brand-blue);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.6;
+}
+
+.session-complete {
+  margin: var(--space-5) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
 .cohort-promise {
   margin-block: var(--space-8);
   padding-block: var(--space-6);
@@ -1635,8 +1654,8 @@ p {
   background: var(--schedule-color);
 }
 
-[data-schedule-type="knowledge"] { --schedule-color: var(--brand-blue-light); }
-[data-schedule-type="build"] { --schedule-color: var(--brand-blue-strong); }
+[data-schedule-type="workshop"] { --schedule-color: var(--brand-blue-light); }
+[data-schedule-type="cohort"] { --schedule-color: var(--brand-blue-strong); }
 [data-schedule-type="chat"] { --schedule-color: var(--text-tertiary); }
 [data-schedule-type="intro"] { --schedule-color: var(--brand-navy); }
 
@@ -1844,9 +1863,26 @@ p {
   font-weight: 650;
 }
 
+.calendar-booking-copy {
+  display: grid;
+  gap: var(--space-1);
+}
+
 .calendar-booking-course {
   color: var(--text-primary);
   font-size: 1rem;
+}
+
+.calendar-booking-topic,
+.calendar-course {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.calendar-course {
+  display: none;
 }
 
 .calendar-booking-participant {
@@ -2189,7 +2225,8 @@ p {
 }
 
 .calendar-admin-dialog,
-.admin-auth-dialog {
+.admin-auth-dialog,
+.cohort-recruit-dialog {
   width: min(calc(100% - (var(--space-4) * 2)), var(--admin-dialog-width));
   max-height: calc(100dvh - (var(--space-8) * 2));
   padding: 0;
@@ -2206,7 +2243,8 @@ p {
 }
 
 .calendar-admin-dialog::backdrop,
-.admin-auth-dialog::backdrop {
+.admin-auth-dialog::backdrop,
+.cohort-recruit-dialog::backdrop {
   background: var(--modal-backdrop);
 }
 
@@ -2542,6 +2580,237 @@ p {
   color: var(--brand-white);
 }
 
+
+body.is-recruit-open {
+  overflow: hidden;
+}
+
+.cohort-recruit-banner {
+  position: relative;
+  z-index: 40;
+  margin-top: var(--header-height);
+  min-height: var(--recruit-banner-min-height);
+  background: var(--brand-navy);
+  color: var(--brand-white);
+}
+
+.cohort-recruit-banner button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
+  width: 100%;
+  min-height: var(--recruit-banner-min-height);
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cohort-recruit-banner button:hover {
+  background: var(--brand-navy-deep);
+}
+
+.cohort-recruit-banner strong {
+  font-size: 0.9375rem;
+  letter-spacing: -0.02em;
+}
+
+.cohort-recruit-banner > button > span:not(.cohort-recruit-status):not(.cohort-recruit-action) {
+  color: var(--brand-ice);
+  font-size: 0.8125rem;
+}
+
+.cohort-recruit-status,
+.cohort-recruit-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-6);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--brand-blue-light);
+  border-radius: var(--radius-pill);
+  color: var(--brand-ice);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cohort-recruit-action {
+  border-color: var(--brand-blue);
+  background: var(--brand-blue);
+  color: var(--brand-white);
+}
+
+.cohort-recruit-dialog {
+  width: min(calc(100% - (var(--space-4) * 2)), var(--recruit-dialog-width));
+  max-height: var(--recruit-dialog-max-height);
+}
+
+.cohort-recruit-shell {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-5);
+}
+
+.cohort-recruit-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.cohort-recruit-header p {
+  margin-bottom: var(--space-1);
+  color: var(--brand-blue-strong);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cohort-recruit-header h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.cohort-recruit-header button {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cohort-recruit-header button:hover {
+  border-color: var(--brand-blue-light);
+  color: var(--text-primary);
+}
+
+#cohort-recruit-description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.cohort-recruit-facts {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.cohort-recruit-facts > div {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.cohort-recruit-facts dt {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cohort-recruit-facts dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.cohort-recruit-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-light);
+}
+
+.cohort-recruit-timeline li {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.cohort-recruit-timeline span {
+  color: var(--brand-blue-accessible);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cohort-recruit-timeline strong {
+  color: var(--text-primary);
+  font-size: 1.0625rem;
+}
+
+.cohort-recruit-timeline small {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.cohort-recruit-price {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 750;
+}
+
+.cohort-recruit-actions {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cohort-recruit-actions p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.cohort-recruit-actions .button,
+.calendar-admin-actions .button,
+.admin-auth-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: var(--space-6);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cohort-recruit-actions .button-primary,
+.calendar-admin-actions .button-primary {
+  border: 1px solid var(--brand-blue-strong);
+  background: var(--brand-blue-strong);
+  color: var(--accent-foreground);
+}
+
+.cohort-recruit-actions .button-secondary,
+.calendar-admin-actions .button-secondary {
+  border: 1px solid var(--border-light);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+}
+
+.cohort-recruit-actions .button:hover,
+.calendar-admin-actions .button:hover {
+  transform: translateY(var(--motion-lift-small));
+}
+
+.cohort-recruit-actions .button:active,
+.calendar-admin-actions .button:active {
+  transform: scale(0.98);
+}
+
 [data-reveal] {
   opacity: 0;
   transform: translateY(var(--space-6));
@@ -2646,13 +2915,44 @@ p {
     font-size: 0.875rem;
   }
 
-  .calendar-event {
+  .calendar-event,
+  .calendar-course {
     display: block;
     margin-top: var(--space-3);
     color: var(--text-secondary);
     font-size: 0.6875rem;
     font-weight: 600;
     line-height: 1.35;
+  }
+
+  .calendar-course {
+    margin-top: var(--space-1);
+  }
+
+  .cohort-recruit-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cohort-recruit-facts > div:nth-child(odd) {
+    padding-right: var(--space-5);
+  }
+
+  .cohort-recruit-facts > div:nth-child(even) {
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--border-light);
+  }
+
+  .cohort-recruit-shell {
+    padding: var(--space-8);
+  }
+
+  .cohort-recruit-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cohort-recruit-actions p,
+  .cohort-recruit-price {
+    grid-column: 1 / -1;
   }
 
   .calendar-booking-badge {
@@ -2816,6 +3116,11 @@ p {
 
   .weekly-pattern {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cohort-recruit-banner button {
+    flex-wrap: nowrap;
+    justify-content: center;
   }
 
   .stic-parts {
