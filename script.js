@@ -58,8 +58,8 @@ const SCHEDULE_BY_DAY = Object.freeze({
   },
   6: {
     type: "intro",
-    short: "Hermes 무료",
-    detail: "10:00~12:00 Hermes Agent 설치 입문반. 교육비 무료.",
+    short: "AI 무료입문",
+    detail: "10:00~12:00 무료 AI 입문 모임. Hermes Agent 시연과 STIC 실습. 교육비 무료, 음료 비용은 개인 결제.",
   },
 });
 
