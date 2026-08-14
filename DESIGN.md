@@ -44,6 +44,7 @@
 | 히어로 모토 | `clamp(2.5rem, 4vw, 4.25rem)` | 700 | 1.08 | -0.04em |
 | 히어로 메시지 | `clamp(2.125rem, 3.5vw, 3.5rem)` | 700 | 1.12 | -0.04em |
 | 유료 실습 가격 | `clamp(2.25rem, 4vw, 3.75rem)` | 750 | 1.05 | -0.045em |
+| 결과 공유 혜택 | `clamp(2rem, 4.5vw, 4rem)` | 750 | 1.08 | -0.045em |
 | 대제목 | `clamp(2.25rem, 5vw, 4.75rem)` | 700 | 1.04 | -0.045em |
 | 중제목 | `clamp(1.5rem, 3vw, 2.5rem)` | 650 | 1.15 | -0.025em |
 | 본문 큰 글 | `clamp(1.125rem, 2vw, 1.5rem)` | 450 | 1.65 | -0.01em |
@@ -59,7 +60,7 @@
 
 콘텐츠 최대 폭은 1240px, 읽기 문단 최대 폭은 720px이다. 모바일 좌우 여백은 20px, 태블릿은 32px, 데스크톱은 48px이다.
 
-히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
+히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`, 결과 공유 혜택은 `--sharing-benefit-title: clamp(2rem, 4.5vw, 4rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
 
 ## 5. 컴포넌트
 
@@ -75,6 +76,7 @@
 - 세션 결과물: 월요일부터 목요일까지 날짜 레이블, 굵은 결과물 이름, 한 줄 설명을 구분선 중심의 세로 목록으로 보여준다. 반복 카드나 완료 보장 표현은 사용하지 않는다.
 - 2주 과정: 네 번의 3시간 수업을 네 개의 펼침 행으로 보여준다. 닫힌 상태에서도 회차, 주제, 필수 결과물이 보이며, 펼치면 180분 시간표가 나타난다. 카드 그림자는 쓰지 않고 구분선으로 리듬을 만든다.
 - 완료 지원: 정규 수업 4회 출석, 사전 기술 점검, 안내 실습 수행 등 적용 조건과 지원 범위를 하나의 아이스 블루 안내 영역에 함께 표시한다. 수익이나 성과 보장이 아니라 합의한 교육 결과물의 완료 지원임을 명시한다.
+- 참여 공유 혜택: 2주 과정의 최종 완료 기준 다음에 넓은 구분선 영역으로 배치한다. 매 수업 결과물 공유 `50% 할인`과 후기 작성 `20% 할인`을 큰 글자로 나눠 강조한다. 할인 대상 과정, 확인 방법, 중복 적용 여부는 신청 전에 안내한다고 명시한다.
 - 상태 배지: 현재 운영은 녹색, 검토 중은 황토색을 사용한다. 가격 옆 배지는 항상 텍스트를 포함한다.
 
 ## 6. 모션

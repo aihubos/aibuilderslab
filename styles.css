@@ -52,6 +52,7 @@
   --hero-title-primary: clamp(2.5rem, 4vw, 4.25rem);
   --hero-title-secondary: clamp(2.125rem, 3.5vw, 3.5rem);
   --stage-price-featured: clamp(2.25rem, 4vw, 3.75rem);
+  --sharing-benefit-title: clamp(2rem, 4.5vw, 4rem);
   --report-hub-width: 78px;
   --report-hub-width-wide: 112px;
   --motion-lift-small: -2px;
@@ -872,6 +873,53 @@ p {
 
 .cohort-session-body .lesson-timeline {
   margin-top: 0;
+}
+
+.sharing-benefit {
+  margin-top: var(--space-12);
+  padding-block: var(--space-12);
+  border-block: 1px solid var(--brand-ice);
+  color: var(--text-primary);
+}
+
+.sharing-benefit-label {
+  margin-bottom: var(--space-4);
+  color: var(--brand-blue-accessible);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sharing-benefit h4 {
+  max-width: var(--reading-width);
+  margin-bottom: var(--space-5);
+  font-size: var(--sharing-benefit-title);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+
+.sharing-benefit h4 span {
+  display: block;
+}
+
+.sharing-benefit h4 span + span {
+  margin-top: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-light);
+}
+
+.sharing-benefit h4 strong {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--brand-blue-accessible);
+}
+
+.sharing-benefit-note {
+  max-width: var(--reading-width);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.55;
 }
 
 .completion-support {
