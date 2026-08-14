@@ -29,4 +29,4 @@
 - 카카오톡 오픈채팅 프로필: https://open.kakao.com/me/aibuilderslab
 - 당근 모임: https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr
 
-Report Hub의 흰색 유틸리티 링크 배치만 참고했으며 이미지나 로고 자산은 복사하지 않았습니다. 카카오톡과 당근도 로고를 내려받지 않고 링크 이름을 텍스트로 표시합니다.
+상단의 `report-hub-banner.png`는 사용자가 직접 제공한 Report Hub 가로형 원본 배너이며, 클릭 시 https://aireport.ai-hub-os.com 으로 이동합니다. 원본 비율과 색상을 유지해 사용하며 공식 제휴를 새로 암시하지 않습니다. 카카오톡과 당근은 로고를 내려받지 않고 링크 이름을 텍스트로 표시합니다.

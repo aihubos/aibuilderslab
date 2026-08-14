@@ -59,11 +59,12 @@
 
 콘텐츠 최대 폭은 1240px, 읽기 문단 최대 폭은 720px이다. 모바일 좌우 여백은 20px, 태블릿은 32px, 데스크톱은 48px이다.
 
-히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`로 강조한다.
+히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
 
 ## 5. 컴포넌트
 
 - 내비게이션: 높이 72px, 반투명 흰색, 1px 하단 구분선. 활성 링크는 파란색과 짧은 하단선으로 표시한다.
+- Report Hub 상단 링크: 사용자가 제공한 가로형 원본 배너를 한 번만 사용한다. 모바일에서는 브랜드와 메뉴 사이, 데스크톱에서는 주요 메뉴 오른쪽에 배치하며 새 탭으로 연다. 흰색 표면과 1px 구분선만 사용하고 원본 색상·비율·여백을 변형하지 않는다.
 - 히어로: 최대 폭 1520px의 비대칭 2열. 왼쪽에는 두 줄 메시지만 두고 오른쪽에는 실제 A 심볼을 배치한다. 파도는 생성한 실사 배경 자산 한 장만 사용하며 버튼, 지식 노드, 카드, 별도 설명은 두지 않는다. 모바일에서는 문구 다음에 A 심볼이 오고 파도는 하단에 유지한다.
 - 버튼: 최소 높이 48px, 좌우 24px, 반지름 999px. hover는 색상 변화, active는 0.98 배율, focus는 3px 파란 링을 사용한다.
 - 정보 영역: 카드 그림자 대신 구분선과 넓은 간격을 사용한다. 반지름은 8px, 16px, 24px 세 단계만 사용한다.

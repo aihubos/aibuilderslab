@@ -52,6 +52,9 @@
   --hero-title-primary: clamp(2.5rem, 4vw, 4.25rem);
   --hero-title-secondary: clamp(2.125rem, 3.5vw, 3.5rem);
   --stage-price-featured: clamp(2.25rem, 4vw, 3.75rem);
+  --report-hub-width: 78px;
+  --report-hub-width-wide: 112px;
+  --motion-lift-small: -2px;
   --header-height: 72px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow-nav: 0 8px 32px rgba(0, 12, 61, 0.06);
@@ -176,23 +179,56 @@ p {
   margin-inline: auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
+  justify-content: flex-start;
+  gap: var(--space-2);
 }
 
 .brand {
+  order: 1;
   display: inline-flex;
   align-items: center;
+  flex: 0 1 auto;
   min-width: 0;
   min-height: 48px;
 }
 
 .brand img {
-  width: 176px;
-  max-width: 48vw;
+  width: 136px;
+  max-width: 40vw;
+}
+
+.report-hub-link {
+  order: 2;
+  width: var(--report-hub-width);
+  min-height: 44px;
+  margin-left: auto;
+  padding: var(--space-2) var(--space-1);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--brand-white);
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  transition: border-color 180ms var(--ease-out), background-color 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+}
+
+.report-hub-link:hover {
+  border-color: var(--brand-ice);
+  background: var(--surface-blue);
+  transform: translateY(var(--motion-lift-small));
+}
+
+.report-hub-link:active {
+  transform: scale(0.98);
+}
+
+.report-hub-link img {
+  width: 100%;
 }
 
 .menu-toggle {
+  order: 3;
   width: 48px;
   height: 48px;
   padding: 0;
@@ -224,6 +260,7 @@ p {
 }
 
 .site-nav {
+  order: 4;
   position: fixed;
   top: var(--header-height);
   left: var(--space-4);
@@ -1350,6 +1387,10 @@ p {
     width: 192px;
   }
 
+  .report-hub-link {
+    width: var(--report-hub-width-wide);
+  }
+
   .about-story,
   .calendar-heading,
   .dark-heading {
@@ -1470,6 +1511,7 @@ p {
   }
 
   .site-nav {
+    order: 2;
     position: static;
     display: flex;
     align-items: center;
@@ -1482,6 +1524,12 @@ p {
     opacity: 1;
     pointer-events: auto;
     transform: none;
+    margin-left: auto;
+  }
+
+  .report-hub-link {
+    order: 3;
+    margin-left: var(--space-2);
   }
 
   .site-nav a {
