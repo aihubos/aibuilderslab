@@ -1,0 +1,11 @@
+{
+  "name": "ai-builders-lab-onepage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "check": "node --check script.js",
+    "build": "node scripts/build.mjs"
+  }
+}
