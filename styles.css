@@ -69,6 +69,7 @@
   --hero-title-secondary: clamp(2.125rem, 3.5vw, 3.5rem);
   --stage-price-featured: clamp(2.25rem, 4vw, 3.75rem);
   --sharing-benefit-title: clamp(2rem, 4.5vw, 4rem);
+  --hero-benefit-amount: clamp(2.25rem, 5vw, 3.75rem);
   --report-hub-width: 78px;
   --report-hub-width-wide: 112px;
   --community-icon-size: 28px;
@@ -828,6 +829,88 @@ p {
   width: 100%;
 }
 
+.hero-benefit {
+  padding-block: var(--space-16) var(--space-20);
+  border-top: 1px solid var(--border-light);
+  background: var(--surface-elevated);
+}
+
+.hero-benefit h2 {
+  max-width: var(--reading-width);
+  margin-bottom: var(--space-10);
+  color: var(--text-primary);
+  font-size: clamp(2.25rem, 5vw, 4.75rem);
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+}
+
+.hero-benefit-list,
+.sharing-benefit-list,
+.cohort-recruit-offers {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.hero-benefit-list > div,
+.sharing-benefit-list > div,
+.cohort-recruit-offers > div {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--border-light);
+}
+
+.hero-benefit-list > div:last-child,
+.sharing-benefit-list > div:last-child,
+.cohort-recruit-offers > div:last-child {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.hero-benefit-list dt,
+.sharing-benefit-list dt,
+.cohort-recruit-offers dt {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.hero-benefit-list dd,
+.sharing-benefit-list dd,
+.cohort-recruit-offers dd {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.hero-benefit-list strong,
+.sharing-benefit-list strong {
+  color: var(--brand-blue-accessible);
+  font-size: var(--hero-benefit-amount);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.hero-benefit-list span,
+.sharing-benefit-list span,
+.cohort-recruit-offers dd {
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 650;
+}
+
+.hero-benefit-list b,
+.sharing-benefit-list b {
+  color: var(--brand-blue-accessible);
+}
+
+.hero-benefit-apply {
+  margin: var(--space-6) 0 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
 .section-kicker,
 .stage-number {
   margin-bottom: var(--space-4);
@@ -1485,27 +1568,11 @@ p {
 
 .sharing-benefit h4 {
   max-width: var(--reading-width);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-8);
   font-size: var(--sharing-benefit-title);
   font-weight: 750;
   letter-spacing: -0.045em;
   line-height: 1.08;
-}
-
-.sharing-benefit h4 span {
-  display: block;
-}
-
-.sharing-benefit h4 span + span {
-  margin-top: var(--space-8);
-  padding-top: var(--space-8);
-  border-top: 1px solid var(--border-light);
-}
-
-.sharing-benefit h4 strong {
-  display: block;
-  margin-top: var(--space-2);
-  color: var(--brand-blue-accessible);
 }
 
 .sharing-benefit-note {
@@ -2755,6 +2822,14 @@ body.is-recruit-open {
   font-size: 0.875rem;
 }
 
+.cohort-recruit-offers {
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.cohort-recruit-offers dd {
+  font-size: 1rem;
+}
+
 .cohort-recruit-price {
   margin: 0;
   color: var(--text-primary);
@@ -2951,8 +3026,20 @@ body.is-recruit-open {
   }
 
   .cohort-recruit-actions p,
-  .cohort-recruit-price {
+  .cohort-recruit-price,
+  .cohort-recruit-actions [data-recruit-curriculum] {
     grid-column: 1 / -1;
+  }
+
+  .hero-benefit-list,
+  .sharing-benefit-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 var(--space-8);
+  }
+
+  .hero-benefit-list > div,
+  .sharing-benefit-list > div {
+    border-bottom: 1px solid var(--border-light);
   }
 
   .calendar-booking-badge {
