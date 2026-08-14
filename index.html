@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="default">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,13 +48,60 @@
       type="image/avif"
       fetchpriority="high"
     />
-    <link rel="stylesheet" href="styles.css?v=20260814-hero-lift" />
+    <script>
+      (() => {
+        const themes = [
+          "default",
+          "neon-yellow",
+          "ultra-violet",
+          "pale-green",
+          "carmine-pastel",
+          "dark",
+        ];
+        try {
+          const savedTheme = localStorage.getItem("ai-builders-theme");
+          if (themes.includes(savedTheme)) document.documentElement.dataset.theme = savedTheme;
+        } catch (error) {
+          /* 저장 기능을 사용할 수 없는 브라우저에서는 기본 블루 테마를 유지합니다. */
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260814-themes-downloads" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문으로 바로가기</a>
 
     <header class="site-header" data-header>
+      <div class="community-strip" aria-label="AI 빌더스 랩 참여 채널">
+        <div class="community-strip-inner">
+          <span class="community-strip-label">빌더와 연결하기</span>
+          <a
+            href="https://open.kakao.com/me/aibuilderslab"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-community="kakao"
+          >
+            <span aria-hidden="true">K</span><strong>개인 카카오톡</strong>
+          </a>
+          <a
+            href="https://open.kakao.com/o/grZIANIi"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-community="kakao"
+          >
+            <span aria-hidden="true">K</span><strong>단체방</strong>
+          </a>
+          <a
+            href="https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-community="daangn"
+          >
+            <span aria-hidden="true">D</span><strong>당근 모임</strong>
+          </a>
+        </div>
+      </div>
       <div class="nav-shell">
         <a class="brand" href="#top" aria-label="AI 빌더스 랩 처음으로">
           <picture>
@@ -85,9 +132,53 @@
         <nav class="site-nav" id="primary-navigation" aria-label="주요 메뉴" data-site-nav>
           <a href="#about">소개</a>
           <a href="#stages">교육 단계</a>
+          <a href="#schedule">교육 일정표</a>
           <a href="#tools">교육 도구</a>
           <a href="#operations">운영 안내</a>
           <a href="#contact">참여 문의</a>
+
+          <div class="nav-download" data-download-menu>
+            <button
+              class="nav-download-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="download-panel"
+              data-download-toggle
+            >
+              다운로드
+              <span class="menu-chevron" aria-hidden="true"></span>
+            </button>
+            <div
+              class="download-panel"
+              id="download-panel"
+              aria-label="도구 공식 다운로드와 원문"
+              data-download-panel
+              hidden
+            >
+              <p>공식 설치·다운로드</p>
+              <a href="https://hermes-agent.nousresearch.com/docs/getting-started/quickstart/" target="_blank" rel="noopener noreferrer">
+                <strong>Hermes Agent</strong><span>공식 설치 안내</span>
+              </a>
+              <a href="https://openai.com/codex/" target="_blank" rel="noopener noreferrer">
+                <strong>Codex</strong><span>OpenAI 공식 홈페이지</span>
+              </a>
+              <a href="https://telegram.org/apps" target="_blank" rel="noopener noreferrer">
+                <strong>Telegram</strong><span>공식 앱 다운로드</span>
+              </a>
+              <a href="https://discord.com/download" target="_blank" rel="noopener noreferrer">
+                <strong>Discord</strong><span>공식 앱 다운로드</span>
+              </a>
+              <a href="https://slack.com/downloads" target="_blank" rel="noopener noreferrer">
+                <strong>Slack</strong><span>공식 앱 다운로드</span>
+              </a>
+              <a href="https://obsidian.md/download" target="_blank" rel="noopener noreferrer">
+                <strong>Obsidian</strong><span>공식 앱 다운로드</span>
+              </a>
+              <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener noreferrer">
+                <strong>LLM Wiki</strong><span>원문 GitHub Gist</span>
+              </a>
+            </div>
+          </div>
         </nav>
 
         <a
@@ -108,6 +199,49 @@
             />
           </picture>
         </a>
+
+        <div class="theme-control" data-theme-control>
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="theme-panel"
+            aria-label="사이트 테마 선택"
+            title="사이트 테마 선택"
+            data-theme-toggle
+          >
+            <span class="theme-current-swatch" aria-hidden="true"></span>
+            <span class="theme-toggle-text" aria-hidden="true">테마</span>
+          </button>
+          <div
+            class="theme-panel"
+            id="theme-panel"
+            role="menu"
+            aria-label="사이트 테마"
+            data-theme-panel
+            hidden
+          >
+            <p>사이트 테마</p>
+            <button type="button" role="menuitemradio" aria-checked="true" data-theme-option="default">
+              <span class="theme-swatch theme-swatch-default" aria-hidden="true"></span><span>기본 블루</span>
+            </button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="neon-yellow">
+              <span class="theme-swatch theme-swatch-neon" aria-hidden="true"></span><span>네온 옐로우</span>
+            </button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="ultra-violet">
+              <span class="theme-swatch theme-swatch-violet" aria-hidden="true"></span><span>울트라 바이올렛</span>
+            </button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="pale-green">
+              <span class="theme-swatch theme-swatch-green" aria-hidden="true"></span><span>옅은 그린</span>
+            </button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="carmine-pastel">
+              <span class="theme-swatch theme-swatch-carmine" aria-hidden="true"></span><span>카민 파스텔</span>
+            </button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-theme-option="dark">
+              <span class="theme-swatch theme-swatch-dark" aria-hidden="true"></span><span>다크 모드</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -236,14 +370,19 @@
                   2주 과정에서 만들고 싶은 결과물 후보를 찾아봅니다.
                 </p>
                 <ol class="lesson-timeline" aria-label="무료 AI 입문 모임 시간표">
-                  <li><time datetime="10:00">10:00</time>~<time datetime="10:15">10:15</time><span>참가자 소개와 AI 사용 경험 확인</span></li>
-                  <li><time datetime="10:15">10:15</time>~<time datetime="10:35">10:35</time><span>챗봇과 AI 에이전트의 차이</span></li>
-                  <li><time datetime="10:35">10:35</time>~<time datetime="11:00">11:00</time><span>Hermes Agent 실제 작동 시연</span></li>
-                  <li><time datetime="11:00">11:00</time>~<time datetime="11:10">11:10</time><span>휴식</span></li>
-                  <li><time datetime="11:10">11:10</time>~<time datetime="11:30">11:30</time><span>LLM Wiki와 세컨드 브레인 소개</span></li>
-                  <li><time datetime="11:30">11:30</time>~<time datetime="11:50">11:50</time><span>STIC을 활용한 AI 요청 실습</span></li>
-                  <li><time datetime="11:50">11:50</time>~<time datetime="12:00">12:00</time><span>만들고 싶은 결과물 확인과 질의응답</span></li>
+                  <li><span class="lesson-time"><time datetime="10:00">10:00</time>~<time datetime="10:15">10:15</time></span><span>참가자 소개와 AI 사용 경험 확인</span></li>
+                  <li><span class="lesson-time"><time datetime="10:15">10:15</time>~<time datetime="10:35">10:35</time></span><span>수업일 기준 최신 AI 동향과 주요 AI 도구(Tool) 소개</span></li>
+                  <li><span class="lesson-time"><time datetime="10:35">10:35</time>~<time datetime="10:50">10:50</time></span><span>챗봇과 AI 에이전트의 차이</span></li>
+                  <li><span class="lesson-time"><time datetime="10:50">10:50</time>~<time datetime="11:10">11:10</time></span><span>Hermes Agent 실제 작동 시연</span></li>
+                  <li><span class="lesson-time"><time datetime="11:10">11:10</time>~<time datetime="11:20">11:20</time></span><span>휴식</span></li>
+                  <li><span class="lesson-time"><time datetime="11:20">11:20</time>~<time datetime="11:40">11:40</time></span><span>LLM Wiki와 세컨드 브레인 도구 소개</span></li>
+                  <li><span class="lesson-time"><time datetime="11:40">11:40</time>~<time datetime="11:55">11:55</time></span><span>STIC을 활용한 AI 요청 실습</span></li>
+                  <li><span class="lesson-time"><time datetime="11:55">11:55</time>~<time datetime="12:00">12:00</time></span><span>만들고 싶은 결과물 확인과 질의응답</span></li>
                 </ol>
+                <p class="curriculum-update-note">
+                  AI 동향과 도구 소개는 수업일 기준 공식 발표를 중심으로 짧게 업데이트하며,
+                  참가자의 관심 주제에 따라 다룰 도구가 달라질 수 있습니다.
+                </p>
                 <section class="session-outcomes" aria-labelledby="free-outcomes-title">
                   <header class="session-outcomes-heading">
                     <p>무료 모임 결과물</p>
@@ -252,6 +391,7 @@
                   <ul class="topic-list">
                     <li>AI로 해결하고 싶은 문제 1개</li>
                     <li>STIC 형식의 요청문 1개</li>
+                    <li>직접 더 사용해볼 AI 도구 1개</li>
                     <li>2주 과정에서 만들고 싶은 결과물 후보 1개</li>
                     <li>개인 노트북과 운영체제 상태 확인</li>
                   </ul>
@@ -282,6 +422,18 @@
                   <div><dt>정원</dt><dd>최소 2명, 최대 3명</dd></div>
                   <div><dt>장소</dt><dd>스터디카페</dd></div>
                 </dl>
+                <section class="curriculum-update" aria-labelledby="paid-update-title">
+                  <p class="section-kicker">모든 유료 실습 공통</p>
+                  <h4 id="paid-update-title">최신 AI 동향과 오늘 사용할 Tool부터 짚습니다.</h4>
+                  <ul class="topic-list">
+                    <li>수업일 기준 주요 AI 업데이트와 활용 사례</li>
+                    <li>오늘 만들 결과물에 필요한 도구의 역할과 선택 기준</li>
+                    <li>기능 설명보다 직접 실행하고 사람이 검수하는 방법</li>
+                  </ul>
+                  <p>
+                    제품 기능·가격·정책처럼 바뀔 수 있는 정보는 공식 페이지를 함께 확인합니다.
+                  </p>
+                </section>
                 <section class="session-outcomes" aria-labelledby="session-outcomes-title">
                   <header class="session-outcomes-heading">
                     <p>한 번의 모임, 하나의 결과물</p>
@@ -374,6 +526,10 @@
                     <p>주 2회, 회당 180분</p>
                     <h4 id="cohort-curriculum-title">네 번의 수업, 네 번의 완료 확인</h4>
                   </header>
+                  <p class="curriculum-update-note">
+                    매 회차 첫 15분에는 해당 주제의 최신 AI 동향과 관련 Tool을 소개하고,
+                    수업일 기준으로 달라진 기능과 주의점을 확인합니다.
+                  </p>
 
                   <div class="cohort-session-list">
                     <details class="cohort-session" open>
@@ -386,8 +542,8 @@
                       </summary>
                       <div class="cohort-session-body">
                         <ol class="lesson-timeline">
-                          <li><time>00:00~00:15</time><span>활용 목표와 개인정보 원칙 확인</span></li>
-                          <li><time>00:15~00:35</time><span>챗봇, 에이전트, LLM Wiki 역할 이해</span></li>
+                          <li><time>00:00~00:15</time><span>최신 AI 에이전트 동향과 Hermes Tool 소개</span></li>
+                          <li><time>00:15~00:35</time><span>활용 목표, 개인정보 원칙, 도구 역할 확인</span></li>
                           <li><time>00:35~01:20</time><span>Hermes Agent 설치와 기본 실행</span></li>
                           <li><time>01:20~01:30</time><span>휴식</span></li>
                           <li><time>01:30~02:10</time><span>역할, 답변 방식, 검수 원칙 설정</span></li>
@@ -407,7 +563,7 @@
                       </summary>
                       <div class="cohort-session-body">
                         <ol class="lesson-timeline">
-                          <li><time>00:00~00:15</time><span>Hermes 실행 상태 확인</span></li>
+                          <li><time>00:00~00:15</time><span>지식관리·LLM Wiki 최신 동향과 관련 Tool 소개</span></li>
                           <li><time>00:15~00:35</time><span>raw, pages, projects 역할 이해</span></li>
                           <li><time>00:35~01:10</time><span>폴더와 문서 템플릿 생성</span></li>
                           <li><time>01:10~01:40</time><span>원자료 2개 저장과 분류</span></li>
@@ -428,8 +584,8 @@
                       </summary>
                       <div class="cohort-session-body">
                         <ol class="lesson-timeline">
-                          <li><time>00:00~00:15</time><span>Wiki와 자료 상태 확인</span></li>
-                          <li><time>00:15~00:40</time><span>자동화할 반복 업무 1개 선정</span></li>
+                          <li><time>00:00~00:15</time><span>AI 자동화 최신 동향과 관련 Tool 소개</span></li>
+                          <li><time>00:15~00:40</time><span>Wiki 상태 확인과 자동화할 반복 업무 1개 선정</span></li>
                           <li><time>00:40~01:10</time><span>입력, 처리, 검수, 출력 설계</span></li>
                           <li><time>01:10~01:20</time><span>휴식</span></li>
                           <li><time>01:20~02:10</time><span>Hermes 자동화 제작</span></li>
@@ -449,8 +605,8 @@
                       </summary>
                       <div class="cohort-session-body">
                         <ol class="lesson-timeline">
-                          <li><time>00:00~00:15</time><span>자동화와 Wiki 상태 확인</span></li>
-                          <li><time>00:15~00:40</time><span>대시보드 목적과 사용자 결정</span></li>
+                          <li><time>00:00~00:15</time><span>바이브 코딩 최신 동향과 대시보드 Tool 소개</span></li>
+                          <li><time>00:15~00:40</time><span>자동화·Wiki 상태 확인과 대시보드 목적 결정</span></li>
                           <li><time>00:40~01:20</time><span>표시할 정보와 화면 구성 설계</span></li>
                           <li><time>01:20~01:30</time><span>휴식</span></li>
                           <li><time>01:30~02:20</time><span>개인 대시보드 제작</span></li>
@@ -549,6 +705,7 @@
                   제작 과정을 함께 점검합니다.
                 </p>
                 <ul class="topic-list">
+                  <li>수업일 기준 최신 AI 동향과 도구 선택</li>
                   <li>개인 AI 활용 환경 설정</li>
                   <li>Obsidian과 LLM Wiki</li>
                   <li>업무 자동화</li>
@@ -559,7 +716,7 @@
             </article>
           </div>
 
-          <section class="calendar-section" aria-labelledby="calendar-title" data-reveal>
+          <section class="calendar-section" id="schedule" aria-labelledby="calendar-title" data-reveal>
             <header class="calendar-heading">
               <div>
                 <p class="section-kicker">월간 운영 계획</p>
@@ -849,6 +1006,6 @@
       </div>
     </footer>
 
-    <script src="script.js" defer></script>
+    <script src="script.js?v=20260814-themes-downloads" defer></script>
   </body>
 </html>

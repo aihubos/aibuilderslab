@@ -65,10 +65,86 @@ const SCHEDULE_BY_DAY = Object.freeze({
 
 document.documentElement.classList.add("js");
 
+const THEME_STORAGE_KEY = "ai-builders-theme";
+const THEMES = Object.freeze({
+  default: { label: "기본 블루", themeColor: "#FFFFFF" },
+  "neon-yellow": { label: "네온 옐로우", themeColor: "#FEFFF8" },
+  "ultra-violet": { label: "울트라 바이올렛", themeColor: "#FEFCFF" },
+  "pale-green": { label: "옅은 그린", themeColor: "#FBFEFC" },
+  "carmine-pastel": { label: "카민 파스텔", themeColor: "#FFFCFB" },
+  dark: { label: "다크 모드", themeColor: "#07101F" },
+});
+
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
-const navLinks = [...document.querySelectorAll("[data-site-nav] a")];
-const mobileBreakpoint = window.matchMedia("(max-width: 899px)");
+const navLinks = [...document.querySelectorAll("[data-site-nav] > a")];
+const mobileBreakpoint = window.matchMedia("(max-width: 1199px)");
+const downloadMenu = document.querySelector("[data-download-menu]");
+const downloadToggle = document.querySelector("[data-download-toggle]");
+const downloadPanel = document.querySelector("[data-download-panel]");
+const downloadLinks = [...document.querySelectorAll("[data-download-panel] a")];
+const themeControl = document.querySelector("[data-theme-control]");
+const themeToggle = document.querySelector("[data-theme-toggle]");
+const themePanel = document.querySelector("[data-theme-panel]");
+const themeOptions = [...document.querySelectorAll("[data-theme-option]")];
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+function applyTheme(themeName, persist = true) {
+  const selectedTheme = THEMES[themeName] ? themeName : "default";
+  document.documentElement.dataset.theme = selectedTheme;
+
+  themeOptions.forEach((option) => {
+    option.setAttribute("aria-checked", String(option.dataset.themeOption === selectedTheme));
+  });
+
+  if (themeToggle) {
+    themeToggle.setAttribute(
+      "aria-label",
+      `사이트 테마 선택, 현재 ${THEMES[selectedTheme].label}`,
+    );
+    themeToggle.title = `사이트 테마 선택 · ${THEMES[selectedTheme].label}`;
+  }
+
+  if (themeColorMeta) themeColorMeta.content = THEMES[selectedTheme].themeColor;
+
+  if (persist) {
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
+    } catch (error) {
+      /* 저장이 제한된 환경에서도 현재 화면의 테마 전환은 유지합니다. */
+    }
+  }
+}
+
+function setThemePanel(open, restoreFocus = false) {
+  if (!themeToggle || !themePanel) return;
+
+  themeToggle.setAttribute("aria-expanded", String(open));
+  themePanel.hidden = !open;
+
+  if (open) {
+    setDownloadMenu(false);
+    setMenu(false);
+    const selected = themeOptions.find((option) => option.getAttribute("aria-checked") === "true");
+    (selected || themeOptions[0])?.focus();
+  } else if (restoreFocus) {
+    themeToggle.focus();
+  }
+}
+
+function setDownloadMenu(open, restoreFocus = false) {
+  if (!downloadToggle || !downloadPanel) return;
+
+  downloadToggle.setAttribute("aria-expanded", String(open));
+  downloadPanel.hidden = !open;
+
+  if (open) {
+    setThemePanel(false);
+    downloadLinks[0]?.focus();
+  } else if (restoreFocus) {
+    downloadToggle.focus();
+  }
+}
 
 function setMenu(open, restoreFocus = false) {
   if (!menuToggle || !siteNav) return;
@@ -80,9 +156,11 @@ function setMenu(open, restoreFocus = false) {
   document.body.classList.toggle("menu-open", open && mobileBreakpoint.matches);
 
   if (open) {
+    setThemePanel(false);
     navLinks[0]?.focus();
-  } else if (restoreFocus) {
-    menuToggle.focus();
+  } else {
+    setDownloadMenu(false);
+    if (restoreFocus) menuToggle.focus();
   }
 }
 
@@ -98,8 +176,40 @@ function syncMenuForViewport() {
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", "메뉴 열기");
     document.body.classList.remove("menu-open");
+    setDownloadMenu(false);
   }
 }
+
+applyTheme(document.documentElement.dataset.theme, false);
+
+themeToggle?.addEventListener("click", () => {
+  const open = themeToggle.getAttribute("aria-expanded") !== "true";
+  setThemePanel(open);
+});
+
+themeOptions.forEach((option, index) => {
+  option.addEventListener("click", () => {
+    applyTheme(option.dataset.themeOption);
+    setThemePanel(false, true);
+  });
+
+  option.addEventListener("keydown", (event) => {
+    if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+
+    let nextIndex = index;
+    if (event.key === "ArrowUp") nextIndex = (index - 1 + themeOptions.length) % themeOptions.length;
+    if (event.key === "ArrowDown") nextIndex = (index + 1) % themeOptions.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = themeOptions.length - 1;
+    themeOptions[nextIndex]?.focus();
+  });
+});
+
+downloadToggle?.addEventListener("click", () => {
+  const open = downloadToggle.getAttribute("aria-expanded") !== "true";
+  setDownloadMenu(open);
+});
 
 menuToggle?.addEventListener("click", () => {
   const open = menuToggle.getAttribute("aria-expanded") !== "true";
@@ -110,13 +220,37 @@ navLinks.forEach((link) => {
   link.addEventListener("click", () => setMenu(false));
 });
 
+downloadLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    setDownloadMenu(false);
+    setMenu(false);
+  });
+});
+
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && menuToggle?.getAttribute("aria-expanded") === "true") {
-    setMenu(false, true);
-  }
+  if (event.key !== "Escape") return;
+  if (themeToggle?.getAttribute("aria-expanded") === "true") return setThemePanel(false, true);
+  if (downloadToggle?.getAttribute("aria-expanded") === "true") return setDownloadMenu(false, true);
+  if (menuToggle?.getAttribute("aria-expanded") === "true") setMenu(false, true);
 });
 
 document.addEventListener("pointerdown", (event) => {
+  if (
+    themeToggle?.getAttribute("aria-expanded") === "true" &&
+    themeControl &&
+    !themeControl.contains(event.target)
+  ) {
+    setThemePanel(false);
+  }
+
+  if (
+    downloadToggle?.getAttribute("aria-expanded") === "true" &&
+    downloadMenu &&
+    !downloadMenu.contains(event.target)
+  ) {
+    setDownloadMenu(false);
+  }
+
   if (
     menuToggle?.getAttribute("aria-expanded") === "true" &&
     siteNav &&
@@ -130,7 +264,7 @@ document.addEventListener("pointerdown", (event) => {
 mobileBreakpoint.addEventListener("change", syncMenuForViewport);
 syncMenuForViewport();
 
-const observedSectionIds = ["top", "about", "stages", "tools", "operations", "contact"];
+const observedSectionIds = ["top", "about", "stages", "schedule", "tools", "operations", "contact"];
 const observedSections = observedSectionIds
   .map((id) => document.getElementById(id))
   .filter(Boolean);

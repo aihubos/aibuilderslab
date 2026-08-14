@@ -30,3 +30,15 @@
 - 당근 모임: https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr
 
 상단의 `report-hub-banner.png`는 사용자가 직접 제공한 Report Hub 가로형 원본 배너이며, 클릭 시 https://aireport.ai-hub-os.com 으로 이동합니다. `report-hub-banner.avif`는 원본 비율과 색상을 유지한 웹 최적화 파일이며, PNG는 대체 파일로 사용합니다. 카카오톡과 당근은 로고를 내려받지 않고 링크 이름을 텍스트로 표시합니다.
+
+## 상단 다운로드 메뉴 링크
+
+- Hermes Agent 공식 설치 안내: https://hermes-agent.nousresearch.com/docs/getting-started/quickstart/
+- Codex 공식 홈페이지: https://openai.com/codex/
+- Telegram 공식 앱: https://telegram.org/apps
+- Discord 공식 다운로드: https://discord.com/download
+- Slack 공식 다운로드: https://slack.com/downloads
+- Obsidian 공식 다운로드: https://obsidian.md/download
+- LLM Wiki 원문 GitHub Gist: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
+
+다운로드 메뉴도 외부 로고를 내려받지 않고 명칭과 출처 설명만 표시합니다.
