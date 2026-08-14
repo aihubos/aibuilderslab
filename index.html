@@ -30,8 +30,10 @@
     <link
       rel="preload"
       as="image"
-      href="assets/ai-builders-lab-logo-transparent.png"
-      type="image/png"
+      href="assets/ai-builders-lab-logo-transparent-384.webp"
+      imagesrcset="assets/ai-builders-lab-logo-transparent-384.webp 384w, assets/ai-builders-lab-logo-transparent-576.webp 576w"
+      imagesizes="(min-width: 768px) 192px, 136px"
+      type="image/webp"
       fetchpriority="high"
     />
     <link
@@ -75,14 +77,21 @@
     <header class="site-header" data-header>
       <div class="nav-shell">
         <a class="brand" href="#top" aria-label="AI 빌더스 랩 처음으로">
-          <img
-            src="assets/ai-builders-lab-logo-transparent.png"
-            width="1200"
-            height="400"
-            fetchpriority="high"
-            decoding="async"
-            alt="AI 빌더스 랩"
-          />
+          <picture>
+            <source
+              srcset="assets/ai-builders-lab-logo-transparent-384.webp 384w, assets/ai-builders-lab-logo-transparent-576.webp 576w"
+              sizes="(min-width: 768px) 192px, 136px"
+              type="image/webp"
+            />
+            <img
+              src="assets/ai-builders-lab-logo-transparent.png"
+              width="1200"
+              height="400"
+              fetchpriority="high"
+              decoding="async"
+              alt="AI 빌더스 랩"
+            />
+          </picture>
         </a>
 
         <button
@@ -156,7 +165,7 @@
               data-community="kakao"
               aria-label="개인 카카오톡 새 창으로 열기"
             >
-              <img src="assets/kakao-openchat-icon.png" width="216" height="216" alt="" />
+              <img src="assets/kakao-openchat-icon-84.webp" width="84" height="84" alt="" />
               <strong>개인</strong>
             </a>
             <a
@@ -166,7 +175,7 @@
               data-community="kakao"
               aria-label="카카오톡 단체방 새 창으로 열기"
             >
-              <img src="assets/kakao-openchat-icon.png" width="216" height="216" alt="" />
+              <img src="assets/kakao-openchat-icon-84.webp" width="84" height="84" alt="" />
               <strong>단체방</strong>
             </a>
             <a
@@ -176,7 +185,7 @@
               data-community="daangn"
               aria-label="당근 모임 새 창으로 열기"
             >
-              <img src="assets/daangn-logo.png" width="1560" height="787" alt="당근" />
+              <img src="assets/daangn-logo-204.webp" width="204" height="103" alt="당근" />
             </a>
           </div>
         </nav>
