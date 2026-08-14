@@ -382,7 +382,7 @@ p {
   align-self: end;
   justify-self: center;
   width: var(--hero-symbol-size);
-  padding-bottom: var(--space-8);
+  padding-bottom: var(--space-16);
 }
 
 .hero-symbol {
