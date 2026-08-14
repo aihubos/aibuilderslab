@@ -81,6 +81,7 @@
   --recruit-dialog-width: 760px;
   --recruit-dialog-max-height: 85dvh;
   --recruit-banner-min-height: 56px;
+  --recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem);
   --modal-backdrop: rgba(0, 12, 61, 0.42);
   --footer-admin-muted: rgba(255, 255, 255, 0.44);
   --motion-lift-small: -2px;
@@ -2763,6 +2764,27 @@ body.is-recruit-open {
   margin: 0;
   color: var(--text-secondary);
   font-size: 1rem;
+}
+
+.cohort-recruit-deadline {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-6);
+  border-block: 1px solid var(--border-light);
+}
+
+.cohort-recruit-deadline span {
+  color: var(--brand-blue-strong);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.cohort-recruit-deadline strong {
+  color: var(--text-primary);
+  font-size: var(--recruit-deadline-size);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
 }
 
 .cohort-recruit-facts {
