@@ -85,7 +85,7 @@
 
 콘텐츠 최대 폭은 1240px, 읽기 문단 최대 폭은 720px이다. 모바일 좌우 여백은 20px, 태블릿은 32px, 데스크톱은 48px이다.
 
-히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`, 결과 공유 혜택은 `--sharing-benefit-title: clamp(2rem, 4.5vw, 4rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 참여 링크는 `--community-icon-size: 28px`, 당근 워드마크는 `--community-daangn-width: 68px`, `--community-daangn-height: 34px`로 표시한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
+히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`, 결과 공유 혜택은 `--sharing-benefit-title: clamp(2rem, 4.5vw, 4rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 참여 링크는 `--community-icon-size: 28px`, 당근 워드마크는 `--community-daangn-width: 68px`, `--community-daangn-height: 34px`로 표시한다. 예약 시간대가 보이는 달력 날짜 셀은 `--calendar-day-booking-height: 188px`를 사용한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
 
 ## 5. 컴포넌트
 
@@ -100,6 +100,8 @@
 - 버튼: 최소 높이 48px, 좌우 24px, 반지름 999px. hover는 색상 변화, active는 0.98 배율, focus는 3px 파란 링을 사용한다.
 - 정보 영역: 카드 그림자 대신 구분선과 넓은 간격을 사용한다. 반지름은 8px, 16px, 24px 세 단계만 사용한다.
 - 캘린더: 날짜 셀은 8px 반지름, 배경색보다 상단 색상선으로 일정을 구분한다. 모바일에서는 일정 문구를 숨기고 날짜와 색상 표식만 남긴다.
+- 캘린더 시간대: 월요일부터 목요일 날짜 셀을 오전 09:00~12:00, 오후 14:00~17:00, 저녁 18:00~21:00 세 줄로 나눈다. 예약된 줄에는 공개 아이디를 표시하고 빈 줄은 `신청 가능`으로 표시한다. 390px 모바일에서는 날짜 셀 안의 세부 줄을 숨기고 `등록` 배지만 표시하며, 달력 아래 등록 현황 목록에서 날짜·시간·교육과정·아이디를 읽게 한다.
+- 캘린더 등록 데이터: `CALENDAR_BOOKINGS`에서 날짜별 `slot`, `course`, `participantIds`를 관리한다. 실제 이름이나 연락처 대신 신청자가 사용하는 공개 닉네임·아이디만 표시한다.
 - 캘린더 주말·공휴일: 토요일은 파란 날짜, 일요일과 공휴일은 빨간 날짜로 표시한다. 공휴일 이름은 일정 위에 짧게 적고, 공휴일에도 모임이 취소된다고 가정하지 않는다.
 - 참여 배너: Report Hub의 상단 유틸리티 링크 구조를 참고하되 하나의 흰색 배너 안에 카카오톡 단체방·프로필, 당근 모임, 전화 문의를 배치한다. 각 링크는 얇은 채널 색상선과 2단 정보 위계만 사용한다.
 - 세션 결과물: 월요일부터 목요일까지 날짜 레이블, 굵은 결과물 이름, 한 줄 설명을 구분선 중심의 세로 목록으로 보여준다. 반복 카드나 완료 보장 표현은 사용하지 않는다.
