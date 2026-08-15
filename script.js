@@ -14,6 +14,7 @@ const GOOGLE_CALENDAR = Object.freeze({
   snapshot: "assets/google-calendar.ics",
   ics: "https://calendar.google.com/calendar/ical/aibuilderslab.kr%40gmail.com/public/basic.ics",
   proxy: "/api/google-calendar.ics",
+  refreshMs: 60 * 1000,
 });
 
 const ADMIN_SESSION_KEY = "ai-builders-admin-unlocked";
@@ -447,21 +448,92 @@ function setCalendarStatus(message) {
   if (status) status.textContent = message;
 }
 
-async function fetchGoogleCalendarEvents() {
-  const urls = [GOOGLE_CALENDAR.snapshot, GOOGLE_CALENDAR.ics, GOOGLE_CALENDAR.proxy];
+function parseApiDate(value) {
+  if (!value) return null;
+  if (value.date) {
+    const [year, month, day] = value.date.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+  const raw = value.dateTime;
+  if (!raw) return null;
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function uniqueEvents(events) {
+  const seen = new Set();
+  return events.filter((event) => {
+    const key = `${event.id || event.title}-${event.start?.getTime() || 0}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+async function fetchGoogleCalendarApiEvents() {
+  const timeMin = new Date();
+  timeMin.setMonth(timeMin.getMonth() - 6);
+  const timeMax = new Date();
+  timeMax.setMonth(timeMax.getMonth() + 18);
+  const events = [];
+  let pageToken = "";
+
+  do {
+    const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR.email)}/events`);
+    url.searchParams.set("singleEvents", "true");
+    url.searchParams.set("orderBy", "startTime");
+    url.searchParams.set("timeZone", "Asia/Seoul");
+    url.searchParams.set("maxResults", "250");
+    url.searchParams.set("timeMin", timeMin.toISOString());
+    url.searchParams.set("timeMax", timeMax.toISOString());
+    url.searchParams.set("key", "AIzaSyBNlYH01_9Hc5S1J9vuFmu2nUqBZJNAXxs");
+    if (pageToken) url.searchParams.set("pageToken", pageToken);
+
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) throw new Error(`calendar-api-${response.status}`);
+    const data = await response.json();
+    (data.items || []).forEach((item) => {
+      const start = parseApiDate(item.start);
+      if (!start) return;
+      events.push({
+        id: item.id || item.iCalUID || "",
+        title: item.summary || "일정",
+        start,
+        end: parseApiDate(item.end),
+        allDay: Boolean(item.start?.date),
+      });
+    });
+    pageToken = data.nextPageToken || "";
+  } while (pageToken);
+
+  return uniqueEvents(events);
+}
+
+async function fetchGoogleCalendarIcsEvents() {
+  const urls = [GOOGLE_CALENDAR.ics, GOOGLE_CALENDAR.proxy, GOOGLE_CALENDAR.snapshot];
   let lastError = null;
   for (const url of urls) {
     try {
-      const response = await fetch(url, { cache: "no-store" });
+      const response = await fetch(`${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
       if (!response.ok) throw new Error(`calendar-${response.status}`);
       const text = await response.text();
       if (!text.includes("BEGIN:VCALENDAR")) throw new Error("invalid-ics");
-      return parseIcsEvents(text);
+      return uniqueEvents(parseIcsEvents(text));
     } catch (error) {
       lastError = error;
     }
   }
   throw lastError || new Error("calendar-unavailable");
+}
+
+async function fetchGoogleCalendarEvents() {
+  try {
+    const liveEvents = await fetchGoogleCalendarApiEvents();
+    if (liveEvents.length) return liveEvents;
+  } catch (error) {
+    /* 공개 API가 막히면 ICS로 이어서 확인합니다. */
+  }
+  return fetchGoogleCalendarIcsEvents();
 }
 
 function initGoogleCalendar() {
@@ -496,20 +568,31 @@ function initGoogleCalendar() {
     renderMonth();
   });
 
+  function applyEvents(loaded, live) {
+    events = loaded;
+    renderMonth();
+    if (loaded.length) {
+      setCalendarStatus(live
+        ? "구글 캘린더 최신 공개 일정을 표시합니다. 1분마다 다시 확인합니다."
+        : "구글 캘린더 공개 일정을 월간 보기로 표시합니다.");
+      return;
+    }
+    setCalendarStatus("등록된 공개 일정이 아직 없습니다. 구글 캘린더에 일정을 추가하면 여기에 나타납니다.");
+  }
+
+  function refreshEvents() {
+    return fetchGoogleCalendarApiEvents()
+      .then((loaded) => applyEvents(loaded, true))
+      .catch(() => fetchGoogleCalendarIcsEvents()
+        .then((loaded) => applyEvents(loaded, false))
+        .catch(() => {
+          setCalendarStatus("구글 캘린더 일정을 불러오지 못했습니다. 내 구글 캘린더에 등록 버튼으로 확인해주세요.");
+        }));
+  }
+
   renderMonth();
-  fetchGoogleCalendarEvents()
-    .then((loaded) => {
-      events = loaded;
-      renderMonth();
-      setCalendarStatus(
-        loaded.length
-          ? "구글 캘린더 공개 일정을 월간 보기로 표시합니다."
-          : "등록된 공개 일정이 아직 없습니다. 구글 캘린더에 일정을 추가하면 여기에 나타납니다.",
-      );
-    })
-    .catch(() => {
-      setCalendarStatus("구글 캘린더 일정을 불러오지 못했습니다. 내 구글 캘린더에 등록 버튼으로 확인해주세요.");
-    });
+  refreshEvents();
+  window.setInterval(refreshEvents, GOOGLE_CALENDAR.refreshMs);
 }
 
 initGoogleCalendar();
