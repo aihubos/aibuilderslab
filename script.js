@@ -649,6 +649,7 @@ function createCalendar(monthConfig) {
     const bookings = calendarBookings[dateKey] || [];
     const day = makeElement("li", "calendar-day");
     day.dataset.date = dateKey;
+    day.dataset.weekday = String(weekday);
     const isToday =
       today.getFullYear() === monthConfig.year &&
       today.getMonth() === monthConfig.monthIndex &&
@@ -695,9 +696,12 @@ function createCalendar(monthConfig) {
       const slots = makeElement("div", "calendar-slots");
       TRAINING_SLOTS.forEach((slot) => {
         const booking = bookings.find((item) => item.slot === slot.key);
-        const slotRow = makeElement("div", "calendar-slot");
+        const slotRow = makeElement("button", "calendar-slot is-editable");
+        slotRow.type = "button";
         slotRow.dataset.slot = slot.key;
-        slotRow.title = `${slot.label} ${slot.time}`;
+        slotRow.dataset.calendarEdit = "slot";
+        slotRow.title = `${slot.label} ${slot.time} 일정 입력`;
+        slotRow.setAttribute("aria-label", `${monthConfig.year}년 ${monthConfig.monthIndex + 1}월 ${dayNumber}일 ${slot.label} 일정 입력 또는 수정`);
         slotRow.append(makeElement("span", "calendar-slot-label", slot.label));
         if (booking) {
           slotRow.classList.add("is-booked");
@@ -715,6 +719,15 @@ function createCalendar(monthConfig) {
         slots.append(slotRow);
       });
       day.append(slots);
+    } else {
+      day.classList.add("is-editable");
+      day.tabIndex = 0;
+      day.dataset.calendarEdit = "day";
+      day.setAttribute("role", "button");
+      day.setAttribute(
+        "aria-label",
+        `${monthConfig.year}년 ${monthConfig.monthIndex + 1}월 ${dayNumber}일 일정 입력 또는 수정. ${holiday ? `${holiday.label}. ` : ""}${schedule.detail}${bookingDescription ? ` 등록 교육. ${bookingDescription}.` : ""}`,
+      );
     }
     grid.append(day);
   }
@@ -731,7 +744,14 @@ function createCalendar(monthConfig) {
     monthBookings.forEach(([dateKey, bookings]) => {
       bookings.forEach((booking) => {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
-        const item = makeElement("li", "calendar-booking-item");
+        const item = makeElement("li", "calendar-booking-item is-editable");
+        item.tabIndex = 0;
+        item.dataset.calendarEdit = "booking";
+        item.dataset.bookingId = booking.id;
+        item.dataset.date = dateKey;
+        item.dataset.slot = booking.slot;
+        item.setAttribute("role", "button");
+        item.setAttribute("aria-label", `${Number(dateKey.slice(5, 7))}월 ${Number(dateKey.slice(8, 10))}일 ${booking.title} 수정`);
         item.append(makeElement("time", "calendar-booking-date", `${Number(dateKey.slice(5, 7))}월 ${Number(dateKey.slice(8, 10))}일`));
         item.append(makeElement("span", "calendar-booking-time", `${slot.label} ${getBookingTime(booking)}`));
         const courseBlock = makeElement("div", "calendar-booking-copy");
@@ -811,12 +831,37 @@ function setAdminStatus(message) {
   if (adminStatus) adminStatus.textContent = message;
 }
 
-function openCalendarAdmin() {
+let pendingCalendarEdit = null;
+
+function openCalendarAdmin(editTarget = pendingCalendarEdit) {
   renderAdminBookingList();
   updateVisitorCount();
-  setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
   calendarAdminDialog?.showModal();
+  if (editTarget?.bookingId) {
+    const booking = getSortedBookings().find((item) => item.id === editTarget.bookingId);
+    if (booking) {
+      openBookingEditor({ booking, message: editTarget.message });
+      pendingCalendarEdit = null;
+      return;
+    }
+  }
+  if (editTarget?.date) {
+    const bookings = calendarBookings[editTarget.date] || [];
+    const booking = editTarget.slot
+      ? bookings.find((item) => item.slot === editTarget.slot)
+      : bookings[0];
+    openBookingEditor({
+      booking,
+      date: editTarget.date,
+      slot: editTarget.slot,
+      message: editTarget.message,
+    });
+    pendingCalendarEdit = null;
+    return;
+  }
+  setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
   bookingForm?.elements.title.focus();
+  pendingCalendarEdit = null;
 }
 
 function setAdminAuthStatus(message) {
@@ -854,16 +899,67 @@ function getSortedBookings() {
     });
 }
 
-function resetBookingForm() {
+function defaultSlotForDate(dateKey) {
+  const weekday = new Date(`${dateKey}T00:00:00`).getDay();
+  if (weekday === 5 || weekday === 6) return "evening";
+  return "morning";
+}
+
+function fillBookingForm(booking) {
   if (!bookingForm) return;
+  bookingForm.elements.bookingId.value = booking.id || "";
+  bookingForm.elements.title.value = booking.title || "";
+  bookingForm.elements.courseTitle.value = booking.courseTitle || "";
+  bookingForm.elements.participantIds.value = Array.isArray(booking.participantIds)
+    ? booking.participantIds.join(", ")
+    : "";
+  bookingForm.elements.date.value = booking.date || "2026-08-17";
+  bookingForm.elements.slot.value = booking.slot || "morning";
+  bookingForm.elements.startTime.value = inferStartTime(booking.startTime || booking.time, booking.slot || "morning");
+  bookingForm.elements.completed.checked = isBookingCompleted(booking);
+}
+
+function resetBookingForm(defaults = {}) {
+  if (!bookingForm) return;
+  const date = defaults.date || "2026-08-17";
+  const slot = defaults.slot || defaultSlotForDate(date);
   bookingForm.reset();
   bookingForm.elements.bookingId.value = "";
-  bookingForm.elements.date.value = "2026-08-17";
-  bookingForm.elements.slot.value = "morning";
-  bookingForm.elements.startTime.value = "09:00";
+  bookingForm.elements.date.value = date;
+  bookingForm.elements.slot.value = slot;
+  bookingForm.elements.startTime.value = inferStartTime(defaults.startTime, slot);
   bookingForm.elements.completed.checked = false;
   bookingForm.elements.title.focus();
-  setAdminStatus("새 일정을 입력할 수 있습니다.");
+  setAdminStatus(defaults.message || "새 일정을 입력할 수 있습니다.");
+}
+
+function openBookingEditor(options = {}) {
+  const { booking, date, slot, message } = options;
+  if (booking) {
+    fillBookingForm(booking);
+    setAdminStatus(message || `${booking.title} 일정을 수정하고 있습니다.`);
+    bookingForm?.elements.title.focus();
+    return;
+  }
+  resetBookingForm({ date, slot, message: message || "선택한 날짜의 새 일정을 입력할 수 있습니다." });
+}
+
+function requestCalendarAdmin(options = {}) {
+  pendingCalendarEdit = {
+    date: options.date || "",
+    slot: options.slot || "",
+    bookingId: options.bookingId || "",
+    message: options.message || "",
+  };
+  setMenu(false);
+  if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
+    openCalendarAdmin(pendingCalendarEdit);
+    return;
+  }
+  adminAuthForm?.reset();
+  setAdminAuthStatus("");
+  adminAuthDialog?.showModal();
+  adminAuthForm?.elements.password.focus();
 }
 
 function renderAdminBookingList() {
@@ -928,16 +1024,41 @@ function refreshCalendarAfterAdminChange(monthKey = "2026-08") {
 
 adminOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    setMenu(false);
-    if (sessionStorage.getItem(ADMIN_SESSION_KEY) === "true") {
-      openCalendarAdmin();
-      return;
-    }
-    adminAuthForm?.reset();
-    setAdminAuthStatus("");
-    adminAuthDialog?.showModal();
-    adminAuthForm?.elements.password.focus();
+    requestCalendarAdmin();
   });
+});
+
+function handleCalendarEditKey(event) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  event.currentTarget.click();
+}
+
+document.addEventListener("click", (event) => {
+  const editTarget = event.target.closest("[data-calendar-edit]");
+  if (!editTarget) return;
+  const day = editTarget.closest("[data-date]");
+  const date = day?.dataset.date || editTarget.dataset.date || "";
+  if (!date) return;
+  const slot = editTarget.dataset.slot || "";
+  const bookingId = editTarget.dataset.bookingId || "";
+  const existing = (calendarBookings[date] || []).find((item) => {
+    if (bookingId) return item.id === bookingId;
+    if (slot) return item.slot === slot;
+    return true;
+  });
+  requestCalendarAdmin({
+    date,
+    slot,
+    bookingId: bookingId || existing?.id || "",
+    message: existing ? "선택한 일정을 수정할 수 있습니다." : "선택한 날짜의 새 일정을 입력할 수 있습니다.",
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  const editTarget = event.target.closest("[data-calendar-edit]");
+  if (!editTarget || event.target !== editTarget) return;
+  handleCalendarEditKey(event);
 });
 
 adminAuthCloseButton?.addEventListener("click", () => adminAuthDialog?.close());
@@ -1043,16 +1164,7 @@ adminBookingList?.addEventListener("click", (event) => {
   if (editButton) {
     const booking = getSortedBookings().find((item) => item.id === editButton.dataset.bookingEdit);
     if (!booking) return;
-    bookingForm.elements.bookingId.value = booking.id;
-    bookingForm.elements.title.value = booking.title;
-    bookingForm.elements.courseTitle.value = booking.courseTitle || "";
-    bookingForm.elements.participantIds.value = booking.participantIds.join(", ");
-    bookingForm.elements.date.value = booking.date;
-    bookingForm.elements.slot.value = booking.slot;
-    bookingForm.elements.startTime.value = inferStartTime(booking.startTime || booking.time, booking.slot);
-    bookingForm.elements.completed.checked = isBookingCompleted(booking);
-    bookingForm.elements.title.focus();
-    setAdminStatus(`${booking.title} 일정을 수정하고 있습니다.`);
+    openBookingEditor({ booking });
   }
 
   if (deleteButton) {

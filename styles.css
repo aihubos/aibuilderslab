@@ -1862,6 +1862,25 @@ p {
   background: var(--surface-elevated);
 }
 
+.calendar-day.is-editable,
+.calendar-slot.is-editable,
+.calendar-booking-item.is-editable {
+  cursor: pointer;
+}
+
+.calendar-day.is-editable:hover,
+.calendar-slot.is-editable:hover,
+.calendar-booking-item.is-editable:hover {
+  border-color: var(--brand-blue-light);
+}
+
+.calendar-day.is-editable:focus-visible,
+.calendar-slot.is-editable:focus-visible,
+.calendar-booking-item.is-editable:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .calendar-day::before {
   content: "";
   position: absolute;
