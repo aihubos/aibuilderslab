@@ -111,6 +111,38 @@ const TRAINING_SLOTS = Object.freeze([
   { key: "evening", label: "저녁", time: "18:00~21:00" },
 ]);
 
+function listSaturdays(year, monthIndex) {
+  const dates = [];
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const date = new Date(year, monthIndex, day);
+    if (date.getDay() === 6) {
+      dates.push(
+        `${year}-${String(monthIndex + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+      );
+    }
+  }
+  return dates;
+}
+
+function createSaturdayIntroSession(dateKey) {
+  return Object.freeze({
+    id: `intro-${dateKey}-morning`,
+    date: dateKey,
+    slot: "morning",
+    type: "intro",
+    title: "무료 AI 입문",
+    startTime: "10:00",
+    courseTitle: "Hermes Agent 시연과 STIC 실습",
+    completed: dateKey < "2026-08-15",
+    participantIds: Object.freeze([dateKey < "2026-08-15" ? "진행 완료" : "모집 중"]),
+  });
+}
+
+const SATURDAY_INTRO_SESSIONS = Object.freeze(
+  CALENDAR_MONTHS.flatMap((month) => listSaturdays(month.year, month.monthIndex).map(createSaturdayIntroSession)),
+);
+
 const COMPLETED_SESSIONS = Object.freeze([
   Object.freeze({
     id: "chat-2026-08-05-evening",
@@ -139,7 +171,7 @@ const COMPLETED_SESSIONS = Object.freeze([
 // 공개 캘린더에는 실명이나 연락처 대신 신청자가 사용하는 아이디만 입력합니다.
 const DEFAULT_CALENDAR_BOOKINGS = Object.freeze((() => {
   const bookings = {};
-  [...COMPLETED_SESSIONS, ...COHORT_ONE.sessions.map((session) => ({
+  [...COMPLETED_SESSIONS, ...SATURDAY_INTRO_SESSIONS, ...COHORT_ONE.sessions.map((session) => ({
     id: session.id,
     date: session.date,
     slot: session.slot,
@@ -270,24 +302,30 @@ function normalizeCalendarBookings(value) {
   return normalized;
 }
 
+function upsertFixedSession(bookings, session) {
+  const dayBookings = bookings[session.date] || [];
+  if (dayBookings.some((booking) => booking.id === session.id || (booking.type === session.type && booking.slot === session.slot && booking.title === session.title))) {
+    return;
+  }
+  bookings[session.date] = [
+    ...dayBookings,
+    {
+      id: session.id,
+      slot: session.slot,
+      type: session.type,
+      title: session.title,
+      courseTitle: session.courseTitle,
+      startTime: session.startTime || "",
+      completed: Boolean(session.completed),
+      participantIds: [...session.participantIds],
+    },
+  ];
+}
+
 function mergeCompletedSessions(bookings) {
   const next = bookings;
-  COMPLETED_SESSIONS.forEach((session) => {
-    const dayBookings = next[session.date] || [];
-    if (dayBookings.some((booking) => booking.id === session.id || booking.title === session.title)) return;
-    next[session.date] = [
-      ...dayBookings,
-      {
-        id: session.id,
-        slot: session.slot,
-        type: session.type,
-        title: session.title,
-        courseTitle: session.courseTitle,
-        startTime: session.startTime || "",
-        completed: Boolean(session.completed),
-        participantIds: [...session.participantIds],
-      },
-    ];
+  [...COMPLETED_SESSIONS, ...SATURDAY_INTRO_SESSIONS].forEach((session) => {
+    upsertFixedSession(next, session);
   });
   return next;
 }
@@ -901,7 +939,8 @@ function getSortedBookings() {
 
 function defaultSlotForDate(dateKey) {
   const weekday = new Date(`${dateKey}T00:00:00`).getDay();
-  if (weekday === 5 || weekday === 6) return "evening";
+  if (weekday === 5) return "evening";
+  if (weekday === 6) return "morning";
   return "morning";
 }
 
