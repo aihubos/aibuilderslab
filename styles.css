@@ -387,17 +387,19 @@ p {
 }
 
 .header-visitors {
-  order: 1;
+  order: 6;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: flex-end;
   gap: var(--space-2) var(--space-3);
-  margin: 0;
+  margin: 0 0 0 auto;
   min-width: 0;
   color: var(--text-tertiary);
   font-size: var(--header-visitor-size);
   font-weight: 650;
   line-height: 1.3;
+  text-align: right;
 }
 
 .header-visitors strong {
@@ -417,7 +419,7 @@ p {
   order: 2;
   width: var(--report-hub-width);
   min-height: 44px;
-  margin-left: auto;
+  margin-left: 0;
   padding: var(--space-2) var(--space-1);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
@@ -3410,7 +3412,7 @@ body.is-recruit-open {
     display: flex;
     align-items: center;
     gap: 0;
-    margin-left: auto;
+    margin-left: var(--space-3);
     padding: 0;
     border: 0;
     border-radius: 0;
@@ -3428,6 +3430,11 @@ body.is-recruit-open {
 
   .theme-control {
     order: 4;
+  }
+
+  .header-visitors {
+    order: 6;
+    margin-left: auto;
   }
 
   .community-actions {
