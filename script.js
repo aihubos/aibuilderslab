@@ -10,9 +10,11 @@ const CONTACT_LINKS = Object.freeze({
 
 const GOOGLE_CALENDAR = Object.freeze({
   email: "aibuilderslab.kr@gmail.com",
+  holidayId: "ko.south_korea#holiday@group.v.calendar.google.com",
   subscribe: "https://calendar.google.com/calendar/r?cid=aibuilderslab.kr@gmail.com",
   snapshot: "assets/google-calendar.ics",
   ics: "https://calendar.google.com/calendar/ical/aibuilderslab.kr%40gmail.com/public/basic.ics",
+  holidayIcs: "https://calendar.google.com/calendar/ical/ko.south_korea%23holiday%40group.v.calendar.google.com/public/basic.ics",
   proxy: "/api/google-calendar.ics",
   refreshMs: 60 * 1000,
 });
@@ -368,6 +370,7 @@ function parseIcsEvents(icsText) {
       start,
       end,
       allDay: startIsDate,
+      type: "event",
     };
   }).filter((event) => event.start instanceof Date && !Number.isNaN(event.start.getTime()));
 }
@@ -377,7 +380,10 @@ function eventTouchesDay(event, date) {
   const dayEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
   const eventEnd = event.end instanceof Date && !Number.isNaN(event.end.getTime())
     ? event.end
-    : new Date(event.start.getTime() + 60 * 60 * 1000);
+    : new Date(event.start.getTime() + (event.allDay ? 24 : 1) * 60 * 60 * 1000);
+  if (event.allDay && eventEnd.getTime() === event.start.getTime() + 24 * 60 * 60 * 1000) {
+    return event.start >= dayStart && event.start < dayEnd;
+  }
   return event.start < dayEnd && eventEnd > dayStart;
 }
 
@@ -424,12 +430,23 @@ function createMonthGrid(year, monthIndex, events) {
     if (dateKey === todayKey) day.classList.add("is-today");
     day.append(makeElement("span", "google-calendar-date", String(dayNumber)));
 
-    const dayEvents = events.filter((event) => eventTouchesDay(event, date));
+    const dayEvents = events
+      .filter((event) => eventTouchesDay(event, date))
+      .sort((eventA, eventB) => {
+        if (eventA.type === "holiday" && eventB.type !== "holiday") return -1;
+        if (eventA.type !== "holiday" && eventB.type === "holiday") return 1;
+        return (eventA.start?.getTime() || 0) - (eventB.start?.getTime() || 0);
+      });
+    if (dayEvents.some((event) => event.type === "holiday")) {
+      day.classList.add("is-holiday");
+    }
     if (dayEvents.length) {
       const list = makeElement("ul", "google-calendar-events");
       dayEvents.slice(0, 3).forEach((event) => {
-        const item = makeElement("li", "google-calendar-event");
-        item.append(makeElement("time", "", formatEventTime(event)));
+        const item = makeElement("li", event.type === "holiday" ? "google-calendar-event is-holiday" : "google-calendar-event");
+        if (event.type !== "holiday") {
+          item.append(makeElement("time", "", formatEventTime(event)));
+        }
         item.append(makeElement("span", "", event.title));
         list.append(item);
       });
@@ -470,7 +487,7 @@ function uniqueEvents(events) {
   });
 }
 
-async function fetchGoogleCalendarApiEvents() {
+async function fetchGoogleCalendarApiEvents(calendarId, type = "event") {
   const timeMin = new Date();
   timeMin.setMonth(timeMin.getMonth() - 6);
   const timeMax = new Date();
@@ -479,7 +496,7 @@ async function fetchGoogleCalendarApiEvents() {
   let pageToken = "";
 
   do {
-    const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR.email)}/events`);
+    const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`);
     url.searchParams.set("singleEvents", "true");
     url.searchParams.set("orderBy", "startTime");
     url.searchParams.set("timeZone", "Asia/Seoul");
@@ -497,16 +514,25 @@ async function fetchGoogleCalendarApiEvents() {
       if (!start) return;
       events.push({
         id: item.id || item.iCalUID || "",
-        title: item.summary || "일정",
+        title: item.summary || (type === "holiday" ? "공휴일" : "일정"),
         start,
         end: parseApiDate(item.end),
         allDay: Boolean(item.start?.date),
+        type,
       });
     });
     pageToken = data.nextPageToken || "";
   } while (pageToken);
 
   return uniqueEvents(events);
+}
+
+async function fetchLiveCalendarEvents() {
+  const [labEvents, holidayEvents] = await Promise.all([
+    fetchGoogleCalendarApiEvents(GOOGLE_CALENDAR.email, "event"),
+    fetchGoogleCalendarApiEvents(GOOGLE_CALENDAR.holidayId, "holiday").catch(() => []),
+  ]);
+  return uniqueEvents([...holidayEvents, ...labEvents]);
 }
 
 async function fetchGoogleCalendarIcsEvents() {
@@ -518,7 +544,7 @@ async function fetchGoogleCalendarIcsEvents() {
       if (!response.ok) throw new Error(`calendar-${response.status}`);
       const text = await response.text();
       if (!text.includes("BEGIN:VCALENDAR")) throw new Error("invalid-ics");
-      return uniqueEvents(parseIcsEvents(text));
+      return uniqueEvents(parseIcsEvents(text).map((event) => ({ ...event, type: event.type || "event" })));
     } catch (error) {
       lastError = error;
     }
@@ -526,14 +552,30 @@ async function fetchGoogleCalendarIcsEvents() {
   throw lastError || new Error("calendar-unavailable");
 }
 
+async function fetchHolidayIcsEvents() {
+  try {
+    const response = await fetch(`${GOOGLE_CALENDAR.holidayIcs}?t=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`holiday-${response.status}`);
+    const text = await response.text();
+    if (!text.includes("BEGIN:VCALENDAR")) throw new Error("invalid-holiday-ics");
+    return uniqueEvents(parseIcsEvents(text).map((event) => ({ ...event, type: "holiday", allDay: true })));
+  } catch (error) {
+    return [];
+  }
+}
+
 async function fetchGoogleCalendarEvents() {
   try {
-    const liveEvents = await fetchGoogleCalendarApiEvents();
+    const liveEvents = await fetchLiveCalendarEvents();
     if (liveEvents.length) return liveEvents;
   } catch (error) {
     /* 공개 API가 막히면 ICS로 이어서 확인합니다. */
   }
-  return fetchGoogleCalendarIcsEvents();
+  const [labEvents, holidayEvents] = await Promise.all([
+    fetchGoogleCalendarIcsEvents(),
+    fetchHolidayIcsEvents(),
+  ]);
+  return uniqueEvents([...holidayEvents, ...labEvents]);
 }
 
 function initGoogleCalendar() {
@@ -573,18 +615,18 @@ function initGoogleCalendar() {
     renderMonth();
     if (loaded.length) {
       setCalendarStatus(live
-        ? "구글 캘린더 최신 공개 일정을 표시합니다. 1분마다 다시 확인합니다."
-        : "구글 캘린더 공개 일정을 월간 보기로 표시합니다.");
+        ? "구글 캘린더 최신 공개 일정과 대한민국 공휴일을 표시합니다. 1분마다 다시 확인합니다."
+        : "구글 캘린더 공개 일정과 대한민국 공휴일을 월간 보기로 표시합니다.");
       return;
     }
     setCalendarStatus("등록된 공개 일정이 아직 없습니다. 구글 캘린더에 일정을 추가하면 여기에 나타납니다.");
   }
 
   function refreshEvents() {
-    return fetchGoogleCalendarApiEvents()
+    return fetchLiveCalendarEvents()
       .then((loaded) => applyEvents(loaded, true))
-      .catch(() => fetchGoogleCalendarIcsEvents()
-        .then((loaded) => applyEvents(loaded, false))
+      .catch(() => Promise.all([fetchGoogleCalendarIcsEvents(), fetchHolidayIcsEvents()])
+        .then(([labEvents, holidayEvents]) => applyEvents(uniqueEvents([...holidayEvents, ...labEvents]), false))
         .catch(() => {
           setCalendarStatus("구글 캘린더 일정을 불러오지 못했습니다. 내 구글 캘린더에 등록 버튼으로 확인해주세요.");
         }));

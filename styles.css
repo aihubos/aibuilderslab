@@ -1901,8 +1901,13 @@ p {
   color: var(--calendar-saturday);
 }
 
-.google-calendar-day.is-sunday .google-calendar-date {
+.google-calendar-day.is-sunday .google-calendar-date,
+.google-calendar-day.is-holiday .google-calendar-date {
   color: var(--calendar-sunday);
+}
+
+.google-calendar-day.is-holiday {
+  background: var(--calendar-sunday-bg);
 }
 
 .google-calendar-events {
@@ -1922,6 +1927,11 @@ p {
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.google-calendar-event.is-holiday,
+.google-calendar-event.is-holiday span {
+  color: var(--calendar-sunday);
 }
 
 .google-calendar-event time {
