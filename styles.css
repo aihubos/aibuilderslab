@@ -84,7 +84,7 @@
   --recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem);
   --modal-backdrop: rgba(0, 12, 61, 0.42);
   --footer-admin-muted: rgba(255, 255, 255, 0.44);
-  --visitor-count-size: clamp(1.5rem, 3vw, 2.25rem);
+  --header-visitor-size: 0.75rem;
   --motion-lift-small: -2px;
   --nav-height: 72px;
   --header-height: var(--nav-height);
@@ -384,6 +384,26 @@ p {
 .brand img {
   width: 136px;
   max-width: 40vw;
+}
+
+.header-visitors {
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  min-width: 0;
+  color: var(--text-tertiary);
+  font-size: var(--header-visitor-size);
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.header-visitors strong {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 750;
 }
 
 .brand img,
@@ -2569,6 +2589,100 @@ p {
   padding-block: var(--space-4);
 }
 
+.visitor-admin {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-light);
+}
+
+.visitor-admin header p {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.visitor-admin-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.visitor-admin-summary dt {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.visitor-admin-summary dd {
+  margin: var(--space-1) 0 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 750;
+}
+
+.visitor-chart {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(var(--space-6), 1fr);
+  align-items: end;
+  gap: var(--space-1);
+  min-height: 120px;
+  padding: var(--space-3) 0 0;
+}
+
+.visitor-chart-bar {
+  display: grid;
+  align-items: end;
+  min-height: 120px;
+}
+
+.visitor-chart-bar span {
+  display: block;
+  min-height: var(--space-1);
+  background: var(--brand-blue);
+}
+
+.visitor-chart-bar small {
+  display: block;
+  margin-top: var(--space-1);
+  overflow: hidden;
+  color: var(--text-tertiary);
+  font-size: 0.625rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visitor-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.visitor-table caption {
+  padding-bottom: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.visitor-table th,
+.visitor-table td {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.visitor-table th {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
 .calendar-admin-status {
   min-height: var(--space-6);
   margin: var(--space-4) 0 0;
@@ -2595,21 +2709,6 @@ p {
 
 .footer-brand strong {
   font-size: clamp(1.5rem, 3vw, 2.5rem);
-}
-
-.visitor-count {
-  margin: var(--space-5) 0 0;
-  color: var(--brand-ice);
-  font-size: 0.875rem;
-}
-
-.visitor-count strong {
-  display: block;
-  margin-top: var(--space-1);
-  color: var(--brand-white);
-  font-size: var(--visitor-count-size);
-  font-weight: 750;
-  letter-spacing: -0.03em;
 }
 
 .footer-notes {

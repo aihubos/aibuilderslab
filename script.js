@@ -704,6 +704,7 @@ function setAdminStatus(message) {
 
 function openCalendarAdmin() {
   renderAdminBookingList();
+  updateVisitorCount();
   setAdminStatus("수정할 일정을 선택하거나 새 일정을 입력하세요.");
   calendarAdminDialog?.showModal();
   bookingForm?.elements.title.focus();
@@ -1026,8 +1027,16 @@ recruitDialog?.addEventListener("close", () => {
 scheduleRecruitDialog();
 
 const VISITOR_COUNT_KEY_NAME = "aibuilderslab-site-visits";
-const VISITOR_COUNT_KEY = "ai-builders-visitor-hit-on";
-const visitorCountTarget = document.querySelector("[data-visitor-count]");
+const VISITOR_TODAY_KEY_NAME = "aibuilderslab-site-visits-today";
+const VISITOR_HIT_KEY = "ai-builders-visitor-hit-on";
+const VISITOR_STATS_KEY = "ai-builders-visitor-stats";
+const headerVisitorTotal = document.querySelector("[data-visitor-total]");
+const headerVisitorToday = document.querySelector("[data-visitor-today]");
+const adminVisitorTotal = document.querySelector("[data-admin-visitor-total]");
+const adminVisitorToday = document.querySelector("[data-admin-visitor-today]");
+const visitorChart = document.querySelector("[data-visitor-chart]");
+const visitorDayTable = document.querySelector("[data-visitor-day-table]");
+const visitorSourceTable = document.querySelector("[data-visitor-source-table]");
 
 function formatVisitorCount(value) {
   return new Intl.NumberFormat("ko-KR").format(value);
@@ -1041,9 +1050,35 @@ function todayStamp() {
   return `${year}-${month}-${day}`;
 }
 
+function emptyVisitorStats() {
+  return { days: {}, sources: {}, daySources: {} };
+}
+
+function loadVisitorStats() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(VISITOR_STATS_KEY) || "null");
+    if (!saved || typeof saved !== "object") return emptyVisitorStats();
+    return {
+      days: saved.days && typeof saved.days === "object" ? saved.days : {},
+      sources: saved.sources && typeof saved.sources === "object" ? saved.sources : {},
+      daySources: saved.daySources && typeof saved.daySources === "object" ? saved.daySources : {},
+    };
+  } catch (error) {
+    return emptyVisitorStats();
+  }
+}
+
+function saveVisitorStats(stats) {
+  try {
+    localStorage.setItem(VISITOR_STATS_KEY, JSON.stringify(stats));
+  } catch (error) {
+    /* 저장할 수 없어도 화면 표시는 계속합니다. */
+  }
+}
+
 function shouldCountVisit() {
   try {
-    return localStorage.getItem(VISITOR_COUNT_KEY) !== todayStamp();
+    return localStorage.getItem(VISITOR_HIT_KEY) !== todayStamp();
   } catch (error) {
     return true;
   }
@@ -1051,42 +1086,159 @@ function shouldCountVisit() {
 
 function rememberVisit() {
   try {
-    localStorage.setItem(VISITOR_COUNT_KEY, todayStamp());
+    localStorage.setItem(VISITOR_HIT_KEY, todayStamp());
   } catch (error) {
     /* 저장할 수 없어도 화면 표시는 계속합니다. */
   }
 }
 
-function renderVisitorCount(value) {
-  if (!visitorCountTarget || !Number.isFinite(value)) return;
-  visitorCountTarget.innerHTML = `전체 방문자 <strong>${formatVisitorCount(value)}</strong>`;
+function visitSourceLabel() {
+  const params = new URLSearchParams(window.location.search);
+  const campaign = params.get("utm_source") || params.get("ref");
+  if (campaign) return campaign.slice(0, 40);
+
+  const referrer = document.referrer;
+  if (!referrer) return "직접 방문";
+
+  try {
+    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    if (!host || host === window.location.hostname) return "사이트 내부";
+    if (host.includes("daangn")) return "당근";
+    if (host.includes("kakao")) return "카카오톡";
+    if (host.includes("instagram")) return "인스타그램";
+    if (host.includes("naver")) return "네이버";
+    if (host.includes("google")) return "구글";
+    return host;
+  } catch (error) {
+    return "기타";
+  }
 }
 
-async function fetchVisitorCount(action) {
+function recordLocalVisit() {
+  if (!shouldCountVisit()) return loadVisitorStats();
+  const stats = loadVisitorStats();
+  const today = todayStamp();
+  const source = visitSourceLabel();
+  stats.days[today] = Number(stats.days[today] || 0) + 1;
+  stats.sources[source] = Number(stats.sources[source] || 0) + 1;
+  stats.daySources[today] = stats.daySources[today] && typeof stats.daySources[today] === "object"
+    ? stats.daySources[today]
+    : {};
+  stats.daySources[today][source] = Number(stats.daySources[today][source] || 0) + 1;
+  saveVisitorStats(stats);
+  rememberVisit();
+  return stats;
+}
+
+function renderHeaderCounts(total, today) {
+  if (headerVisitorTotal) headerVisitorTotal.textContent = Number.isFinite(total) ? formatVisitorCount(total) : "--";
+  if (headerVisitorToday) headerVisitorToday.textContent = Number.isFinite(today) ? formatVisitorCount(today) : "--";
+}
+
+function renderVisitorAdmin(stats, total, today) {
+  if (adminVisitorTotal) adminVisitorTotal.textContent = Number.isFinite(total) ? formatVisitorCount(total) : "--";
+  if (adminVisitorToday) adminVisitorToday.textContent = Number.isFinite(today) ? formatVisitorCount(today) : "--";
+
+  const dayRows = Object.entries(stats.days).sort(([dateA], [dateB]) => dateB.localeCompare(dateA));
+  const sourceRows = Object.entries(stats.sources).sort((a, b) => b[1] - a[1]);
+
+  if (visitorChart) {
+    visitorChart.replaceChildren();
+    const recent = [...dayRows].slice(0, 14).reverse();
+    const maxValue = Math.max(1, ...recent.map(([, count]) => Number(count) || 0));
+    if (!recent.length) {
+      visitorChart.append(makeElement("p", "", "아직 그래프에 표시할 기록이 없습니다."));
+    } else {
+      recent.forEach(([date, count]) => {
+        const bar = makeElement("div", "visitor-chart-bar");
+        const fill = makeElement("span");
+        fill.style.height = `${Math.max(8, Math.round((Number(count) / maxValue) * 100))}%`;
+        bar.append(fill, makeElement("small", "", date.slice(5)));
+        visitorChart.append(bar);
+      });
+    }
+  }
+
+  if (visitorDayTable) {
+    visitorDayTable.replaceChildren();
+    if (!dayRows.length) {
+      const row = makeElement("tr");
+      const cell = document.createElement("td");
+      cell.colSpan = 3;
+      cell.textContent = "아직 기록된 방문이 없습니다.";
+      row.append(cell);
+      visitorDayTable.append(row);
+    } else {
+      dayRows.forEach(([date, count]) => {
+        const row = makeElement("tr");
+        row.append(makeElement("th", "", date));
+        row.lastElementChild.scope = "row";
+        row.append(makeElement("td", "", formatVisitorCount(count)));
+        const daySources = Object.entries(stats.daySources?.[date] || {}).sort((a, b) => b[1] - a[1]);
+        const topSource = daySources[0] ? `${daySources[0][0]} ${daySources[0][1]}` : "직접 방문";
+        row.append(makeElement("td", "", topSource));
+        visitorDayTable.append(row);
+      });
+    }
+  }
+
+  if (visitorSourceTable) {
+    visitorSourceTable.replaceChildren();
+    if (!sourceRows.length) {
+      const row = makeElement("tr");
+      const cell = document.createElement("td");
+      cell.colSpan = 2;
+      cell.textContent = "아직 기록된 유입이 없습니다.";
+      row.append(cell);
+      visitorSourceTable.append(row);
+    } else {
+      sourceRows.forEach(([source, count]) => {
+        const row = makeElement("tr");
+        row.append(makeElement("th", "", source));
+        row.lastElementChild.scope = "row";
+        row.append(makeElement("td", "", formatVisitorCount(count)));
+        visitorSourceTable.append(row);
+      });
+    }
+  }
+}
+
+async function fetchNamedCount(name, action) {
   const response = await fetch(
-    `https://countapi.mileshilliard.com/api/v1/${action}/${VISITOR_COUNT_KEY_NAME}`,
+    `https://countapi.mileshilliard.com/api/v1/${action}/${name}`,
     { cache: "no-store" },
   );
-  if (!response.ok) throw new Error("counter-failed");
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
   const count = Number(data.value);
-  if (!Number.isFinite(count)) throw new Error("counter-invalid");
+  if (!response.ok || !Number.isFinite(count)) {
+    if (action === "get") return fetchNamedCount(name, "hit");
+    throw new Error("counter-failed");
+  }
   return count;
 }
 
 async function updateVisitorCount() {
-  if (!visitorCountTarget) return;
-
-  const countThisVisit = shouldCountVisit();
+  const stats = recordLocalVisit();
+  const today = todayStamp();
+  const localToday = Number(stats.days[today] || 0);
+  renderHeaderCounts(Object.values(stats.days).reduce((sum, value) => sum + Number(value || 0), 0), localToday);
+  renderVisitorAdmin(stats, Object.values(stats.days).reduce((sum, value) => sum + Number(value || 0), 0), localToday);
 
   try {
-    const count = countThisVisit
-      ? await fetchVisitorCount("hit")
-      : await fetchVisitorCount("get").catch(() => fetchVisitorCount("hit"));
-    rememberVisit();
-    renderVisitorCount(count);
+    const countedToday = localStorage.getItem(VISITOR_HIT_KEY) === today;
+    const total = countedToday
+      ? await fetchNamedCount(VISITOR_COUNT_KEY_NAME, "get").catch(() => fetchNamedCount(VISITOR_COUNT_KEY_NAME, "hit"))
+      : await fetchNamedCount(VISITOR_COUNT_KEY_NAME, "hit");
+    const todayCount = countedToday
+      ? await fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "get").catch(() => fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "hit"))
+      : await fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "hit");
+    renderHeaderCounts(total, todayCount);
+    renderVisitorAdmin(stats, total, todayCount);
   } catch (error) {
-    visitorCountTarget.textContent = "방문자 수를 아직 불러오지 못했습니다.";
+    if (headerVisitorTotal && headerVisitorTotal.textContent === "--") {
+      headerVisitorTotal.textContent = "0";
+      headerVisitorToday.textContent = "0";
+    }
   }
 }
 

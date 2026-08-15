@@ -68,7 +68,7 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260815-visitor-count" />
+    <link rel="stylesheet" href="styles.css?v=20260815-visitor-stats" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
@@ -93,6 +93,11 @@
             />
           </picture>
         </a>
+
+        <p class="header-visitors" data-header-visitors aria-live="polite">
+          <span>전체 <strong data-visitor-total>--</strong></span>
+          <span>오늘 <strong data-visitor-today>--</strong></span>
+        </p>
 
         <button
           class="menu-toggle"
@@ -1266,6 +1271,52 @@
           </header>
           <ul data-admin-booking-list></ul>
         </section>
+        <section class="visitor-admin" aria-labelledby="visitor-admin-title">
+          <header>
+            <h3 id="visitor-admin-title">방문자 통계</h3>
+            <p>이 브라우저에 쌓인 일자별 방문과 유입 경로입니다. 개인 식별 정보는 저장하지 않습니다.</p>
+          </header>
+          <dl class="visitor-admin-summary">
+            <div>
+              <dt>전체 방문자</dt>
+              <dd data-admin-visitor-total>--</dd>
+            </div>
+            <div>
+              <dt>오늘 방문자</dt>
+              <dd data-admin-visitor-today>--</dd>
+            </div>
+          </dl>
+          <div class="visitor-chart" aria-hidden="true" data-visitor-chart></div>
+          <table class="visitor-table">
+            <caption>일자별 방문자</caption>
+            <thead>
+              <tr>
+                <th scope="col">날짜</th>
+                <th scope="col">방문</th>
+                <th scope="col">주요 유입</th>
+              </tr>
+            </thead>
+            <tbody data-visitor-day-table>
+              <tr>
+                <td colspan="3">아직 기록된 방문이 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="visitor-table">
+            <caption>유입 경로</caption>
+            <thead>
+              <tr>
+                <th scope="col">유입</th>
+                <th scope="col">방문</th>
+              </tr>
+            </thead>
+            <tbody data-visitor-source-table>
+              <tr>
+                <td colspan="2">아직 기록된 유입이 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
         <p class="calendar-admin-status" role="status" aria-live="polite" data-admin-status></p>
       </div>
     </dialog>
@@ -1275,7 +1326,6 @@
         <div class="footer-brand">
           <p>AI BUILDERS LAB</p>
           <strong>배우고, 공유하고, 성장한다.</strong>
-          <p class="visitor-count" data-visitor-count aria-live="polite">방문자 수를 불러오는 중입니다.</p>
         </div>
         <ul class="footer-notes">
           <li>교육 일정과 장소, 공휴일 운영은 신청과 공간 상황에 따라 조정될 수 있습니다.</li>
@@ -1301,6 +1351,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260815-visitor-count" defer></script>
+    <script src="script.js?v=20260815-visitor-stats" defer></script>
   </body>
 </html>
