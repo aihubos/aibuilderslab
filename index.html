@@ -68,7 +68,7 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260815-saturday-intro" />
+    <link rel="stylesheet" href="styles.css?v=20260815-gcal-live" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
@@ -816,14 +816,30 @@
             <header class="calendar-heading">
               <div>
                 <p class="section-kicker">월간 운영 계획</p>
-                <h3 id="calendar-title">2026년 8월·9월 정기 모임</h3>
+                <h3 id="calendar-title">구글 캘린더</h3>
               </div>
               <p>
-                월요일부터 목요일까지 하루 세 번 운영합니다. 공휴일과 명절 일정은
-                참여 신청과 공간 상황을 확인한 뒤 별도로 안내합니다.
-                참여자는 실명 대신 신청 시 사용하는 공개 아이디로 표시합니다.
+                실제 일정은 구글 캘린더 월간 보기에서 확인합니다. 일정 추가와 수정은
+                구글 캘린더에서 바로 반영됩니다.
               </p>
             </header>
+
+            <div class="google-calendar-actions">
+              <a
+                class="button button-primary"
+                href="https://calendar.google.com/calendar/r?cid=aibuilderslab.kr@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                내 구글 캘린더에 등록
+              </a>
+              <a
+                class="button button-secondary"
+                href="https://calendar.google.com/calendar/ical/aibuilderslab.kr%40gmail.com/public/basic.ics"
+              >
+                ICS 구독
+              </a>
+            </div>
 
             <div class="weekly-pattern" aria-label="요일별 정기 운영 계획">
               <div data-schedule-type="workshop">
@@ -838,11 +854,6 @@
                 <p>날짜와 시간은 기수별 모집 공고에서 확정합니다.</p>
                 <b>1기 총 80,000원 · 4회 12시간</b>
               </div>
-              <div data-schedule-type="chat">
-                <span>금</span>
-                <strong>자유 커피챗</strong>
-                <p>시간이 맞는 빌더끼리 편하게 만납니다.</p>
-              </div>
               <div data-schedule-type="intro">
                 <span>토</span>
                 <strong>무료 AI 입문 모임</strong>
@@ -850,61 +861,19 @@
               </div>
             </div>
 
-            <div class="calendar-tabs" role="tablist" aria-label="월 선택">
-              <button
-                type="button"
-                role="tab"
-                aria-selected="true"
-                aria-controls="calendar-2026-08"
-                id="tab-2026-08"
-                data-calendar-tab="2026-08"
-              >
-                2026년 8월
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected="false"
-                aria-controls="calendar-2026-09"
-                id="tab-2026-09"
-                tabindex="-1"
-                data-calendar-tab="2026-09"
-              >
-                2026년 9월
-              </button>
+            <div class="google-calendar-wrap" data-google-calendar>
+              <div class="google-calendar-toolbar">
+                <button type="button" class="google-calendar-nav" data-calendar-prev>이전</button>
+                <h4 class="google-calendar-month" data-calendar-month>일정을 불러오는 중</h4>
+                <button type="button" class="google-calendar-nav" data-calendar-next>다음</button>
+              </div>
+              <div class="google-calendar-grid-wrap" data-calendar-grid></div>
+              <p class="google-calendar-status" role="status" data-calendar-status>구글 캘린더 일정을 불러오는 중입니다.</p>
             </div>
-
-            <div
-              class="calendar-panel"
-              role="tabpanel"
-              id="calendar-2026-08"
-              aria-labelledby="tab-2026-08"
-              data-calendar-panel="2026-08"
-            ></div>
-            <div
-              class="calendar-panel"
-              role="tabpanel"
-              id="calendar-2026-09"
-              aria-labelledby="tab-2026-09"
-              data-calendar-panel="2026-09"
-              hidden
-            ></div>
-
-            <div class="calendar-legend" aria-label="캘린더 일정 구분">
-              <span data-schedule-type="workshop">주제별 소수정예 실습</span>
-              <span data-schedule-type="cohort">AI 빌더스 랩 기수 과정</span>
-              <span data-schedule-type="chat">자유 커피챗</span>
-              <span data-schedule-type="intro">무료 AI 입문 모임</span>
-              <span class="calendar-legend-saturday">토요일</span>
-              <span class="calendar-legend-holiday">일요일·공휴일·명절</span>
-            </div>
-            <noscript>
-              <p class="noscript-note">
-                월요일부터 목요일은 주제별 소수정예 실습, 등록된 기수 과정은
-                회차별 일정, 금요일은 자유 커피챗, 토요일 10:00~12:00는
-                무료 AI 입문 모임으로 운영합니다.
-              </p>
-            </noscript>
+            <p class="google-calendar-note">
+              버튼을 누르면 구글 계정으로 로그인 후 AI 빌더스 랩 일정을 내 캘린더에 추가할 수 있습니다.
+              구글 캘린더에 올린 공개 일정이 이 월간 보기에 반영됩니다.
+            </p>
           </section>
         </div>
       </section>
@@ -1190,7 +1159,7 @@
       <form class="admin-auth-form" data-admin-auth-form>
         <header class="admin-auth-header">
           <div>
-            <p>일정 관리자</p>
+            <p>방문자 통계</p>
             <h2 id="admin-auth-title">비밀번호를 입력해주세요.</h2>
           </div>
           <button type="button" class="calendar-admin-close" data-admin-auth-close>닫기</button>
@@ -1217,68 +1186,10 @@
         <header class="calendar-admin-header">
           <div>
             <p>관리자 메뉴</p>
-            <h2 id="calendar-admin-title">교육 일정 관리</h2>
+            <h2 id="calendar-admin-title">방문자 통계</h2>
           </div>
           <button type="button" class="calendar-admin-close" data-admin-close>닫기</button>
         </header>
-
-        <p class="calendar-admin-notice">
-          현재 수정 내용은 이 브라우저에만 저장됩니다. 공개 사이트에 반영할 때는
-          아래의 `공개 반영용 데이터 복사`를 사용합니다.
-        </p>
-
-        <form class="calendar-admin-form" data-booking-form>
-          <input type="hidden" name="bookingId" />
-          <div class="calendar-admin-fields">
-            <label>
-              <span>기수와 회차</span>
-              <input type="text" name="title" maxlength="40" required placeholder="예: AI 빌더스 랩 1기 · 1회차" />
-            </label>
-            <label>
-              <span>교육명</span>
-              <input type="text" name="courseTitle" maxlength="40" placeholder="예: 나만의 AI 작업환경 구축" />
-            </label>
-            <label>
-              <span>참여자 아이디 (수정 가능)</span>
-              <input type="text" name="participantIds" maxlength="80" required placeholder="여러 명은 쉼표로 구분" />
-            </label>
-            <label>
-              <span>교육 일자</span>
-              <input type="date" name="date" min="2026-08-01" max="2026-09-30" required />
-            </label>
-            <label>
-              <span>교육 시간대</span>
-              <select name="slot" required>
-                <option value="morning">오전</option>
-                <option value="afternoon">오후</option>
-                <option value="evening">저녁</option>
-              </select>
-            </label>
-            <label>
-              <span>시작 시간</span>
-              <input type="time" name="startTime" step="300" />
-            </label>
-            <label class="calendar-admin-complete">
-              <input type="checkbox" name="completed" value="true" />
-              <span>진행 완료</span>
-            </label>
-          </div>
-          <div class="calendar-admin-actions">
-            <button type="submit" class="button button-primary">일정 저장</button>
-            <button type="button" class="button button-secondary" data-booking-new>새 일정 입력</button>
-          </div>
-        </form>
-
-        <section class="calendar-admin-existing" aria-labelledby="calendar-admin-list-title">
-          <header>
-            <h3 id="calendar-admin-list-title">등록된 일정</h3>
-            <div>
-              <button type="button" data-booking-copy>공개 반영용 데이터 복사</button>
-              <button type="button" data-booking-reset>기본 일정 복원</button>
-            </div>
-          </header>
-          <ul data-admin-booking-list></ul>
-        </section>
         <section class="visitor-admin" aria-labelledby="visitor-admin-title">
           <header>
             <h3 id="visitor-admin-title">방문자 통계</h3>
@@ -1355,10 +1266,10 @@
             <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent 공식 저장소</a>입니다.
           </p>
         </details>
-        <button class="footer-admin-link" type="button" data-admin-open>일정 관리</button>
+        <button class="footer-admin-link" type="button" data-admin-open>방문자 통계</button>
       </div>
     </footer>
 
-    <script src="script.js?v=20260815-saturday-intro" defer></script>
+    <script src="script.js?v=20260815-gcal-live" defer></script>
   </body>
 </html>

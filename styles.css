@@ -1747,7 +1747,6 @@ p {
 
 [data-schedule-type="workshop"] { --schedule-color: var(--brand-blue-light); }
 [data-schedule-type="cohort"] { --schedule-color: var(--brand-blue-strong); }
-[data-schedule-type="chat"] { --schedule-color: var(--text-tertiary); }
 [data-schedule-type="intro"] { --schedule-color: var(--brand-navy); }
 
 .weekly-pattern span {
@@ -1776,6 +1775,174 @@ p {
   margin-top: var(--space-3);
   color: var(--text-primary);
   font-size: 1rem;
+}
+
+.google-calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.google-calendar-wrap {
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+}
+
+.google-calendar-frame {
+  display: block;
+  width: 100%;
+  min-height: 720px;
+  border: 0;
+  background: #fff;
+}
+
+
+.google-calendar-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.google-calendar-month {
+  margin: 0;
+  color: var(--text-primary);
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.google-calendar-nav {
+  min-height: 40px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.google-calendar-nav:hover {
+  border-color: var(--brand-blue-light);
+}
+
+.google-calendar-nav:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.google-calendar-grid-wrap {
+  padding: var(--space-3);
+}
+
+.google-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.google-calendar-weekday,
+.google-calendar-day,
+.google-calendar-blank {
+  min-width: 0;
+}
+
+.google-calendar-weekday {
+  padding-block: var(--space-2);
+  color: var(--text-tertiary);
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.google-calendar-weekday.is-saturday {
+  color: var(--calendar-saturday);
+}
+
+.google-calendar-weekday.is-sunday {
+  color: var(--calendar-sunday);
+}
+
+.google-calendar-blank {
+  min-height: 72px;
+  background: var(--surface-light);
+  opacity: 0.4;
+}
+
+.google-calendar-day {
+  min-height: 88px;
+  padding: var(--space-2);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elevated);
+}
+
+.google-calendar-day.is-today {
+  border-color: var(--brand-blue-light);
+  background: var(--surface-blue);
+}
+
+.google-calendar-date {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.google-calendar-day.is-saturday .google-calendar-date {
+  color: var(--calendar-saturday);
+}
+
+.google-calendar-day.is-sunday .google-calendar-date {
+  color: var(--calendar-sunday);
+}
+
+.google-calendar-events {
+  display: grid;
+  gap: 2px;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.google-calendar-event,
+.google-calendar-more {
+  overflow: hidden;
+  color: var(--brand-navy);
+  font-size: 0.625rem;
+  font-weight: 650;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.google-calendar-event time {
+  margin-right: 0.3em;
+  color: var(--text-tertiary);
+}
+
+.google-calendar-more {
+  color: var(--text-tertiary);
+}
+
+.google-calendar-status,
+.google-calendar-note {
+  margin: 0;
+  padding: var(--space-4);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.google-calendar-note {
+  padding-inline: 0;
 }
 
 .calendar-tabs {
@@ -2598,6 +2765,10 @@ p {
   border-bottom: 1px solid var(--border-light);
 }
 
+.calendar-admin-booking-item.is-hidden-slot {
+  opacity: 0.72;
+}
+
 .calendar-admin-booking-info strong,
 .calendar-admin-booking-info span {
   display: block;
@@ -3024,6 +3195,7 @@ body.is-recruit-open {
   font-size: 0.875rem;
 }
 
+.google-calendar-actions .button,
 .cohort-recruit-actions .button,
 .calendar-admin-actions .button,
 .admin-auth-submit {
@@ -3038,6 +3210,7 @@ body.is-recruit-open {
   text-decoration: none;
 }
 
+.google-calendar-actions .button-primary,
 .cohort-recruit-actions .button-primary,
 .calendar-admin-actions .button-primary {
   border: 1px solid var(--brand-blue-strong);
@@ -3045,6 +3218,7 @@ body.is-recruit-open {
   color: var(--accent-foreground);
 }
 
+.google-calendar-actions .button-secondary,
 .cohort-recruit-actions .button-secondary,
 .calendar-admin-actions .button-secondary {
   border: 1px solid var(--border-light);
@@ -3052,11 +3226,13 @@ body.is-recruit-open {
   color: var(--text-primary);
 }
 
+.google-calendar-actions .button:hover,
 .cohort-recruit-actions .button:hover,
 .calendar-admin-actions .button:hover {
   transform: translateY(var(--motion-lift-small));
 }
 
+.google-calendar-actions .button:active,
 .cohort-recruit-actions .button:active,
 .calendar-admin-actions .button:active {
   transform: scale(0.98);
@@ -3151,6 +3327,10 @@ body.is-recruit-open {
 
   .calendar-panel {
     padding: var(--space-6);
+  }
+
+  .google-calendar-day {
+    min-height: 118px;
   }
 
   .calendar-day,
@@ -3387,7 +3567,7 @@ body.is-recruit-open {
   }
 
   .weekly-pattern {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .cohort-recruit-banner button {

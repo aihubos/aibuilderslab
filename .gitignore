@@ -4,3 +4,5 @@ output/
 .superloopy/
 .playwright-cli/
 *.tgz
+.secrets/
+supabase/functions/.env
