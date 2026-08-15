@@ -118,8 +118,9 @@ const COMPLETED_SESSIONS = Object.freeze([
     slot: "evening",
     type: "chat",
     title: "수다모임",
-    time: "19:00~21:00",
+    startTime: "19:00",
     courseTitle: "자유 커피챗",
+    completed: true,
     participantIds: Object.freeze(["진행 완료"]),
   }),
   Object.freeze({
@@ -128,8 +129,9 @@ const COMPLETED_SESSIONS = Object.freeze([
     slot: "evening",
     type: "intro",
     title: "무료 입문반",
-    time: "18:00~21:00",
+    startTime: "18:00",
     courseTitle: "Hermes 입문",
+    completed: true,
     participantIds: Object.freeze(["진행 완료"]),
   }),
 ]);
@@ -153,7 +155,8 @@ const DEFAULT_CALENDAR_BOOKINGS = Object.freeze((() => {
       type: session.type,
       title: session.title,
       courseTitle: session.courseTitle,
-      time: session.time || "",
+      startTime: session.startTime || "",
+      completed: Boolean(session.completed),
       participantIds: session.participantIds,
     }));
     bookings[session.date] = Object.freeze(existing);
@@ -179,9 +182,36 @@ function findCohortSession(booking) {
     || null;
 }
 
+function normalizeStartTime(value) {
+  const raw = String(value || "").trim();
+  const match = raw.match(/^(\d{1,2}):(\d{2})/);
+  if (!match) return "";
+  const hour = Number(match[1]);
+  const minute = Number(match[2]);
+  if (hour > 23 || minute > 59) return "";
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function inferStartTime(value, slotKey) {
+  const fromValue = normalizeStartTime(value);
+  if (fromValue) return fromValue;
+  const slotTime = TRAINING_SLOTS.find((item) => item.key === slotKey)?.time || "";
+  return normalizeStartTime(slotTime.split("~")[0]);
+}
+
 function getBookingTime(booking) {
-  if (booking?.time) return booking.time;
-  return TRAINING_SLOTS.find((item) => item.key === booking?.slot)?.time || "";
+  const startTime = inferStartTime(booking?.startTime || booking?.time, booking?.slot);
+  return startTime || TRAINING_SLOTS.find((item) => item.key === booking?.slot)?.time || "";
+}
+
+function isBookingCompleted(booking) {
+  if (booking?.completed === false) return false;
+  if (booking?.completed === true) return true;
+  return Array.isArray(booking?.participantIds) && booking.participantIds.includes("진행 완료");
+}
+
+function getBookingStatusLabel(booking) {
+  return isBookingCompleted(booking) ? "진행 완료" : "예정";
 }
 
 function getTodayKey() {
@@ -209,7 +239,8 @@ function normalizeCalendarBookings(value) {
           date: dateKey,
           title: String(booking.title || "교육 일정").slice(0, 40),
           courseTitle: String(booking.courseTitle || "").trim().slice(0, 40),
-          time: String(booking.time || "").trim().slice(0, 20),
+          startTime: inferStartTime(booking.startTime || booking.time, slot),
+          completed: booking.completed === true || (Array.isArray(booking.participantIds) && booking.participantIds.includes("진행 완료")),
           type: ["cohort", "workshop", "chat", "intro"].includes(booking.type) ? booking.type : "",
           participantIds: Array.isArray(booking.participantIds)
             ? booking.participantIds
@@ -252,7 +283,8 @@ function mergeCompletedSessions(bookings) {
         type: session.type,
         title: session.title,
         courseTitle: session.courseTitle,
-        time: session.time || "",
+        startTime: session.startTime || "",
+        completed: Boolean(session.completed),
         participantIds: [...session.participantIds],
       },
     ];
@@ -639,7 +671,7 @@ function createCalendar(monthConfig) {
       .map((booking) => {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
         const courseTitle = booking.courseTitle ? `, ${booking.courseTitle}` : "";
-        return `${slot?.label || booking.slot} ${getBookingTime(booking)}, ${booking.title}${courseTitle}, 참여자 ${booking.participantIds.join(", ")}`;
+        return `${slot?.label || booking.slot} ${getBookingTime(booking)}, ${booking.title}${courseTitle}, ${getBookingStatusLabel(booking)}, 참여자 ${booking.participantIds.join(", ")}`;
       })
       .join(". ");
     day.setAttribute(
@@ -655,7 +687,8 @@ function createCalendar(monthConfig) {
     }
 
     if (bookings.length) {
-      day.append(makeElement("span", "calendar-booking-badge", "등록"));
+      const badgeLabel = bookings.every(isBookingCompleted) ? "진행 완료" : "등록";
+      day.append(makeElement("span", "calendar-booking-badge", badgeLabel));
     }
 
     if ([1, 2, 3, 4].includes(weekday)) {
@@ -668,8 +701,13 @@ function createCalendar(monthConfig) {
         slotRow.append(makeElement("span", "calendar-slot-label", slot.label));
         if (booking) {
           slotRow.classList.add("is-booked");
+          if (isBookingCompleted(booking)) slotRow.classList.add("is-completed");
           slotRow.append(
-            makeElement("strong", "calendar-slot-participants", booking.participantIds.join(", ")),
+            makeElement(
+              "strong",
+              "calendar-slot-participants",
+              isBookingCompleted(booking) ? "진행 완료" : booking.participantIds.join(", "),
+            ),
           );
         } else if (dateKey >= todayKey) {
           slotRow.append(makeElement("span", "calendar-slot-open", "신청 가능"));
@@ -702,6 +740,7 @@ function createCalendar(monthConfig) {
           courseBlock.append(makeElement("span", "calendar-booking-topic", booking.courseTitle));
         }
         item.append(courseBlock);
+        item.append(makeElement("span", "calendar-booking-status", getBookingStatusLabel(booking)));
         item.append(makeElement("span", "calendar-booking-participant", `참여자 ${booking.participantIds.join(", ")}`));
         bookingList.append(item);
       });
@@ -821,6 +860,8 @@ function resetBookingForm() {
   bookingForm.elements.bookingId.value = "";
   bookingForm.elements.date.value = "2026-08-17";
   bookingForm.elements.slot.value = "morning";
+  bookingForm.elements.startTime.value = "09:00";
+  bookingForm.elements.completed.checked = false;
   bookingForm.elements.title.focus();
   setAdminStatus("새 일정을 입력할 수 있습니다.");
 }
@@ -849,17 +890,22 @@ function renderAdminBookingList() {
       makeElement(
         "span",
         "",
-        `${booking.date} · ${slot.label} ${slot.time} · ${booking.participantIds.join(", ")}`,
+        `${booking.date} · ${slot.label} ${getBookingTime(booking)} · ${booking.participantIds.join(", ")}`,
       ),
     );
+    information.append(makeElement("span", "", getBookingStatusLabel(booking)));
     const actions = makeElement("div", "calendar-admin-booking-actions");
+    const completeButton = makeElement("button", "", isBookingCompleted(booking) ? "예정으로 되돌리기" : "진행 완료");
+    completeButton.type = "button";
+    completeButton.dataset.bookingComplete = booking.id;
+    completeButton.setAttribute("aria-pressed", String(isBookingCompleted(booking)));
     const editButton = makeElement("button", "", "수정");
     editButton.type = "button";
     editButton.dataset.bookingEdit = booking.id;
     const deleteButton = makeElement("button", "", "삭제");
     deleteButton.type = "button";
     deleteButton.dataset.bookingDelete = booking.id;
-    actions.append(editButton, deleteButton);
+    actions.append(completeButton, editButton, deleteButton);
     item.append(information, actions);
     adminBookingList.append(item);
   });
@@ -928,6 +974,8 @@ bookingForm?.addEventListener("submit", (event) => {
   const title = String(formData.get("title") || "").trim();
   const courseTitle = String(formData.get("courseTitle") || "").trim().slice(0, 40);
   const slot = String(formData.get("slot") || "morning");
+  const startTime = inferStartTime(formData.get("startTime"), slot);
+  const completed = formData.get("completed") === "true";
   const participantIds = String(formData.get("participantIds") || "")
     .split(",")
     .map((id) => id.trim())
@@ -946,6 +994,8 @@ bookingForm?.addEventListener("submit", (event) => {
     slot,
     title,
     courseTitle,
+    startTime,
+    completed,
     type: "workshop",
     participantIds,
   };
@@ -963,9 +1013,32 @@ bookingForm?.addEventListener("submit", (event) => {
   setAdminStatus(`${title} 일정을 이 브라우저에 저장했습니다.`);
 });
 
+function setBookingCompleted(bookingId, completed) {
+  let changed = false;
+  Object.entries(calendarBookings).forEach(([date, bookings]) => {
+    calendarBookings[date] = bookings.map((booking) => {
+      if (booking.id !== bookingId) return booking;
+      changed = true;
+      return { ...booking, completed };
+    });
+  });
+  return changed;
+}
+
 adminBookingList?.addEventListener("click", (event) => {
+  const completeButton = event.target.closest("[data-booking-complete]");
   const editButton = event.target.closest("[data-booking-edit]");
   const deleteButton = event.target.closest("[data-booking-delete]");
+
+  if (completeButton) {
+    const booking = getSortedBookings().find((item) => item.id === completeButton.dataset.bookingComplete);
+    if (!booking) return;
+    const nextCompleted = !isBookingCompleted(booking);
+    if (!setBookingCompleted(booking.id, nextCompleted) || !persistCalendarBookings()) return;
+    refreshCalendarAfterAdminChange(booking.date.slice(0, 7));
+    setAdminStatus(`${booking.title}을 ${nextCompleted ? "진행 완료" : "예정"}으로 표시했습니다.`);
+    return;
+  }
 
   if (editButton) {
     const booking = getSortedBookings().find((item) => item.id === editButton.dataset.bookingEdit);
@@ -976,6 +1049,8 @@ adminBookingList?.addEventListener("click", (event) => {
     bookingForm.elements.participantIds.value = booking.participantIds.join(", ");
     bookingForm.elements.date.value = booking.date;
     bookingForm.elements.slot.value = booking.slot;
+    bookingForm.elements.startTime.value = inferStartTime(booking.startTime || booking.time, booking.slot);
+    bookingForm.elements.completed.checked = isBookingCompleted(booking);
     bookingForm.elements.title.focus();
     setAdminStatus(`${booking.title} 일정을 수정하고 있습니다.`);
   }

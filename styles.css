@@ -1976,10 +1976,15 @@ p {
   display: none;
 }
 
-.calendar-booking-participant {
+.calendar-booking-participant,
+.calendar-booking-status {
   color: var(--brand-blue-accessible);
   font-size: 0.875rem;
   font-weight: 700;
+}
+
+.calendar-booking-status {
+  color: var(--text-secondary);
 }
 
 .calendar-booking-empty {
@@ -2474,6 +2479,19 @@ p {
 .calendar-admin-fields label {
   display: grid;
   gap: var(--space-2);
+}
+
+.calendar-admin-complete {
+  align-content: center;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  min-height: 48px;
+}
+
+.calendar-admin-complete input {
+  width: 20px;
+  min-height: 20px;
+  accent-color: var(--brand-blue-strong);
 }
 
 .calendar-admin-fields label > span {
@@ -3206,6 +3224,15 @@ body.is-recruit-open {
   .calendar-slot.is-booked {
     border-color: var(--brand-blue-light);
     background: var(--surface-blue);
+  }
+
+  .calendar-slot.is-completed {
+    border-color: var(--border-light);
+    background: var(--surface-light);
+  }
+
+  .calendar-slot.is-completed .calendar-slot-participants {
+    color: var(--text-secondary);
   }
 
   .calendar-slot-label,

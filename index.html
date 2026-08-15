@@ -68,7 +68,7 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="styles.css?v=20260815-past-calendar" />
+    <link rel="stylesheet" href="styles.css?v=20260815-complete-toggle" />
     <title>AI 빌더스 랩 | 배우고, 공유하고, 성장한다</title>
   </head>
   <body>
@@ -1247,12 +1247,20 @@
               <input type="date" name="date" min="2026-08-01" max="2026-09-30" required />
             </label>
             <label>
-              <span>교육 시간</span>
+              <span>교육 시간대</span>
               <select name="slot" required>
-                <option value="morning">오전 09:00~12:00</option>
-                <option value="afternoon">오후 14:00~17:00</option>
-                <option value="evening">저녁 18:00~21:00</option>
+                <option value="morning">오전</option>
+                <option value="afternoon">오후</option>
+                <option value="evening">저녁</option>
               </select>
+            </label>
+            <label>
+              <span>시작 시간</span>
+              <input type="time" name="startTime" step="300" />
+            </label>
+            <label class="calendar-admin-complete">
+              <input type="checkbox" name="completed" value="true" />
+              <span>진행 완료</span>
             </label>
           </div>
           <div class="calendar-admin-actions">
@@ -1351,6 +1359,6 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260815-past-calendar" defer></script>
+    <script src="script.js?v=20260815-complete-toggle" defer></script>
   </body>
 </html>
