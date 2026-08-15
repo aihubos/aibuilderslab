@@ -1024,3 +1024,70 @@ recruitDialog?.addEventListener("close", () => {
 });
 
 scheduleRecruitDialog();
+
+const VISITOR_COUNT_KEY_NAME = "aibuilderslab-site-visits";
+const VISITOR_COUNT_KEY = "ai-builders-visitor-hit-on";
+const visitorCountTarget = document.querySelector("[data-visitor-count]");
+
+function formatVisitorCount(value) {
+  return new Intl.NumberFormat("ko-KR").format(value);
+}
+
+function todayStamp() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function shouldCountVisit() {
+  try {
+    return localStorage.getItem(VISITOR_COUNT_KEY) !== todayStamp();
+  } catch (error) {
+    return true;
+  }
+}
+
+function rememberVisit() {
+  try {
+    localStorage.setItem(VISITOR_COUNT_KEY, todayStamp());
+  } catch (error) {
+    /* 저장할 수 없어도 화면 표시는 계속합니다. */
+  }
+}
+
+function renderVisitorCount(value) {
+  if (!visitorCountTarget || !Number.isFinite(value)) return;
+  visitorCountTarget.innerHTML = `전체 방문자 <strong>${formatVisitorCount(value)}</strong>`;
+}
+
+async function fetchVisitorCount(action) {
+  const response = await fetch(
+    `https://countapi.mileshilliard.com/api/v1/${action}/${VISITOR_COUNT_KEY_NAME}`,
+    { cache: "no-store" },
+  );
+  if (!response.ok) throw new Error("counter-failed");
+  const data = await response.json();
+  const count = Number(data.value);
+  if (!Number.isFinite(count)) throw new Error("counter-invalid");
+  return count;
+}
+
+async function updateVisitorCount() {
+  if (!visitorCountTarget) return;
+
+  const countThisVisit = shouldCountVisit();
+
+  try {
+    const count = countThisVisit
+      ? await fetchVisitorCount("hit")
+      : await fetchVisitorCount("get").catch(() => fetchVisitorCount("hit"));
+    rememberVisit();
+    renderVisitorCount(count);
+  } catch (error) {
+    visitorCountTarget.textContent = "방문자 수를 아직 불러오지 못했습니다.";
+  }
+}
+
+updateVisitorCount();

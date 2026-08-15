@@ -84,6 +84,7 @@
   --recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem);
   --modal-backdrop: rgba(0, 12, 61, 0.42);
   --footer-admin-muted: rgba(255, 255, 255, 0.44);
+  --visitor-count-size: clamp(1.5rem, 3vw, 2.25rem);
   --motion-lift-small: -2px;
   --nav-height: 72px;
   --header-height: var(--nav-height);
@@ -2594,6 +2595,21 @@ p {
 
 .footer-brand strong {
   font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.visitor-count {
+  margin: var(--space-5) 0 0;
+  color: var(--brand-ice);
+  font-size: 0.875rem;
+}
+
+.visitor-count strong {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--brand-white);
+  font-size: var(--visitor-count-size);
+  font-weight: 750;
+  letter-spacing: -0.03em;
 }
 
 .footer-notes {
