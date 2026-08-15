@@ -111,24 +111,55 @@ const TRAINING_SLOTS = Object.freeze([
   { key: "evening", label: "저녁", time: "18:00~21:00" },
 ]);
 
+const COMPLETED_SESSIONS = Object.freeze([
+  Object.freeze({
+    id: "chat-2026-08-05-evening",
+    date: "2026-08-05",
+    slot: "evening",
+    type: "chat",
+    title: "수다모임",
+    time: "19:00~21:00",
+    courseTitle: "자유 커피챗",
+    participantIds: Object.freeze(["진행 완료"]),
+  }),
+  Object.freeze({
+    id: "intro-2026-08-12-evening",
+    date: "2026-08-12",
+    slot: "evening",
+    type: "intro",
+    title: "무료 입문반",
+    time: "18:00~21:00",
+    courseTitle: "Hermes 입문",
+    participantIds: Object.freeze(["진행 완료"]),
+  }),
+]);
+
 // 공개 캘린더에는 실명이나 연락처 대신 신청자가 사용하는 아이디만 입력합니다.
-const DEFAULT_CALENDAR_BOOKINGS = Object.freeze(
-  Object.fromEntries(
-    COHORT_ONE.sessions.map((session) => [
-      session.date,
-      Object.freeze([
-        Object.freeze({
-          id: session.id,
-          slot: session.slot,
-          type: "cohort",
-          title: session.label,
-          courseTitle: session.courseTitle,
-          participantIds: session.participantIds,
-        }),
-      ]),
-    ]),
-  ),
-);
+const DEFAULT_CALENDAR_BOOKINGS = Object.freeze((() => {
+  const bookings = {};
+  [...COMPLETED_SESSIONS, ...COHORT_ONE.sessions.map((session) => ({
+    id: session.id,
+    date: session.date,
+    slot: session.slot,
+    type: "cohort",
+    title: session.label,
+    courseTitle: session.courseTitle,
+    participantIds: session.participantIds,
+  }))].forEach((session) => {
+    const existing = bookings[session.date] ? [...bookings[session.date]] : [];
+    existing.push(Object.freeze({
+      id: session.id,
+      slot: session.slot,
+      type: session.type,
+      title: session.title,
+      courseTitle: session.courseTitle,
+      time: session.time || "",
+      participantIds: session.participantIds,
+    }));
+    bookings[session.date] = Object.freeze(existing);
+  });
+  return bookings;
+})());
 
 const BOOKINGS_STORAGE_KEY = "ai-builders-calendar-bookings";
 const ADMIN_SESSION_KEY = "ai-builders-admin-unlocked";
@@ -148,6 +179,20 @@ function findCohortSession(booking) {
     || null;
 }
 
+function getBookingTime(booking) {
+  if (booking?.time) return booking.time;
+  return TRAINING_SLOTS.find((item) => item.key === booking?.slot)?.time || "";
+}
+
+function getTodayKey() {
+  const today = new Date();
+  return [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
 function normalizeCalendarBookings(value) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const normalized = {};
@@ -164,7 +209,8 @@ function normalizeCalendarBookings(value) {
           date: dateKey,
           title: String(booking.title || "교육 일정").slice(0, 40),
           courseTitle: String(booking.courseTitle || "").trim().slice(0, 40),
-          type: booking.type === "cohort" || booking.type === "workshop" ? booking.type : "",
+          time: String(booking.time || "").trim().slice(0, 20),
+          type: ["cohort", "workshop", "chat", "intro"].includes(booking.type) ? booking.type : "",
           participantIds: Array.isArray(booking.participantIds)
             ? booking.participantIds
                 .map((id) => String(id).trim())
@@ -193,11 +239,34 @@ function normalizeCalendarBookings(value) {
   return normalized;
 }
 
+function mergeCompletedSessions(bookings) {
+  const next = bookings;
+  COMPLETED_SESSIONS.forEach((session) => {
+    const dayBookings = next[session.date] || [];
+    if (dayBookings.some((booking) => booking.id === session.id || booking.title === session.title)) return;
+    next[session.date] = [
+      ...dayBookings,
+      {
+        id: session.id,
+        slot: session.slot,
+        type: session.type,
+        title: session.title,
+        courseTitle: session.courseTitle,
+        time: session.time || "",
+        participantIds: [...session.participantIds],
+      },
+    ];
+  });
+  return next;
+}
+
 function loadCalendarBookings() {
   try {
     const saved = localStorage.getItem(BOOKINGS_STORAGE_KEY);
     if (!saved) return cloneDefaultBookings();
-    const normalized = normalizeCalendarBookings(JSON.parse(saved)) || cloneDefaultBookings();
+    const normalized = mergeCompletedSessions(
+      normalizeCalendarBookings(JSON.parse(saved)) || cloneDefaultBookings(),
+    );
     const serialized = JSON.stringify(normalized);
     if (serialized !== saved) localStorage.setItem(BOOKINGS_STORAGE_KEY, serialized);
     return normalized;
@@ -525,6 +594,7 @@ function createCalendar(monthConfig) {
   const daysInMonth = new Date(monthConfig.year, monthConfig.monthIndex + 1, 0).getDate();
   const totalSlots = 42;
   const today = new Date();
+  const todayKey = getTodayKey();
 
   for (let index = 0; index < totalSlots; index += 1) {
     const dayNumber = index - startOffset + 1;
@@ -569,7 +639,7 @@ function createCalendar(monthConfig) {
       .map((booking) => {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
         const courseTitle = booking.courseTitle ? `, ${booking.courseTitle}` : "";
-        return `${slot?.label || booking.slot} ${slot?.time || ""}, ${booking.title}${courseTitle}, 참여자 ${booking.participantIds.join(", ")}`;
+        return `${slot?.label || booking.slot} ${getBookingTime(booking)}, ${booking.title}${courseTitle}, 참여자 ${booking.participantIds.join(", ")}`;
       })
       .join(". ");
     day.setAttribute(
@@ -601,7 +671,7 @@ function createCalendar(monthConfig) {
           slotRow.append(
             makeElement("strong", "calendar-slot-participants", booking.participantIds.join(", ")),
           );
-        } else {
+        } else if (dateKey >= todayKey) {
           slotRow.append(makeElement("span", "calendar-slot-open", "신청 가능"));
         }
         slots.append(slotRow);
@@ -625,7 +695,7 @@ function createCalendar(monthConfig) {
         const slot = TRAINING_SLOTS.find((item) => item.key === booking.slot);
         const item = makeElement("li", "calendar-booking-item");
         item.append(makeElement("time", "calendar-booking-date", `${Number(dateKey.slice(5, 7))}월 ${Number(dateKey.slice(8, 10))}일`));
-        item.append(makeElement("span", "calendar-booking-time", `${slot.label} ${slot.time}`));
+        item.append(makeElement("span", "calendar-booking-time", `${slot.label} ${getBookingTime(booking)}`));
         const courseBlock = makeElement("div", "calendar-booking-copy");
         courseBlock.append(makeElement("strong", "calendar-booking-course", booking.title));
         if (booking.courseTitle) {
