@@ -5,7 +5,6 @@ const CONTACT_LINKS = Object.freeze({
   kakaoProfile: "https://open.kakao.com/me/aibuilderslab",
   paidWorkshop:
     "https://daangn.com/kr/share/community/ref/invite-group/baRr2nojJVT?utm_campaign=share_qr",
-  oneToOneInterest: "tel:+821030657890",
 });
 
 const GOOGLE_CALENDAR = Object.freeze({
@@ -828,54 +827,6 @@ contactButtons.forEach((button) => {
   button.removeAttribute("href");
   button.setAttribute("aria-disabled", "true");
 });
-
-const airtableApplyButtons = [...document.querySelectorAll("[data-airtable-apply]")];
-const airtableStatusItems = [...document.querySelectorAll("[data-airtable-status]")];
-const airtableFormUrl = window.AI_BUILDERS_CONFIG?.AIRTABLE_FORM_URL;
-
-function isValidAirtableFormUrl(value) {
-  if (typeof value !== "string" || !value.trim()) return false;
-
-  try {
-    const url = new URL(value.trim());
-    return url.protocol === "https:" && (url.hostname === "airtable.com" || url.hostname.endsWith(".airtable.com"));
-  } catch (error) {
-    return false;
-  }
-}
-
-function setAirtableStatus(message, pending) {
-  airtableStatusItems.forEach((item) => {
-    item.textContent = message;
-    item.classList.toggle("is-pending", pending);
-  });
-}
-
-function configureAirtableApply() {
-  if (!isValidAirtableFormUrl(airtableFormUrl)) {
-    airtableApplyButtons.forEach((button) => {
-      button.removeAttribute("href");
-      button.removeAttribute("target");
-      button.removeAttribute("rel");
-      button.setAttribute("aria-disabled", "true");
-      button.textContent = "신청 폼 준비 중";
-    });
-    setAirtableStatus("현재 공식 신청 폼을 준비하고 있습니다. 급한 문의는 개인 카카오톡으로 연락해주세요.", true);
-    return;
-  }
-
-  const formUrl = airtableFormUrl.trim();
-  airtableApplyButtons.forEach((button) => {
-    button.href = formUrl;
-    button.target = "_blank";
-    button.rel = "noopener noreferrer";
-    button.removeAttribute("aria-disabled");
-    button.textContent = "AI 빌더스 랩 교육 신청하기";
-  });
-  setAirtableStatus("신청서는 새 창에서 열립니다. 개인정보 동의와 공개 동의는 각각 확인해주세요.", false);
-}
-
-configureAirtableApply();
 
 const recruitDialog = document.querySelector("[data-recruit-dialog]");
 const recruitOpenButtons = [...document.querySelectorAll("[data-recruit-open]")];

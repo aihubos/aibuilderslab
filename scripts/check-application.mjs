@@ -3,56 +3,35 @@ import { resolve } from "node:path";
 
 const root = process.cwd();
 const sourceFiles = ["index.html", "styles.css", "script.js", "site-config.js"];
-const contents = new Map();
-
-for (const file of sourceFiles) {
-  const content = await readFile(resolve(root, file), "utf8");
-  contents.set(file, content);
-}
-
-const indexHtml = contents.get("index.html");
-const script = contents.get("script.js");
-const config = contents.get("site-config.js");
+const contents = await Promise.all(
+  sourceFiles.map(async (file) => [file, await readFile(resolve(root, file), "utf8")]),
+);
+const source = new Map(contents);
+const indexHtml = source.get("index.html");
+const script = source.get("script.js");
+const config = source.get("site-config.js");
 
 function expect(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-const formUrlMatch = config.match(/AIRTABLE_FORM_URL\s*:\s*"([^"]*)"/);
-expect(formUrlMatch, "site-config.js에 AIRTABLE_FORM_URL 설정이 필요합니다.");
+const scanned = [...source.values()].join("\n");
 
-const configuredFormUrl = formUrlMatch[1];
-if (configuredFormUrl) {
-  const parsedFormUrl = new URL(configuredFormUrl);
-  expect(parsedFormUrl.protocol === "https:", "Airtable 신청 폼 주소는 HTTPS여야 합니다.");
-  expect(parsedFormUrl.hostname === "airtable.com" || parsedFormUrl.hostname.endsWith(".airtable.com"), "Airtable 신청 폼 주소만 설정할 수 있습니다.");
-}
-expect(indexHtml.indexOf('src="site-config.js"') < indexHtml.indexOf('src="script.js'), "site-config.js는 script.js보다 먼저 로드해야 합니다.");
 expect(indexHtml.includes('id="apply"'), "#apply 신청 영역이 없습니다.");
-expect(indexHtml.includes("data-airtable-apply"), "공식 신청 CTA가 없습니다.");
-expect(indexHtml.includes("data-airtable-status"), "신청 상태 안내 영역이 없습니다.");
-expect(script.includes("isValidAirtableFormUrl"), "Airtable URL 검증 로직이 없습니다.");
-expect(script.includes("aria-disabled"), "미설정 신청 버튼 비활성화 처리가 없습니다.");
-expect(script.includes("https:"), "HTTPS 검증 로직이 없습니다.");
-expect(script.includes("airtable.com"), "Airtable 호스트 검증 로직이 없습니다.");
+expect(indexHtml.includes("당근 댓글로 신청"), "당근 신청 버튼이 없습니다.");
+expect(indexHtml.includes("개인 카카오톡으로 신청"), "개인 카카오톡 신청 버튼이 없습니다.");
+expect(indexHtml.includes('data-contact-key="paidWorkshop"'), "당근 신청 링크 설정이 없습니다.");
+expect(indexHtml.includes('data-contact-key="kakaoProfile"'), "카카오 신청 링크 설정이 없습니다.");
+expect(!/data-airtable|Airtable|AIRTABLE|airtable\.com|신청 폼 준비/i.test(scanned), "Airtable 신청 흐름이 남아 있습니다.");
+expect(!/무상 보충|보충교육|completion-support|조건 충족자 완료/i.test(scanned), "삭제 대상 보충교육 문구가 남아 있습니다.");
+expect(!/전화 문의|010-3065|821030657890|oneToOneInterest/i.test(scanned), "전화 문의 정보가 남아 있습니다.");
+expect(!/api\.airtable\.com|Authorization:\s*Bearer|pat[A-Za-z0-9_-]{10,}/i.test(scanned), "Airtable 인증 정보 또는 API 호출이 남아 있습니다.");
+expect(config.includes("CONTACT_NOTE"), "신청 채널 설정 안내가 없습니다.");
+expect(script.includes("CONTACT_LINKS"), "연락 채널 설정이 없습니다.");
 
-const scanned = [...contents.values()].join("\n");
-const forbiddenPatterns = [
-  [/api\.airtable\.com/i, "브라우저 Airtable REST API 호출"],
-  [/Authorization:\s*Bearer/i, "Authorization Bearer 헤더"],
-  [/pat[A-Za-z0-9_-]{10,}/, "Airtable PAT 형태의 값"],
-];
+const builtIndex = await readFile(resolve(root, "dist", "client", "index.html"), "utf8");
+const builtScript = await readFile(resolve(root, "dist", "client", "script.js"), "utf8");
+expect(!/data-airtable|Airtable|AIRTABLE|airtable\.com|신청 폼 준비/i.test(`${builtIndex}\n${builtScript}`), "빌드 결과에 Airtable 신청 흐름이 남아 있습니다.");
+await access(resolve(root, "dist", "client", "index.html"));
 
-for (const [pattern, label] of forbiddenPatterns) {
-  expect(!pattern.test(scanned), `${label}이 소스에 포함되어 있습니다.`);
-}
-
-const phoneNumbers = scanned.match(/01[0-9][-\s]?\d{3,4}[-\s]?\d{4}/g) || [];
-const unexpectedPhoneNumbers = phoneNumbers.filter((phone) => phone.replace(/[-\s]/g, "") !== "01030657890");
-expect(unexpectedPhoneNumbers.length === 0, `허용되지 않은 전화번호가 있습니다: ${unexpectedPhoneNumbers.join(", ")}`);
-
-await access(resolve(root, "dist", "client", "site-config.js"));
-const builtConfig = await readFile(resolve(root, "dist", "client", "site-config.js"), "utf8");
-expect(builtConfig.includes("AIRTABLE_FORM_URL"), "빌드 결과에 site-config.js가 포함되지 않았습니다.");
-
-console.log("신청 시스템 정적 검사 통과");
+console.log("교육 신청 채널 정적 검사 통과");
