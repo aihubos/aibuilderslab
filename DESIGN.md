@@ -36,6 +36,8 @@
 | `--hero-video-scrim-wide` | `linear-gradient(90deg, rgba(255,255,255,.9), rgba(255,255,255,.56) 48%, rgba(255,255,255,.08))` | 데스크톱 풀스크린 영상 위 문장 대비 |
 | `--hero-video-edge-mask` | `radial-gradient(ellipse 78% 64% at 64% 50%, #000 44%, rgba(0,0,0,.6) 62%, transparent 92%)` | 영상 투명도가 외곽 전에 사라지는 강한 마스크 |
 | `--hero-video-edge-fade` | `radial-gradient(ellipse 72% 60% at 64% 50%, transparent 42%, rgba(255,255,255,.4) 66%, rgba(255,255,255,.98) 100%)` | 영상 외곽을 흰 배경으로 덮는 소실 그라데이션 |
+| `--hero-video-crop-scale` | `1.12` | 영상 우측 하단 표시를 화면 밖으로 밀어내는 확대 크롭 |
+| `--hero-video-watermark-fade` | `radial-gradient(circle at 100% 100%, #fff 0%, rgba(255,255,255,.98) 12%, rgba(255,255,255,.72) 23%, transparent 40%)` | 영상 우측 하단 표시를 자연스럽게 덮는 흰색 소실 영역 |
 
 본문 대비는 밝은 배경에서 `--text-primary`, 어두운 배경에서 `--brand-white`를 사용한다. 작은 보조 문구는 `--text-secondary`보다 연하게 만들지 않는다.
 
