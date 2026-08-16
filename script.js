@@ -901,6 +901,7 @@ const VISITOR_COUNT_KEY_NAME = "aibuilderslab-site-visits";
 const VISITOR_TODAY_KEY_NAME = "aibuilderslab-site-visits-today";
 const VISITOR_HIT_KEY = "ai-builders-visitor-hit-on";
 const VISITOR_STATS_KEY = "ai-builders-visitor-stats";
+const VISITOR_REMOTE_CACHE_KEY = "ai-builders-visitor-remote-counts";
 const headerVisitorTotal = document.querySelector("[data-visitor-total]");
 const headerVisitorToday = document.querySelector("[data-visitor-today]");
 const adminVisitorTotal = document.querySelector("[data-admin-visitor-total]");
@@ -942,6 +943,33 @@ function loadVisitorStats() {
 function saveVisitorStats(stats) {
   try {
     localStorage.setItem(VISITOR_STATS_KEY, JSON.stringify(stats));
+  } catch (error) {
+    /* 저장할 수 없어도 화면 표시는 계속합니다. */
+  }
+}
+
+function loadRemoteVisitorCounts(today) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(VISITOR_REMOTE_CACHE_KEY) || "null");
+    if (
+      saved?.date !== today
+      || !Number.isFinite(Number(saved.total))
+      || !Number.isFinite(Number(saved.today))
+    ) {
+      return null;
+    }
+    return { total: Number(saved.total), today: Number(saved.today) };
+  } catch (error) {
+    return null;
+  }
+}
+
+function saveRemoteVisitorCounts(date, total, today) {
+  try {
+    localStorage.setItem(
+      VISITOR_REMOTE_CACHE_KEY,
+      JSON.stringify({ date, total, today }),
+    );
   } catch (error) {
     /* 저장할 수 없어도 화면 표시는 계속합니다. */
   }
@@ -1089,20 +1117,25 @@ async function fetchNamedCount(name, action) {
 }
 
 async function updateVisitorCount() {
+  const isNewVisitToday = shouldCountVisit();
   const stats = recordLocalVisit();
   const today = todayStamp();
   const localToday = Number(stats.days[today] || 0);
-  renderHeaderCounts(Object.values(stats.days).reduce((sum, value) => sum + Number(value || 0), 0), localToday);
-  renderVisitorAdmin(stats, Object.values(stats.days).reduce((sum, value) => sum + Number(value || 0), 0), localToday);
+  const localTotal = Object.values(stats.days).reduce((sum, value) => sum + Number(value || 0), 0);
+  const cachedRemote = loadRemoteVisitorCounts(today);
+  const initialTotal = cachedRemote?.total ?? localTotal;
+  const initialToday = cachedRemote?.today ?? localToday;
+  renderHeaderCounts(initialTotal, initialToday);
+  renderVisitorAdmin(stats, initialTotal, initialToday);
+
+  // 같은 브라우저의 같은 날 재방문은 저장된 값을 사용합니다.
+  // 불필요한 외부 조회를 반복하지 않아 화면과 콘솔을 안정적으로 유지합니다.
+  if (!isNewVisitToday) return;
 
   try {
-    const countedToday = localStorage.getItem(VISITOR_HIT_KEY) === today;
-    const total = countedToday
-      ? await fetchNamedCount(VISITOR_COUNT_KEY_NAME, "get").catch(() => fetchNamedCount(VISITOR_COUNT_KEY_NAME, "hit"))
-      : await fetchNamedCount(VISITOR_COUNT_KEY_NAME, "hit");
-    const todayCount = countedToday
-      ? await fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "get").catch(() => fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "hit"))
-      : await fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "hit");
+    const total = await fetchNamedCount(VISITOR_COUNT_KEY_NAME, "hit");
+    const todayCount = await fetchNamedCount(`${VISITOR_TODAY_KEY_NAME}-${today}`, "hit");
+    saveRemoteVisitorCounts(today, total, todayCount);
     renderHeaderCounts(total, todayCount);
     renderVisitorAdmin(stats, total, todayCount);
   } catch (error) {
