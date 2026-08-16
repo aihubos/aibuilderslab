@@ -322,7 +322,7 @@ document.addEventListener("pointerdown", (event) => {
 mobileBreakpoint.addEventListener("change", syncMenuForViewport);
 syncMenuForViewport();
 
-const observedSectionIds = ["top", "about", "stages", "schedule", "tools", "operations", "apply", "contact"];
+const observedSectionIds = ["top", "about", "method", "stages", "schedule", "apply", "contact"];
 const observedSections = observedSectionIds
   .map((id) => document.getElementById(id))
   .filter(Boolean);
