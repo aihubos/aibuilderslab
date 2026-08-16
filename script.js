@@ -24,6 +24,7 @@ const ADMIN_PASSWORD_HASH = "3f44b2fbb0aaffb68530a82cd4e4da9498b9337ae9c805b600e
 const RECRUIT_DIALOG_DISMISSED_KEY = "ai-builders-cohort-1-dismissed-at";
 const RECRUIT_DIALOG_SESSION_KEY = "ai-builders-cohort-1-auto-shown";
 const RECRUIT_DIALOG_DELAY_MS = 3000;
+const RECRUIT_DIALOG_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
 document.documentElement.classList.add("js");
 
@@ -50,6 +51,101 @@ const themeToggle = document.querySelector("[data-theme-toggle]");
 const themePanel = document.querySelector("[data-theme-panel]");
 const themeOptions = [...document.querySelectorAll("[data-theme-option]")];
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+const heroVideo = document.querySelector("[data-hero-video]");
+const heroVideoToggle = document.querySelector("[data-hero-video-toggle]");
+const heroVideoLabel = document.querySelector("[data-hero-video-label]");
+const heroScroll = document.querySelector("[data-hero-scroll]");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function syncHeroVideoControl() {
+  if (!heroVideo || !heroVideoToggle || !heroVideoLabel) return;
+
+  const isPaused = heroVideo.paused;
+  heroVideoLabel.textContent = isPaused ? "재생" : "일시정지";
+  heroVideoToggle.setAttribute("aria-pressed", String(isPaused));
+  heroVideoToggle.setAttribute(
+    "aria-label",
+    isPaused ? "브랜드 영상 재생" : "브랜드 영상 일시정지",
+  );
+}
+
+async function playHeroVideo() {
+  if (!heroVideo) return;
+  heroVideo.muted = true;
+  heroVideo.volume = 0;
+
+  try {
+    await heroVideo.play();
+  } catch (error) {
+    /* 자동재생이 제한된 환경에서는 재생 버튼으로 시작할 수 있습니다. */
+  }
+
+  syncHeroVideoControl();
+}
+
+if (heroVideo) {
+  heroVideo.muted = true;
+  heroVideo.volume = 0;
+
+  if (reduceMotion.matches) {
+    heroVideo.pause();
+  } else {
+    playHeroVideo();
+  }
+
+  heroVideo.addEventListener("play", syncHeroVideoControl);
+  heroVideo.addEventListener("pause", syncHeroVideoControl);
+  heroVideo.addEventListener("error", () => {
+    if (!heroVideoToggle || !heroVideoLabel) return;
+    heroVideoLabel.textContent = "재생 불가";
+    heroVideoToggle.disabled = true;
+    heroVideoToggle.setAttribute("aria-label", "브랜드 영상을 재생할 수 없음");
+  });
+}
+
+heroVideoToggle?.addEventListener("click", () => {
+  if (!heroVideo) return;
+
+  if (heroVideo.paused) {
+    playHeroVideo();
+  } else {
+    heroVideo.pause();
+  }
+});
+
+let heroFadeFrame = 0;
+
+function updateHeroScrollFade() {
+  heroFadeFrame = 0;
+  if (!heroScroll) return;
+
+  if (reduceMotion.matches) {
+    heroScroll.style.setProperty("--hero-scroll-progress", "0");
+    return;
+  }
+
+  const fadeRatio = Number.parseFloat(
+    getComputedStyle(heroScroll).getPropertyValue("--hero-fade-distance-ratio"),
+  );
+  if (!fadeRatio) return;
+
+  const travelled = Math.max(0, -heroScroll.getBoundingClientRect().top);
+  const fadeDistance = heroScroll.offsetHeight * fadeRatio;
+  const progress = Math.min(1, travelled / fadeDistance);
+  heroScroll.style.setProperty("--hero-scroll-progress", progress.toFixed(3));
+}
+
+function scheduleHeroScrollFade() {
+  if (heroFadeFrame) return;
+  heroFadeFrame = window.requestAnimationFrame(updateHeroScrollFade);
+}
+
+if (heroScroll) {
+  updateHeroScrollFade();
+  window.addEventListener("scroll", scheduleHeroScrollFade, { passive: true });
+  window.addEventListener("resize", scheduleHeroScrollFade, { passive: true });
+  reduceMotion.addEventListener("change", scheduleHeroScrollFade);
+}
 
 function applyTheme(themeName, persist = true) {
   const selectedTheme = THEMES[themeName] ? themeName : "default";
@@ -226,7 +322,7 @@ document.addEventListener("pointerdown", (event) => {
 mobileBreakpoint.addEventListener("change", syncMenuForViewport);
 syncMenuForViewport();
 
-const observedSectionIds = ["top", "about", "stages", "schedule", "tools", "operations", "contact"];
+const observedSectionIds = ["top", "about", "stages", "schedule", "tools", "operations", "apply", "contact"];
 const observedSections = observedSectionIds
   .map((id) => document.getElementById(id))
   .filter(Boolean);
@@ -732,6 +828,54 @@ contactButtons.forEach((button) => {
   button.removeAttribute("href");
   button.setAttribute("aria-disabled", "true");
 });
+
+const airtableApplyButtons = [...document.querySelectorAll("[data-airtable-apply]")];
+const airtableStatusItems = [...document.querySelectorAll("[data-airtable-status]")];
+const airtableFormUrl = window.AI_BUILDERS_CONFIG?.AIRTABLE_FORM_URL;
+
+function isValidAirtableFormUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return false;
+
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" && (url.hostname === "airtable.com" || url.hostname.endsWith(".airtable.com"));
+  } catch (error) {
+    return false;
+  }
+}
+
+function setAirtableStatus(message, pending) {
+  airtableStatusItems.forEach((item) => {
+    item.textContent = message;
+    item.classList.toggle("is-pending", pending);
+  });
+}
+
+function configureAirtableApply() {
+  if (!isValidAirtableFormUrl(airtableFormUrl)) {
+    airtableApplyButtons.forEach((button) => {
+      button.removeAttribute("href");
+      button.removeAttribute("target");
+      button.removeAttribute("rel");
+      button.setAttribute("aria-disabled", "true");
+      button.textContent = "신청 폼 준비 중";
+    });
+    setAirtableStatus("현재 공식 신청 폼을 준비하고 있습니다. 급한 문의는 개인 카카오톡으로 연락해주세요.", true);
+    return;
+  }
+
+  const formUrl = airtableFormUrl.trim();
+  airtableApplyButtons.forEach((button) => {
+    button.href = formUrl;
+    button.target = "_blank";
+    button.rel = "noopener noreferrer";
+    button.removeAttribute("aria-disabled");
+    button.textContent = "AI 빌더스 랩 교육 신청하기";
+  });
+  setAirtableStatus("신청서는 새 창에서 열립니다. 개인정보 동의와 공개 동의는 각각 확인해주세요.", false);
+}
+
+configureAirtableApply();
 
 const recruitDialog = document.querySelector("[data-recruit-dialog]");
 const recruitOpenButtons = [...document.querySelectorAll("[data-recruit-open]")];

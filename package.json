@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "check": "node --check script.js",
+    "check": "node --check script.js && node --check site-config.js",
+    "test": "node scripts/check-application.mjs",
     "build": "node scripts/build.mjs"
   }
 }

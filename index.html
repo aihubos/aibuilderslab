@@ -39,15 +39,8 @@
     <link
       rel="preload"
       as="image"
-      href="assets/hero-wave-background.avif"
-      type="image/avif"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="assets/ai-builders-lab-symbol-transparent.avif"
-      type="image/avif"
+      href="assets/hero-builders-wave-poster.jpg"
+      type="image/jpeg"
       fetchpriority="high"
     />
     <script>
@@ -117,7 +110,7 @@
           <a href="#schedule">교육 일정표</a>
           <a href="#tools">교육 도구</a>
           <a href="#operations">운영 안내</a>
-          <a href="#contact">참여 문의</a>
+          <a href="#apply">교육 신청</a>
 
           <div class="nav-download" data-download-menu>
             <button
@@ -268,23 +261,40 @@
         <span class="cohort-recruit-status">모집 중</span>
         <strong>AI BUILDERS LAB 1기</strong>
         <span>신청 마감 8월 31일 · 총 80,000원</span>
-        <span class="cohort-recruit-action">당근 댓글 또는 카카오 신청</span>
+        <span class="cohort-recruit-action">신청 안내 열기</span>
       </button>
     </aside>
 
     <main id="main-content">
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <picture class="hero-background" aria-hidden="true">
-          <source srcset="assets/hero-wave-background.avif" type="image/avif" />
-          <img
-            src="assets/hero-wave-background.png"
-            width="1728"
-            height="912"
-            fetchpriority="high"
-            decoding="async"
-            alt=""
-          />
-        </picture>
+      <section class="hero" id="top" aria-labelledby="hero-title" data-hero-scroll>
+        <div class="hero-mark">
+          <div class="hero-video-frame">
+            <video
+              class="hero-video"
+              data-hero-video
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="assets/hero-builders-wave-poster.jpg"
+              aria-label="두 명의 빌더가 AI라는 파도를 함께 타는 브랜드 영상"
+            >
+              <source src="assets/hero-builders-wave.mp4" type="video/mp4" />
+              이 브라우저에서는 영상을 재생할 수 없습니다.
+            </video>
+            <button
+              class="hero-video-toggle"
+              type="button"
+              data-hero-video-toggle
+              aria-label="브랜드 영상 일시정지"
+              aria-pressed="false"
+            >
+              <span data-hero-video-label>일시정지</span>
+            </button>
+          </div>
+        </div>
+
         <div class="hero-inner">
           <div class="hero-copy" data-reveal>
             <h1 id="hero-title">
@@ -295,24 +305,6 @@
                 <span>AI라는 큰 파도, </span><span>함께 탈 준비를 합니다.</span>
               </span>
             </h1>
-          </div>
-
-          <div class="hero-mark" data-reveal>
-            <picture>
-              <source
-                srcset="assets/ai-builders-lab-symbol-transparent.avif"
-                type="image/avif"
-              />
-              <img
-                class="hero-symbol"
-                src="assets/ai-builders-lab-symbol-transparent.png"
-                width="620"
-                height="520"
-                fetchpriority="high"
-                decoding="async"
-                alt="AI 빌더스 랩의 파란 리본형 A 심볼"
-              />
-            </picture>
           </div>
         </div>
       </section>
@@ -337,7 +329,11 @@
               </dd>
             </div>
           </dl>
-          <p class="hero-benefit-apply">신청은 당근 댓글 또는 개인 카카오톡으로 연락해주세요.</p>
+          <div class="hero-benefit-actions">
+            <a class="button button-primary" data-airtable-apply data-application-course="AI 빌더스 랩 1기">AI 빌더스 랩 교육 신청하기</a>
+            <a class="button button-secondary" data-contact-key="kakaoProfile">개인 카카오톡 문의</a>
+          </div>
+          <p class="hero-benefit-apply">당근 댓글이나 카카오톡 대화만으로는 DB 신청 완료로 간주하지 않습니다.</p>
         </div>
       </section>
 
@@ -739,9 +735,12 @@
                     </div>
                   </dl>
                   <p class="sharing-benefit-note">
-                    신청은 당근 댓글 또는 개인 카카오톡으로 연락해주세요.
                     할인 확인 방법과 중복 적용 여부는 신청 전에 안내드립니다.
                   </p>
+                  <div class="sharing-benefit-actions">
+                    <a class="button button-primary" data-airtable-apply data-application-course="AI 빌더스 랩 1기">AI 빌더스 랩 교육 신청하기</a>
+                    <a class="button button-secondary" data-contact-key="kakaoProfile">개인 카카오톡 문의</a>
+                  </div>
                 </section>
 
                 <section class="completion-support" aria-labelledby="completion-support-title">
@@ -976,6 +975,43 @@
         </ol>
       </section>
 
+      <section class="application-section" id="apply" aria-labelledby="apply-title">
+        <div class="section-shell application-inner">
+          <header class="application-heading" data-reveal>
+            <p class="section-kicker">공식 교육 신청</p>
+            <h2 id="apply-title">AI 빌더스 랩<br />교육 신청하기</h2>
+            <p>일정이 아직 확정되지 않아도 미리 신청할 수 있습니다.</p>
+            <p>신청서를 확인한 뒤 참여 가능한 일정과 준비사항을 개별 안내합니다.</p>
+          </header>
+
+          <ol class="application-course-list" aria-label="신청할 교육 과정" data-reveal>
+            <li><a href="#stage-0"><strong>무료 AI 입문 모임</strong><span>무료 입문 과정 자세히 보기</span></a></li>
+            <li><a href="#stage-1"><strong>주제별 소수정예 실습</strong><span>1회 3시간 실습 과정 자세히 보기</span></a></li>
+            <li><a href="#stage-2"><strong>AI 빌더스 랩 1기</strong><span>2주 4회 연속 과정 자세히 보기</span></a></li>
+            <li><a href="#contact"><strong>기타 교육 문의</strong><span>운영자에게 먼저 질문하기</span></a></li>
+          </ol>
+
+          <ol class="application-steps" aria-label="교육 신청 절차" data-reveal>
+            <li>교육 과정 확인</li>
+            <li>Airtable 신청서 작성</li>
+            <li>운영자 일정 확인 및 개별 안내</li>
+          </ol>
+
+          <div class="application-actions" data-reveal>
+            <a class="button button-primary" data-airtable-apply>AI 빌더스 랩 교육 신청하기</a>
+            <a class="button button-secondary" data-contact-key="kakaoProfile">개인 카카오톡으로 문의</a>
+          </div>
+          <p class="application-status" data-airtable-status role="status" aria-live="polite"></p>
+          <p class="application-privacy" data-reveal>
+            주민등록번호, 상세 주소, 계정 비밀번호, API 키, 결제카드 정보는 받지 않습니다.
+            사진, 후기, 결과물 공개 동의는 교육 신청 동의와 별도로 선택합니다.
+          </p>
+          <p class="application-channel-note" data-reveal>
+            당근 댓글이나 카카오톡 대화만으로는 DB 신청 완료로 간주하지 않습니다.
+          </p>
+        </div>
+      </section>
+
       <section class="contact-section" id="contact" aria-labelledby="contact-title">
         <div class="section-shell contact-inner">
           <div class="contact-copy" data-reveal>
@@ -1132,14 +1168,15 @@
         <p class="cohort-recruit-price">정규 교육비 80,000원 · 회당 3시간 × 4회</p>
 
         <div class="cohort-recruit-actions">
-          <p>신청은 당근 댓글 또는 개인 카카오톡으로 연락해주세요.</p>
+          <p>공식 신청서는 새 창에서 열립니다. 일정과 준비사항은 신청서 접수 뒤 개별 안내합니다.</p>
           <p>공개 댓글에는 전화번호나 개인정보를 작성하지 마세요.</p>
           <a
             class="button button-primary"
-            data-contact-key="paidWorkshop"
+            data-airtable-apply
+            data-application-course="AI 빌더스 랩 1기"
             data-recruit-apply
           >
-            당근 댓글로 신청하기
+            AI 빌더스 랩 교육 신청하기
           </a>
           <a
             class="button button-secondary"
@@ -1270,6 +1307,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260815-gcal-holiday" defer></script>
+    <script src="site-config.js"></script>
+    <script src="script.js?v=20260816-application" defer></script>
   </body>
 </html>

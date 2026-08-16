@@ -65,6 +65,40 @@
   --hero-copy-width: 980px;
   --hero-symbol-size: clamp(220px, 29vw, 480px);
   --hero-symbol-tablet-size: clamp(280px, 40vw, 340px);
+  --hero-video-width: clamp(320px, 44vw, 720px);
+  --hero-video-control-height: 48px;
+  --hero-video-panel-mobile-width: 92%;
+  --hero-video-panel-tablet-width: 80%;
+  --hero-video-panel-wide-width: 70%;
+  --hero-video-edge-mask: radial-gradient(
+    ellipse 78% 64% at 64% 50%,
+    #000 44%,
+    rgba(0, 0, 0, 0.6) 62%,
+    transparent 92%
+  );
+  --hero-video-edge-fade: radial-gradient(
+    ellipse 72% 60% at 64% 50%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.4) 66%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
+  --hero-video-scrim-mobile: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.88),
+    rgba(255, 255, 255, 0.48) 58%,
+    rgba(255, 255, 255, 0.12)
+  );
+  --hero-video-scrim-wide: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.56) 48%,
+    rgba(255, 255, 255, 0.08)
+  );
+  --hero-scroll-shift: -24px;
+  --hero-fade-distance-ratio: 0.72;
+  --hero-copy-column: 1.1fr;
+  --hero-media-column: 0.9fr;
+  --font-small: 0.875rem;
   --hero-title-primary: clamp(2.5rem, 4vw, 4.25rem);
   --hero-title-secondary: clamp(2.125rem, 3.5vw, 3.5rem);
   --stage-price-featured: clamp(2.25rem, 4vw, 3.75rem);
@@ -81,6 +115,7 @@
   --recruit-dialog-width: 760px;
   --recruit-dialog-max-height: 85dvh;
   --recruit-banner-min-height: 56px;
+  --recruit-banner-mobile-height: 80px;
   --recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem);
   --modal-backdrop: rgba(0, 12, 61, 0.42);
   --footer-admin-muted: rgba(255, 255, 255, 0.44);
@@ -346,6 +381,7 @@ p {
 #schedule,
 #tools,
 #operations,
+#apply,
 #contact {
   scroll-margin-top: var(--space-2);
 }
@@ -754,52 +790,27 @@ p {
 }
 
 .hero {
+  --hero-scroll-progress: 0;
   position: relative;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--header-height) - var(--recruit-banner-mobile-height));
   padding-top: 0;
   overflow: clip;
   background: var(--surface-base);
 }
 
-.hero-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.hero-background::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--hero-tint);
-  opacity: var(--hero-tint-opacity);
-  mix-blend-mode: color;
-  transition: background-color 220ms var(--ease-out), opacity 220ms var(--ease-out);
-}
-
-.hero-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 56% bottom;
-  filter: var(--hero-wave-filter);
-  opacity: var(--hero-wave-opacity);
-  transition: filter 220ms var(--ease-out), opacity 220ms var(--ease-out);
-}
-
 .hero-inner {
   position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-rows: auto 1fr;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
   width: min(100% - (var(--space-5) * 2), var(--hero-content-width));
-  min-height: calc(100svh - var(--header-height));
+  min-height: calc(100svh - var(--header-height) - var(--recruit-banner-mobile-height));
   margin-inline: auto;
-  padding-block: var(--space-16) var(--space-8);
+  padding-block: var(--space-16);
+  opacity: calc(1 - var(--hero-scroll-progress));
+  transform: translateY(calc(var(--hero-scroll-progress) * var(--hero-scroll-shift)));
+  will-change: opacity, transform;
+  pointer-events: none;
 }
 
 .hero-copy {
@@ -840,17 +851,76 @@ p {
 }
 
 .hero-mark {
-  position: relative;
-  z-index: 1;
-  align-self: end;
-  justify-self: center;
-  width: var(--hero-symbol-size);
-  padding-bottom: var(--space-16);
+  position: absolute;
+  right: 0;
+  bottom: var(--space-5);
+  z-index: 0;
+  width: var(--hero-video-panel-mobile-width);
+  aspect-ratio: 16 / 9;
+  opacity: calc(1 - var(--hero-scroll-progress));
+  transform: translateY(calc(var(--hero-scroll-progress) * var(--hero-scroll-shift)));
+  will-change: opacity, transform;
 }
 
-.hero-symbol {
+.hero-video-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  background: transparent;
+}
+
+.hero-video-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--hero-video-edge-fade), var(--hero-video-scrim-mobile);
+  pointer-events: none;
+}
+
+.hero-video {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  -webkit-mask-image: var(--hero-video-edge-mask);
+  mask-image: var(--hero-video-edge-mask);
+}
+
+.hero-video-toggle {
+  position: absolute;
+  z-index: 2;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  min-width: var(--hero-video-control-height);
+  min-height: var(--hero-video-control-height);
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  background: var(--brand-white);
+  color: var(--brand-navy);
+  font: inherit;
+  font-size: var(--font-small);
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 180ms var(--ease-out), border-color 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
+}
+
+.hero-video-toggle:hover {
+  border-color: var(--brand-blue);
+  color: var(--brand-blue-accessible);
+}
+
+.hero-video-toggle:active {
+  transform: scale(0.98);
+}
+
+.hero-video-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
 }
 
 .hero-benefit {
@@ -1912,7 +1982,7 @@ p {
 
 .google-calendar-events {
   display: grid;
-  gap: 2px;
+  gap: var(--space-1);
   margin: var(--space-2) 0 0;
   padding: 0;
   list-style: none;
@@ -2402,6 +2472,118 @@ p {
 .contact-section {
   padding-block: var(--space-24);
   background: var(--surface-blue);
+}
+
+.application-section {
+  padding-block: var(--space-24);
+  border-top: 1px solid var(--border-light);
+  background: var(--surface-base);
+}
+
+.application-inner {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.application-heading {
+  max-width: var(--reading-width);
+}
+
+.application-heading h2 {
+  margin-bottom: var(--space-5);
+}
+
+.application-heading p {
+  margin-bottom: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+.application-course-list,
+.application-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-light);
+}
+
+.application-course-list li,
+.application-steps li {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.application-course-list a {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.application-course-list a strong {
+  font-size: 1.125rem;
+}
+
+.application-course-list a span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.application-course-list a:hover strong,
+.application-course-list a:focus-visible strong {
+  color: var(--brand-blue-accessible);
+}
+
+.application-steps {
+  counter-reset: application-step;
+}
+
+.application-steps li {
+  display: grid;
+  grid-template-columns: var(--space-8) 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding-block: var(--space-4);
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+.application-steps li::before {
+  counter-increment: application-step;
+  content: counter(application-step, decimal-leading-zero);
+  color: var(--brand-blue-accessible);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.application-actions,
+.hero-benefit-actions,
+.sharing-benefit-actions {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.application-status,
+.application-privacy,
+.application-channel-note {
+  max-width: var(--reading-width);
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.application-status:empty {
+  display: none;
+}
+
+.application-status.is-pending {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-light);
+}
+
+[data-airtable-apply][aria-disabled="true"] {
+  opacity: 0.56;
+  pointer-events: none;
 }
 
 .contact-inner {
@@ -3208,6 +3390,9 @@ body.is-recruit-open {
 .google-calendar-actions .button,
 .cohort-recruit-actions .button,
 .calendar-admin-actions .button,
+.application-actions .button,
+.hero-benefit-actions .button,
+.sharing-benefit-actions .button,
 .admin-auth-submit {
   display: inline-flex;
   align-items: center;
@@ -3222,7 +3407,10 @@ body.is-recruit-open {
 
 .google-calendar-actions .button-primary,
 .cohort-recruit-actions .button-primary,
-.calendar-admin-actions .button-primary {
+.calendar-admin-actions .button-primary,
+.application-actions .button-primary,
+.hero-benefit-actions .button-primary,
+.sharing-benefit-actions .button-primary {
   border: 1px solid var(--brand-blue-strong);
   background: var(--brand-blue-strong);
   color: var(--accent-foreground);
@@ -3230,7 +3418,10 @@ body.is-recruit-open {
 
 .google-calendar-actions .button-secondary,
 .cohort-recruit-actions .button-secondary,
-.calendar-admin-actions .button-secondary {
+.calendar-admin-actions .button-secondary,
+.application-actions .button-secondary,
+.hero-benefit-actions .button-secondary,
+.sharing-benefit-actions .button-secondary {
   border: 1px solid var(--border-light);
   background: var(--surface-elevated);
   color: var(--text-primary);
@@ -3238,13 +3429,19 @@ body.is-recruit-open {
 
 .google-calendar-actions .button:hover,
 .cohort-recruit-actions .button:hover,
-.calendar-admin-actions .button:hover {
+.calendar-admin-actions .button:hover,
+.application-actions .button:hover,
+.hero-benefit-actions .button:hover,
+.sharing-benefit-actions .button:hover {
   transform: translateY(var(--motion-lift-small));
 }
 
 .google-calendar-actions .button:active,
 .cohort-recruit-actions .button:active,
-.calendar-admin-actions .button:active {
+.calendar-admin-actions .button:active,
+.hero-benefit-actions .button:active,
+.sharing-benefit-actions .button:active,
+.application-actions .button:active {
   transform: scale(0.98);
 }
 
@@ -3267,7 +3464,23 @@ body.is-recruit-open {
 
   .hero-inner {
     width: min(100% - (var(--space-8) * 2), var(--hero-content-width));
-    padding-block: var(--space-20) var(--space-12);
+    padding-block: var(--space-20);
+  }
+
+  .hero,
+  .hero-inner {
+    min-height: calc(100svh - var(--header-height) - var(--recruit-banner-min-height));
+  }
+
+  .hero-inner {
+    align-items: center;
+  }
+
+  .hero-mark {
+    top: 0;
+    bottom: 0;
+    width: var(--hero-video-panel-tablet-width);
+    margin-block: auto;
   }
 
   .hero-line-primary > span,
@@ -3275,8 +3488,9 @@ body.is-recruit-open {
     display: inline;
   }
 
-  .hero-mark {
-    width: var(--hero-symbol-tablet-size);
+  .hero-video-toggle {
+    right: var(--space-8);
+    bottom: var(--space-8);
   }
 
   .brand img {
@@ -3551,29 +3765,21 @@ body.is-recruit-open {
 }
 
 @media (min-width: 900px) {
-  .hero-background img {
-    object-position: center bottom;
+  .hero-video-frame::after {
+    background: var(--hero-video-edge-fade), var(--hero-video-scrim-wide);
   }
 
   .hero-inner {
-    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.65fr);
-    grid-template-rows: 1fr;
     align-items: center;
-    gap: var(--space-12);
-    padding-block: var(--space-12) var(--space-10);
+    padding-block: var(--space-20);
   }
 
   .hero-copy {
-    align-self: start;
-    padding-top: calc(var(--space-32) + var(--space-4));
+    width: min(58%, var(--hero-copy-width));
   }
 
   .hero-mark {
-    align-self: center;
-    justify-self: end;
-    width: var(--hero-symbol-size);
-    padding: var(--space-12) 0 0;
-    transform: translateY(var(--space-4));
+    width: var(--hero-video-panel-wide-width);
   }
 
   .weekly-pattern {
@@ -3840,5 +4046,12 @@ body.is-recruit-open {
   [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+
+  .hero-inner,
+  .hero-mark {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
   }
 }

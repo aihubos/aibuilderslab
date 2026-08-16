@@ -32,6 +32,10 @@
 | `--calendar-saturday` | `#0B63CE` | 토요일 날짜 |
 | `--channel-kakao` | `#FEE500` | 카카오톡 참여 링크의 얇은 색상선 |
 | `--channel-daangn` | `#FF6F0F` | 당근 모임 링크의 얇은 색상선 |
+| `--hero-video-scrim-mobile` | `linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.48) 58%, rgba(255,255,255,.12))` | 모바일 풀스크린 영상 위 문장 대비 |
+| `--hero-video-scrim-wide` | `linear-gradient(90deg, rgba(255,255,255,.9), rgba(255,255,255,.56) 48%, rgba(255,255,255,.08))` | 데스크톱 풀스크린 영상 위 문장 대비 |
+| `--hero-video-edge-mask` | `radial-gradient(ellipse 78% 64% at 64% 50%, #000 44%, rgba(0,0,0,.6) 62%, transparent 92%)` | 영상 투명도가 외곽 전에 사라지는 강한 마스크 |
+| `--hero-video-edge-fade` | `radial-gradient(ellipse 72% 60% at 64% 50%, transparent 42%, rgba(255,255,255,.4) 66%, rgba(255,255,255,.98) 100%)` | 영상 외곽을 흰 배경으로 덮는 소실 그라데이션 |
 
 본문 대비는 밝은 배경에서 `--text-primary`, 어두운 배경에서 `--brand-white`를 사용한다. 작은 보조 문구는 `--text-secondary`보다 연하게 만들지 않는다.
 
@@ -77,6 +81,8 @@
 | 작은 글 | `0.875rem` | 450 | 1.55 | 0 |
 | 레이블 | `0.75rem` | 650 | 1.3 | 0.04em |
 
+CSS에서는 작은 글 크기를 `--font-small: 0.875rem` 토큰으로 사용한다.
+
 ## 4. 간격
 
 기본 단위는 4px이다. 모든 여백은 아래 토큰을 사용한다.
@@ -85,9 +91,9 @@
 
 콘텐츠 최대 폭은 1240px, 읽기 문단 최대 폭은 720px이다. 모바일 좌우 여백은 20px, 태블릿은 32px, 데스크톱은 48px이다.
 
-히어로 다음의 혜택 안내는 `--hero-benefit-amount: clamp(2.25rem, 5vw, 3.75rem)`로 할인 금액을 강조한다. 히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-symbol-size: clamp(220px, 29vw, 480px)`, `--hero-symbol-tablet-size: clamp(280px, 40vw, 340px)`를 사용한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`, 결과 공유 혜택은 `--sharing-benefit-title: clamp(2rem, 4.5vw, 4rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 참여 링크는 `--community-icon-size: 28px`, 당근 워드마크는 `--community-daangn-width: 68px`, `--community-daangn-height: 34px`로 표시한다. 예약 시간대가 보이는 달력 날짜 셀은 `--calendar-day-booking-height: 188px`, 관리자 창 최대 폭은 `--admin-dialog-width: 720px`, 비밀번호 창 최대 폭은 `--admin-auth-width: 420px`, 배경 오버레이는 `--modal-backdrop: rgba(0, 12, 61, 0.42)`를 사용한다. 상단 방문자 숫자는 `--header-visitor-size: 0.75rem`을 사용한다. 푸터의 일정 관리 링크는 `--footer-admin-muted`로 낮은 시각적 위계를 유지한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
+히어로 다음의 혜택 안내는 `--hero-benefit-amount: clamp(2.25rem, 5vw, 3.75rem)`로 할인 금액을 강조한다. 히어로 전용 토큰은 `--hero-content-width: 1520px`, `--hero-copy-width: 980px`, `--hero-video-control-height: 48px`, `--hero-video-panel-mobile-width: 92%`, `--hero-video-panel-tablet-width: 80%`, `--hero-video-panel-wide-width: 70%`, `--hero-scroll-shift: -24px`, `--hero-fade-distance-ratio: 0.72`를 사용한다. 영상은 오른쪽에 정렬한 16:9 영역으로 두되 `--hero-video-edge-mask`와 `--hero-video-edge-fade`를 겹쳐 사방을 흰 배경에 강하게 소실시킨다. 스크롤 진행률에 따라 `opacity`와 `transform`만 변한다. 유료 실습 가격은 `--stage-price-featured: clamp(2.25rem, 4vw, 3.75rem)`, 결과 공유 혜택은 `--sharing-benefit-title: clamp(2rem, 4.5vw, 4rem)`로 강조한다. 상단 Report Hub 링크는 `--report-hub-width: 78px`, 태블릿 이상은 `--report-hub-width-wide: 112px`로 원본 가로 비율을 유지한다. 참여 링크는 `--community-icon-size: 28px`, 당근 워드마크는 `--community-daangn-width: 68px`, `--community-daangn-height: 34px`로 표시한다. 예약 시간대가 보이는 달력 날짜 셀은 `--calendar-day-booking-height: 188px`, 관리자 창 최대 폭은 `--admin-dialog-width: 720px`, 비밀번호 창 최대 폭은 `--admin-auth-width: 420px`, 배경 오버레이는 `--modal-backdrop: rgba(0, 12, 61, 0.42)`를 사용한다. 상단 방문자 숫자는 `--header-visitor-size: 0.75rem`을 사용한다. 푸터의 일정 관리 링크는 `--footer-admin-muted`로 낮은 시각적 위계를 유지한다. 링크 hover 이동은 `--motion-lift-small: -2px`를 사용한다.
 
-1기 모집 배너는 고정 내비게이션 아래의 일반 문서 흐름에 두고 `--header-height`만큼만 내려 헤더와 겹치지 않게 한다. 신청 마감 강조 숫자는 `--recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem)`를 사용한다. 모집 팝업 최대 폭은 `--recruit-dialog-width: 760px`, 모바일 최대 높이는 `--recruit-dialog-max-height: 85dvh`를 사용한다. 배너 최소 높이는 `--recruit-banner-min-height: 56px`다.
+1기 모집 배너는 고정 내비게이션 아래의 일반 문서 흐름에 두고 `--header-height`만큼만 내려 헤더와 겹치지 않게 한다. 신청 마감 강조 숫자는 `--recruit-deadline-size: clamp(2.5rem, 6vw, 4.25rem)`를 사용한다. 모집 팝업 최대 폭은 `--recruit-dialog-width: 760px`, 모바일 최대 높이는 `--recruit-dialog-max-height: 85dvh`를 사용한다. 배너 최소 높이는 `--recruit-banner-min-height: 56px`, 모바일에서 줄바꿈되는 실제 높이는 `--recruit-banner-mobile-height: 80px`로 계산한다.
 
 ## 5. 컴포넌트
 
@@ -100,7 +106,7 @@
 - 1기 모집 배너: 고정 헤더 바로 아래의 네이비 한 줄이다. 모집 상태, 신청 마감 8월 31일, 총 80,000원, `당근 댓글 또는 카카오 신청`을 한 버튼으로 보여 주고 클릭하면 상세 팝업을 연다. 카운트다운, 자동 슬라이드, 깜빡임은 사용하지 않는다.
 - 1기 모집 팝업: 기존 관리자 창과 같은 모달 토큰을 재사용한다. 신청 마감 8월 31일을 큰 숫자로 먼저 보여 주고, 4회차 주제는 날짜 없이 표시한다. 총 교육비와 할인 금액, 정원, 당근 댓글과 개인 카카오톡 신청 버튼을 구분선으로 쌓는다. 데스크톱은 중앙 대화상자, 모바일은 화면 높이 85% 이하에서 내부 스크롤한다. 첫 방문 3초 뒤 한 번만 자동으로 열고, 닫은 뒤 같은 방문과 24시간 동안 자동으로 다시 열지 않는다.
 - Report Hub 상단 링크: 사용자가 제공한 가로형 원본 배너를 한 번만 사용한다. 모바일에서는 브랜드와 메뉴 사이, 데스크톱에서는 주요 메뉴 오른쪽에 배치하며 새 탭으로 연다. 흰색 표면과 1px 구분선만 사용하고 원본 색상·비율·여백을 변형하지 않는다.
-- 히어로: 최대 폭 1520px의 비대칭 2열. 왼쪽에는 두 줄 메시지만 두고 오른쪽에는 실제 A 심볼을 배치한다. 파도는 생성한 실사 배경 자산 한 장만 사용하며 버튼, 지식 노드, 카드, 별도 설명은 두지 않는다. 모바일에서는 문구 다음에 A 심볼이 오고 파도는 하단에 유지한다. 심볼 하단 여백은 `--space-16`을 사용해 화면 끝에 붙지 않게 올리고, 데스크톱의 중앙 정렬 위치는 유지한다.
+- 히어로: 실제 브랜드 영상은 화면 전체를 덮지 않고 오른쪽에 정렬한 16:9 영역으로 사용한다. 데스크톱은 화면 폭의 약 70%, 태블릿은 80%, 모바일은 92%를 사용한다. 영상의 사방은 마스크 그라데이션으로 흰 배경에 자연스럽게 이어지며 카드형 경계선과 모서리는 사용하지 않는다. 모바일에서는 문구를 위에, 영상을 아래에 배치하고 데스크톱에서는 문구와 영상이 일부 겹치는 비대칭 구성을 사용한다. 영상 제어 버튼은 48px 높이로 영상 오른쪽 아래에 둔다. 스크롤하면 영상과 문장이 함께 서서히 투명해지고 24px 위로 이동해 다음 콘텐츠로 전환된다. 모션 감소 환경에서는 페이드 이동 없이 일반 문서 스크롤만 사용한다.
 - 버튼: 최소 높이 48px, 좌우 24px, 반지름 999px. hover는 색상 변화, active는 0.98 배율, focus는 3px 파란 링을 사용한다.
 - 정보 영역: 카드 그림자 대신 구분선과 넓은 간격을 사용한다. 반지름은 8px, 16px, 24px 세 단계만 사용한다.
 - 캘린더: 자체 달력 대신 구글 캘린더 월간 보기 iframe을 사용한다. 위에 `내 구글 캘린더에 등록` 버튼을 두고, 누르면 `cid=aibuilderslab.kr@gmail.com`으로 내 구글 캘린더에 구독 추가한다. ICS 주소도 함께 제공한다.
@@ -114,6 +120,7 @@
 - 1기 과정: 네 번의 3시간 수업을 네 개의 펼침 행으로 보여준다. 닫힌 상태에서도 회차, 주제, 필수 결과물이 보이며, 펼치면 180분 시간표가 나타난다. 흐름은 환경 구축, 자동화, 바이브 코딩, 대시보드 완성 순서다. 카드 그림자는 쓰지 않고 구분선으로 리듬을 만든다.
 - 완료 지원: 정규 수업 4회 출석과 안내 실습 수행 등 적용 조건을 하나의 아이스 블루 안내 영역에 표시한다. 지원은 조건 충족자 무상 보충교육 최대 2회, 회당 90분으로 제한한다. 수익이나 성과 보장이 아니라 합의한 교육 결과물의 완료 지원임을 명시한다.
 - 참여 공유 혜택: 히어로 다음, 모집 팝업, 1기 상세에 같은 금액을 반복한다. 정규 교육비 80,000원, 매 수업 결과물 공유 시 50% 할인 40,000원, 매 수업 후기 작성 시 20% 할인 64,000원을 큰 숫자로 보여 준다. 신청 경로는 당근 댓글 또는 개인 카카오톡이다. 할인 확인 방법과 중복 적용 여부는 신청 전에 안내한다고 명시한다.
+- 교육 신청: 교육 단계와 참여 안내 사이에 한 번만 둔다. 네 과정은 같은 크기 카드 대신 1px 구분선이 있는 세로 목록으로 보여주고, 각 행의 과정 안내 링크와 공식 신청 버튼을 분리한다. 공식 신청 폼 주소가 비어 있거나 올바르지 않으면 버튼은 `신청 폼 준비 중`으로 비활성화하되, 개인 카카오톡 문의 링크와 준비 중 안내를 함께 보여준다. 외부 Airtable 폼은 새 창으로 열리며 홈페이지에서 개인정보를 입력받지 않는다.
 - 상태 배지: 현재 운영은 녹색, 검토 중은 황토색을 사용한다. 가격 옆 배지는 항상 텍스트를 포함한다.
 
 ## 6. 모션

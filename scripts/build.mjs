@@ -7,7 +7,7 @@ const clientRoot = resolve(distRoot, "client");
 const serverRoot = resolve(distRoot, "server");
 const metadataRoot = resolve(distRoot, ".openai");
 
-const requiredFiles = ["index.html", "styles.css", "script.js"];
+const requiredFiles = ["index.html", "styles.css", "site-config.js", "script.js"];
 
 for (const file of requiredFiles) {
   await access(resolve(projectRoot, file));
