@@ -98,6 +98,7 @@ if (heroVideo) {
     if (!heroVideoToggle || !heroVideoLabel) return;
     heroVideoLabel.textContent = "재생 불가";
     heroVideoToggle.disabled = true;
+    heroVideoToggle.setAttribute("aria-pressed", "true");
     heroVideoToggle.setAttribute("aria-label", "브랜드 영상을 재생할 수 없음");
   });
 }
