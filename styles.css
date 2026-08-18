@@ -3375,7 +3375,7 @@ body.is-recruit-open {
   color: var(--brand-white);
 }
 
-.cohort-recruit-banner button {
+.cohort-recruit-banner a {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3391,7 +3391,7 @@ body.is-recruit-open {
   cursor: pointer;
 }
 
-.cohort-recruit-banner button:hover {
+.cohort-recruit-banner a:hover {
   background: var(--brand-navy-deep);
 }
 
@@ -3400,7 +3400,7 @@ body.is-recruit-open {
   letter-spacing: -0.02em;
 }
 
-.cohort-recruit-banner > button > span:not(.cohort-recruit-status):not(.cohort-recruit-action) {
+.cohort-recruit-banner > a > span:not(.cohort-recruit-status):not(.cohort-recruit-action) {
   color: var(--brand-ice);
   font-size: 0.8125rem;
 }
@@ -4011,7 +4011,7 @@ body.is-recruit-open {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .cohort-recruit-banner button {
+  .cohort-recruit-banner a {
     flex-wrap: nowrap;
     justify-content: center;
   }

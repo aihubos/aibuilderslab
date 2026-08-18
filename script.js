@@ -20,11 +20,6 @@ const GOOGLE_CALENDAR = Object.freeze({
 
 const ADMIN_SESSION_KEY = "ai-builders-admin-unlocked";
 const ADMIN_PASSWORD_HASH = "3f44b2fbb0aaffb68530a82cd4e4da9498b9337ae9c805b600efff12624c2cc7";
-const RECRUIT_DIALOG_DISMISSED_KEY = "ai-builders-cohort-1-dismissed-at";
-const RECRUIT_DIALOG_SESSION_KEY = "ai-builders-cohort-1-auto-shown";
-const RECRUIT_DIALOG_DELAY_MS = 3000;
-const RECRUIT_DIALOG_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-
 document.documentElement.classList.add("js");
 
 const THEME_STORAGE_KEY = "ai-builders-theme";
@@ -828,74 +823,6 @@ contactButtons.forEach((button) => {
   button.removeAttribute("href");
   button.setAttribute("aria-disabled", "true");
 });
-
-const recruitDialog = document.querySelector("[data-recruit-dialog]");
-const recruitOpenButtons = [...document.querySelectorAll("[data-recruit-open]")];
-const recruitCloseButton = document.querySelector("[data-recruit-close]");
-const recruitCurriculumLink = document.querySelector("[data-recruit-curriculum]");
-let recruitDialogTrigger = null;
-
-function canAutoOpenRecruitDialog() {
-  if (sessionStorage.getItem(RECRUIT_DIALOG_SESSION_KEY) === "true") return false;
-  const dismissedAt = Number(localStorage.getItem(RECRUIT_DIALOG_DISMISSED_KEY) || 0);
-  if (!dismissedAt) return true;
-  return Date.now() - dismissedAt >= RECRUIT_DIALOG_COOLDOWN_MS;
-}
-
-function restoreRecruitDialogFocus() {
-  if (recruitDialogTrigger && typeof recruitDialogTrigger.focus === "function") {
-    recruitDialogTrigger.focus();
-  }
-  recruitDialogTrigger = null;
-}
-
-function closeRecruitDialog({ remember = true } = {}) {
-  if (!recruitDialog?.open) return;
-  if (remember) {
-    localStorage.setItem(RECRUIT_DIALOG_DISMISSED_KEY, String(Date.now()));
-  }
-  recruitDialog.close();
-}
-
-function openRecruitDialog({ manual = false } = {}) {
-  if (!recruitDialog || recruitDialog.open) return;
-  if (!manual && !canAutoOpenRecruitDialog()) return;
-  recruitDialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  if (!manual) sessionStorage.setItem(RECRUIT_DIALOG_SESSION_KEY, "true");
-  document.body.classList.add("is-recruit-open");
-  recruitDialog.showModal();
-  recruitCloseButton?.focus();
-}
-
-function scheduleRecruitDialog() {
-  window.setTimeout(() => openRecruitDialog({ manual: false }), RECRUIT_DIALOG_DELAY_MS);
-}
-
-recruitOpenButtons.forEach((button) => {
-  button.addEventListener("click", () => openRecruitDialog({ manual: true }));
-});
-
-recruitCloseButton?.addEventListener("click", () => closeRecruitDialog({ remember: true }));
-
-recruitCurriculumLink?.addEventListener("click", () => {
-  closeRecruitDialog({ remember: true });
-});
-
-recruitDialog?.addEventListener("click", (event) => {
-  if (event.target === recruitDialog) closeRecruitDialog({ remember: true });
-});
-
-recruitDialog?.addEventListener("cancel", (event) => {
-  event.preventDefault();
-  closeRecruitDialog({ remember: true });
-});
-
-recruitDialog?.addEventListener("close", () => {
-  document.body.classList.remove("is-recruit-open");
-  restoreRecruitDialogFocus();
-});
-
-scheduleRecruitDialog();
 
 const VISITOR_COUNT_KEY_NAME = "aibuilderslab-site-visits";
 const VISITOR_TODAY_KEY_NAME = "aibuilderslab-site-visits-today";
