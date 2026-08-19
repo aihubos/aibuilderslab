@@ -2824,18 +2824,32 @@ p {
   min-height: 52px;
   padding: 0 16px;
   border-radius: 16px;
-  background: #fff7f0;
-  color: #c93400;
+  background: var(--brand-blue);
+  color: #fff;
   font-size: 0.95rem;
   font-weight: 800;
 }
-.workshop-cta-kakao {
-  background: #fff8cc;
-  color: #3d2e00;
+.workshop-cta-ghost {
+  background: #fff;
+  color: var(--brand-blue-strong);
+  border: 1px solid var(--border-light);
 }
 .workshop-cta-apply:hover,
 .workshop-cta-apply:focus-visible {
   transform: translateY(-1px);
+}
+.inline-blue-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 16px;
+  color: var(--brand-blue-strong);
+  font-size: 1rem;
+  font-weight: 800;
+}
+.inline-blue-link:hover,
+.inline-blue-link:focus-visible {
+  color: var(--brand-blue);
 }
 .workshop-cta > p {
   margin: 4px 0 0;
@@ -2953,7 +2967,7 @@ p {
 }
 
 .contact-channel-list a[data-channel="daangn"] {
-  --channel-color: var(--channel-daangn);
+  --channel-color: var(--brand-blue);
 }
 
 .contact-channel-list a:hover {
