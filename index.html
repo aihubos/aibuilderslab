@@ -106,7 +106,6 @@
 
         <nav class="site-nav" id="primary-navigation" aria-label="주요 메뉴" data-site-nav>
           <a href="#about">소개</a>
-          <a href="#method">학습 방식</a>
           <a href="#stages">커리큘럼</a>
           <a href="#schedule">교육 일정표</a>
           <a href="hermes.html">Hermes 3시간</a>
@@ -310,38 +309,41 @@
             </h1>
             <p class="hero-method-note">먼저 만들고, 실행하고, 수정하며 배웁니다.</p>
             <div class="hero-method-actions">
-              <a class="button button-primary" href="#method">학습 방식 보기</a>
-              <a class="button button-secondary" href="#stages">커리큘럼 보기</a>
+              <a class="button button-primary" href="#workshop">3시간 모임 보기</a>
+              <a class="button button-secondary" href="hermes.html">Hermes 자세히</a>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="hero-benefit" aria-labelledby="hero-benefit-title">
+      <section class="hero-benefit" id="workshop" aria-labelledby="hero-benefit-title">
         <div class="section-shell">
-          <p class="section-kicker">교육 구성</p>
-          <h2 id="hero-benefit-title">수요일과 토요일에 만나고,<br />필요한 분은 1:1로 이어갑니다.</h2>
+          <p class="section-kicker">수요일 · 토요일 3시간</p>
+          <h2 id="hero-benefit-title">Hermes와 LLM Wiki를<br />직접 설치하고 써봅니다.</h2>
+          <p class="hero-benefit-apply">개발 팀을 꾸리는 수업이 아닙니다. 노트북에 Hermes를 설치하고 텔레그램으로 실행한 뒤, 내 자료를 남겨 두는 LLM Wiki까지 3시간에 맞춥니다.</p>
           <dl class="hero-benefit-list">
             <div>
-              <dt>정기 모임</dt>
+              <dt>Hermes Agent</dt>
               <dd>
-                <strong>3시간</strong>
-                <span>수요일 · 토요일 · 20,000원</span>
+                <strong>2시간</strong>
+                <span>설치, 텔레그램 연동, 기본 사용과 오류 해결</span>
               </dd>
             </div>
             <div>
-              <dt>1:1 맞춤</dt>
+              <dt>LLM Wiki</dt>
               <dd>
-                <strong>문의</strong>
-                <span>비용 · 시간 · 장소 별도 안내</span>
+                <strong>1시간</strong>
+                <span>개인 Wiki 구성, 자료 정리, Hermes와 연결</span>
               </dd>
             </div>
           </dl>
+          <p class="hero-benefit-apply">Hermes는 채팅창에 일을 시키면 내 컴퓨터에서 대신 실행해 주는 AI입니다. LLM Wiki는 나중에 AI가 다시 꺼내 읽게 하는 내 전용 메모장입니다.</p>
           <div class="hero-benefit-actions">
             <a class="button button-primary" data-contact-key="paidWorkshop">당근 댓글로 신청</a>
             <a class="button button-secondary" data-contact-key="kakaoProfile">개인 카카오톡으로 신청</a>
+            <a class="button button-secondary" href="hermes.html">3시간 설명 페이지</a>
           </div>
-          <p class="hero-benefit-apply">교육 신청은 당근 모임 댓글 또는 개인 카카오톡으로 받습니다.</p>
+          <p class="hero-benefit-apply">참가비 20,000원 · 장소 대여비 포함 · 음료는 각자 지참</p>
         </div>
       </section>
 
@@ -379,95 +381,6 @@
           </p>
         </div>
 
-        <ol class="principle-list" aria-label="AI 빌더스 랩 핵심 원칙">
-          <li data-reveal><span>01</span><strong>소수정예로 만납니다.</strong></li>
-          <li data-reveal><span>02</span><strong>만들고 싶은 결과부터 정합니다.</strong></li>
-          <li data-reveal><span>03</span><strong>Plan을 읽고 사람이 승인합니다.</strong></li>
-          <li data-reveal><span>04</span><strong>첫 버전을 직접 열고 실행합니다.</strong></li>
-          <li data-reveal><span>05</span><strong>수정 전 버전을 남기고 사람이 검수합니다.</strong></li>
-        </ol>
-      </section>
-
-      <section class="method-section" id="method" aria-labelledby="method-title">
-        <div class="section-shell">
-          <header class="method-heading" data-reveal>
-            <p class="section-kicker">AI 빌더스 랩 학습 방식</p>
-            <h2 id="method-title">설명부터 시작하지 않습니다.<br />만들고 싶은 결과부터 시작합니다.</h2>
-            <p>
-              모든 빌더가 같은 예제를 따라가는 대신, 각자가 원하는 결과를 먼저 정합니다.
-              설명은 없어지는 것이 아니라 실제로 막히고 판단이 필요한 순간에 배웁니다.
-            </p>
-          </header>
-
-          <ol class="method-flow" aria-label="결과 중심 프로젝트 학습 순서">
-            <li data-reveal>
-              <span>01</span>
-              <div><strong>원하는 결과를 찾습니다.</strong><p>누가, 언제, 무엇을 위해 사용할지 한 문장으로 정합니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>02</span>
-              <div><strong>Hermes가 Plan을 작성합니다.</strong><p>완성 모습, 첫 버전 기준, 제작 순서, 필요한 도구와 위험 요소를 적습니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>03</span>
-              <div><strong>빌더와 강사가 함께 승인합니다.</strong><p>빠진 기능, AI가 임의로 만든 조건, 확인 방법이 없는 부분을 먼저 고칩니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>04</span>
-              <div><strong>첫 버전을 만듭니다.</strong><p>완성품보다 직접 열고, 재생하고, 실행할 수 있는 최소 결과를 먼저 만듭니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>05</span>
-              <div><strong>직접 실행해 확인합니다.</strong><p>예상한 결과와 실제 결과를 비교하고 정확한 오류와 빠진 내용을 기록합니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>06</span>
-              <div><strong>필요한 개념만 배웁니다.</strong><p>지금의 문제를 이해하고 다음 판단을 내리는 데 필요한 만큼 설명합니다.</p></div>
-            </li>
-            <li data-reveal>
-              <span>07</span>
-              <div><strong>새 Plan과 버전을 남긴 뒤 수정합니다.</strong><p>한 가지 변경씩 적용하고 다시 실행해 품질과 퇴행 여부를 검수합니다.</p></div>
-            </li>
-          </ol>
-
-          <aside class="first-version-callout" data-reveal>
-            <p>첫 버전은 완성품이 아닙니다.</p>
-            <strong>다음 수정이 좋아졌는지 비교할 수 있는 첫 기준점입니다.</strong>
-          </aside>
-
-          <div class="method-editorial-grid">
-            <section class="project-formats" aria-labelledby="project-formats-title" data-reveal>
-              <header>
-                <p class="section-kicker">선택 가능한 결과</p>
-                <h3 id="project-formats-title">도구가 아니라<br />만들고 싶은 결과를 고릅니다.</h3>
-              </header>
-              <ul>
-                <li><span>웹과 앱</span><strong>웹페이지, 서비스 화면, 간단한 게임</strong></li>
-                <li><span>자동화</span><strong>Telegram 봇, AI 에이전트, 반복 업무 흐름</strong></li>
-                <li><span>문서</span><strong>보고서, 전자책, 교재, 교육자료</strong></li>
-                <li><span>이미지</span><strong>로고, 만화, 포스터, 인포그래픽</strong></li>
-                <li><span>미디어</span><strong>영상, 음악, 오디오 결과물</strong></li>
-                <li><span>데이터</span><strong>개인 대시보드와 데이터 시각화</strong></li>
-                <li><span>지식 시스템</span><strong>Obsidian, Second Brain, LLM Wiki</strong></li>
-              </ul>
-            </section>
-
-            <section class="first-version-guide" aria-labelledby="first-version-title" data-reveal>
-              <header>
-                <p class="section-kicker">형식별 첫 버전</p>
-                <h3 id="first-version-title">수업 안에서 확인할 수 있는<br />작은 기준부터 만듭니다.</h3>
-              </header>
-              <dl>
-                <div><dt>웹과 앱</dt><dd>첫 화면과 핵심 동작 1개</dd></div>
-                <div><dt>자동화</dt><dd>안전한 테스트 입력과 출력 1회</dd></div>
-                <div><dt>문서와 교재</dt><dd>수정 가능한 원본과 핵심 구조</dd></div>
-                <div><dt>이미지</dt><dd>열어보고 사람이 수정할 수 있는 원본</dd></div>
-                <div><dt>영상과 음악</dt><dd>재생 가능한 첫 구간 또는 핵심 장면</dd></div>
-                <div><dt>지식 시스템</dt><dd>실제 노트, 폴더, 링크가 연결된 묶음</dd></div>
-              </dl>
-            </section>
-          </div>
-        </div>
       </section>
 
       <section class="stages-section" id="stages" aria-labelledby="stages-title">
