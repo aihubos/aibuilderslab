@@ -31,7 +31,7 @@
 | `--calendar-sunday-bg` | `#FFF1F0` | 공휴일의 옅은 배경 |
 | `--calendar-saturday` | `#0B63CE` | 토요일 날짜 |
 | `--channel-kakao` | `#FEE500` | 카카오톡 참여 링크의 얇은 색상선 |
-| `--channel-daangn` | `#FF6F0F` | 당근 모임 링크의 얇은 색상선 |
+| `--channel-daangn` | `#2389FE` | 당근 모임 링크의 얇은 색상선 |
 | `--hero-video-edge-fade` | 가로·세로 `linear-gradient` 2개, 중앙 20%~80% 투명 | 영상 중앙 60%는 덮지 않고 상하좌우 외곽 20%만 흰 배경으로 연결하는 소실 그라데이션 |
 | `--hero-video-crop-scale` | `1.12` | 영상 우측 하단 표시를 화면 밖으로 밀어내는 확대 크롭 |
 | `--hero-video-watermark-fade` | `radial-gradient(circle at 100% 100%, #fff 0%, rgba(255,255,255,.98) 10%, rgba(255,255,255,.84) 18%, transparent 31%)` | 중앙 밝기를 유지하면서 영상 우측 하단 표시만 덮는 흰색 소실 영역 |

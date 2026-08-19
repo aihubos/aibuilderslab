@@ -25,7 +25,7 @@
   --calendar-sunday-bg: #FFF1F0;
   --calendar-saturday: #0B63CE;
   --channel-kakao: #FEE500;
-  --channel-daangn: #FF6F0F;
+  --channel-daangn: #2389FE;
   --focus-ring: #2389FE;
   --accent-foreground: #FFFFFF;
   --hero-text: #000C3D;
@@ -2770,6 +2770,28 @@ p {
 .application-actions,
 
 
+
+.workshop-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 18px;
+}
+.workshop-heading h2 {
+  margin-bottom: 0;
+  max-width: min(16ch, 100%);
+  flex: 1 1 280px;
+}
+.workshop-detail-btn {
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
 .workshop-cta {
   display: grid;
   gap: 14px;
@@ -2856,6 +2878,16 @@ p {
   color: var(--text-secondary);
   font-size: 0.875rem;
   text-align: center;
+}
+@media (max-width: 720px) {
+  .workshop-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .workshop-heading h2 {
+    max-width: none;
+  }
 }
 @media (max-width: 640px) {
   .workshop-cta-row { grid-template-columns: 1fr; }
