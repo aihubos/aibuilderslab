@@ -2769,41 +2769,82 @@ p {
 
 .application-actions,
 
-.hermes-click {
+
+.workshop-cta {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 640px);
+  margin: 36px auto 0;
+}
+.workshop-cta-main {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 92px;
+  padding: 22px 26px;
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(7, 19, 49, 0.05);
+}
+.workshop-cta-main small {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.workshop-cta-main strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+}
+.workshop-cta-main em {
+  color: var(--brand-blue);
+  font-size: 1.75rem;
+  font-style: normal;
+  font-weight: 400;
+}
+.workshop-cta-main:hover,
+.workshop-cta-main:focus-visible {
+  border-color: rgba(35, 137, 254, 0.35);
+  transform: translateY(-2px);
+}
+.workshop-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.workshop-cta-apply {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  width: min(100%, 560px);
-  min-height: 148px;
-  margin: 28px auto 18px;
-  padding: 22px 24px 24px;
-  border-radius: 28px;
-  background: var(--channel-daangn);
-  color: #fff;
-  box-shadow: 0 18px 40px rgba(255, 111, 15, 0.28);
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: #fff7f0;
+  color: #c93400;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.workshop-cta-kakao {
+  background: #fff8cc;
+  color: #3d2e00;
+}
+.workshop-cta-apply:hover,
+.workshop-cta-apply:focus-visible {
+  transform: translateY(-1px);
+}
+.workshop-cta > p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
   text-align: center;
 }
-.hermes-click:hover,
-.hermes-click:focus-visible {
-  transform: translateY(-3px);
-  background: #ff7d22;
-}
-.hermes-click-kicker {
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  opacity: 0.92;
-}
-.hermes-click strong {
-  font-size: clamp(3.2rem, 8vw, 5rem);
-  line-height: 0.95;
-  letter-spacing: -0.06em;
-}
-.hermes-click-sub {
-  font-size: 1rem;
-  font-weight: 750;
+@media (max-width: 640px) {
+  .workshop-cta-row { grid-template-columns: 1fr; }
 }
 .hero-benefit-actions,
 .sharing-benefit-actions {
