@@ -2821,6 +2821,56 @@ p {
 .workshop-toggle:focus-visible .workshop-toggle-knob {
   transform: scale(1.04);
 }
+.hermes-use {
+  display: grid;
+  gap: var(--space-8);
+  max-width: var(--reading-width);
+  margin: var(--space-10) 0 0;
+}
+.hermes-use h3 {
+  max-width: 16ch;
+  margin: 0 0 var(--space-4);
+  color: var(--text-primary);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+.hermes-use p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.hermes-use-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-light);
+}
+.hermes-use-list li {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--border-light);
+}
+.hermes-use-list strong {
+  color: var(--text-primary);
+  font-size: 1.0625rem;
+  letter-spacing: -0.03em;
+}
+.hermes-use-list span {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+@media (min-width: 860px) {
+  .hermes-use {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-12);
+    align-items: start;
+    max-width: none;
+  }
+}
 .workshop-cta {
   display: grid;
   gap: 14px;
