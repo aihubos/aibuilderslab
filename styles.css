@@ -2828,47 +2828,84 @@ p {
   margin: var(--space-10) 0 0;
 }
 .hermes-use h3 {
-  max-width: 16ch;
-  margin: 0 0 var(--space-4);
+  max-width: 12ch;
+  margin: 0 0 var(--space-5);
   color: var(--text-primary);
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  letter-spacing: -0.04em;
-  line-height: 1.2;
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+  letter-spacing: -0.05em;
+  line-height: 1.12;
 }
 .hermes-use p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  line-height: 1.65;
 }
 .hermes-use-list {
+  display: grid;
+  gap: var(--space-5);
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--border-light);
 }
 .hermes-use-list li {
   display: grid;
-  gap: var(--space-1);
-  padding-block: var(--space-5);
-  border-bottom: 1px solid var(--border-light);
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
+  padding: var(--space-5);
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  background: #fff;
+}
+.hermes-use-list img {
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  object-fit: cover;
+  background: var(--surface-light);
+}
+.hermes-use-list div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 .hermes-use-list strong {
   color: var(--text-primary);
-  font-size: 1.0625rem;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.045em;
+  line-height: 1.15;
 }
 .hermes-use-list span {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: clamp(1.0625rem, 1.8vw, 1.25rem);
+  line-height: 1.55;
 }
-@media (min-width: 860px) {
+@media (min-width: 980px) {
   .hermes-use {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     gap: var(--space-12);
     align-items: start;
     max-width: none;
+  }
+  .hermes-use-list li {
+    grid-template-columns: 132px minmax(0, 1fr);
+    padding: var(--space-6);
+  }
+  .hermes-use-list img {
+    width: 132px;
+    height: 132px;
+  }
+}
+@media (max-width: 560px) {
+  .hermes-use-list li {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+  .hermes-use-list img {
+    width: min(100%, 220px);
+    height: auto;
+    aspect-ratio: 1;
   }
 }
 .workshop-cta {
