@@ -46,15 +46,18 @@ expect(installHtml.includes('data-install-request'), "복사할 설치 요청문
 expect(installHtml.includes('role="tablist"'), "운영체제 선택기가 없습니다.");
 expect(installHtml.includes("macOS") && installHtml.includes("Windows"), "macOS와 Windows 안내가 모두 필요합니다.");
 expect(installHtml.includes("TELEGRAM_ALLOWED_USERS"), "Telegram 사용자 허용 목록 안내가 없습니다.");
-expect(installHtml.includes("v1.2.0"), "안정 버전이 설치 요청문에 없습니다.");
+expect(installHtml.includes("v1.2.1"), "안정 버전이 설치 요청문에 없습니다.");
 expect(
-  installHtml.includes("https://raw.githubusercontent.com/jeremylee0213/builderslab-starter/v1.2.0/prompts/codex-install.md"),
+  installHtml.includes("https://raw.githubusercontent.com/jeremylee0213/builderslab-starter/v1.2.1/prompts/codex-install.md"),
   "버전 고정 Codex 지침 URL이 없습니다.",
 );
 expect(installHtml.includes("공식 Hermes Desktop App만 설치"), "Desktop 전용 설치 안내가 없습니다.");
 expect(installHtml.includes("Desktop 확인에 실패하면 전체 설치를 중단"), "Desktop 확인 실패 중단 안내가 없습니다.");
 expect(installHtml.includes("CLI 전용 설치를 자동 실행하지"), "CLI 전용 자동 설치 금지 안내가 없습니다.");
 expect(installHtml.includes("`1`, `2`, `3` 형식으로 답하게"), "번호형 사용자 질문 안내가 없습니다.");
+expect(installHtml.includes("Hermes 공식 비밀번호형 자격증명 입력란"), "Bot Token 전용 입력란 안내가 없습니다.");
+expect(installHtml.includes("Bot Token 단계에서는 Hermes 자격증명 입력란을 열고"), "복사 요청문에 Bot Token 붙여넣기 안내가 없습니다.");
+expect(installHtml.includes("Codex 대화창, 홈페이지, 공개 문서에는 붙여넣지"), "Bot Token 노출 방지 안내가 없습니다.");
 expect(!installHtml.includes("필요한 경우에만 공식 CLI 설치를 선택"), "CLI 대체 선택 문구가 남아 있습니다.");
 expect(installHtml.includes("raw/") && installHtml.includes("pages/") && installHtml.includes("prompts/"), "Raw, Pages, 프롬프트 폴더 안내가 없습니다.");
 expect(!/curl -fsSL|iex\s*\(irm/i.test(installHtml), "홈페이지에 긴 설치 명령을 중복하면 안 됩니다.");
