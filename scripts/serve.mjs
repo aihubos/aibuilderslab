@@ -21,7 +21,7 @@ const contentTypes = new Map([
 
 function safePathname(requestUrl) {
   const pathname = decodeURIComponent(new URL(requestUrl, `http://127.0.0.1:${port}`).pathname);
-  const requestedPath = pathname === "/" ? "/index.html" : pathname;
+  const requestedPath = pathname === "/" ? "/index.html" : pathname.endsWith("/") ? `${pathname}index.html` : pathname;
   const absolutePath = resolve(projectRoot, `.${requestedPath}`);
   const rootPrefix = projectRoot.endsWith(sep) ? projectRoot : `${projectRoot}${sep}`;
   return absolutePath.startsWith(rootPrefix) ? absolutePath : null;
@@ -121,6 +121,24 @@ const server = createServer(async (request, response) => {
   if (requestUrl.pathname === "/api/google-calendar") {
     await proxyGoogleCalendarHtml(requestUrl, response);
     return;
+  }
+
+  if (
+    requestUrl.pathname !== "/" &&
+    !requestUrl.pathname.endsWith("/") &&
+    !extname(requestUrl.pathname)
+  ) {
+    const directoryIndex = safePathname(`${requestUrl.pathname}/`);
+    try {
+      const indexStat = directoryIndex ? await stat(directoryIndex) : null;
+      if (indexStat?.isFile()) {
+        response.writeHead(308, { Location: `${requestUrl.pathname}/${requestUrl.search}` });
+        response.end();
+        return;
+      }
+    } catch {
+      /* 파일 처리 단계에서 일반 404로 응답합니다. */
+    }
   }
 
   const filePath = safePathname(request.url || "/");

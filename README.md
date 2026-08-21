@@ -18,6 +18,8 @@ npm run build
 
 페이지 원본은 `index.html`, `styles.css`, `script.js`, `assets/`에 있습니다. 별도 프레임워크나 화면 라이브러리를 사용하지 않습니다.
 
+Hermes, Obsidian, LLM Wiki 설치 안내는 `install/index.html`에 있으며 공개 주소는 `https://builderslab.ai-hub-os.com/install`입니다. 기존 `hermes.html` 입문교육 페이지와 분리해 운영합니다.
+
 ## 교육 신청
 
 홈페이지 교육 신청은 당근 모임 댓글 또는 개인 카카오톡으로 받습니다.

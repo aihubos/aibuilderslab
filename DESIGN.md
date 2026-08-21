@@ -138,6 +138,21 @@ CSS에서는 작은 글 크기를 `--font-small: 0.875rem` 토큰으로 사용�
 
 기본 깊이 전략은 표면 색상과 1px 구분선이다. 내비게이션에만 부드러운 그림자 한 단계를 허용한다. 히어로 심볼은 파도 배경 위에 그림자나 카드 없이 직접 놓는다. 반복 카드, 유리 패널, 강한 글로우는 사용하지 않는다.
 
+## 설치 페이지 확장 토큰
+
+`/install`은 기존 기본 블루 테마를 그대로 사용하며 아래 토큰만 추가한다.
+
+- `--install-title-size: 2.5rem`, `--install-title-size-wide: 4rem`: 히어로 제목. 700, 행간 1.08, 자간 0.
+- `--install-heading-size: 2rem`, `--install-heading-size-wide: 3rem`: 설치 페이지 대제목. 700, 행간 1.12, 자간 0.
+- `--install-lead-size: 1.25rem`: 히어로 설명. 450, 행간 1.65, 자간 0.
+- `--install-code-size: 0.875rem`: 요청문과 Vault 트리.
+- `--install-copy-width: 700px`: 히어로 문장 최대 폭.
+- `--install-segment-width: 420px`: 운영체제 선택기 최대 폭.
+- `--install-hero-overlay: linear-gradient(90deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.9) 54%, rgba(255,255,255,.98) 100%)`: 데스크톱 이미지 위 오른쪽 문장 대비.
+- `--install-hero-overlay-mobile: rgba(255,255,255,.9)`: 모바일 이미지 위 문장 대비.
+
+설치 단계는 그림자 없는 구분선 행, 운영체제 선택은 2항목 segmented control, 승인 안내는 `--status-review`와 `--status-review-bg`, 복사 성공은 `--status-current`와 `--status-current-bg`를 사용한다. 모든 동작은 180ms `--ease-out`이며 모션 감소 환경에서는 즉시 표시한다.
+
 ## 금지 규칙
 
 - 보라색 그라데이션, 네온 글로우, 사이버펑크 배경을 사용하지 않는다. 네온 옐로우 테마도 단색 강조만 사용한다.
