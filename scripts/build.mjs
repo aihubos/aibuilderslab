@@ -13,6 +13,7 @@ const requiredFiles = [
   "styles.css",
   "site-config.js",
   "script.js",
+  "sitemap.xml",
   "install/index.html",
   "install/install.css",
   "install/install.js",
@@ -34,6 +35,7 @@ for (const file of [
   "site-config.js",
   "script.js",
   "robots.txt",
+  "sitemap.xml",
   "CNAME",
   ".nojekyll",
 ]) {
@@ -53,13 +55,18 @@ await cp(
 );
 
 const html = await readFile(resolve(clientRoot, "index.html"), "utf8");
-if (!html.includes("AI라는 큰 파도")) {
-  throw new Error("완성 페이지의 핵심 문구가 없습니다.");
+if (!html.includes("Hermes와 LLM Wiki를") || !html.includes('id="curriculum"')) {
+  throw new Error("전환형 홈페이지 핵심 섹션이 없습니다.");
 }
 
 const installHtml = await readFile(resolve(clientRoot, "install", "index.html"), "utf8");
 if (!installHtml.includes("Codex 설치 요청문 복사")) {
   throw new Error("설치 페이지의 복사 동작이 없습니다.");
+}
+
+const sitemap = await readFile(resolve(clientRoot, "sitemap.xml"), "utf8");
+if (!sitemap.includes("https://builderslab.ai-hub-os.com/")) {
+  throw new Error("sitemap.xml의 홈페이지 주소가 없습니다.");
 }
 
 await writeFile(resolve(distRoot, "BUILD_OK"), "AI 빌더스 랩 정적 빌드 완료\n");
