@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://builderslab.ai-hub-os.com/sitemap.xml
