@@ -1053,6 +1053,82 @@ p {
   gap: var(--space-2);
 }
 
+.calendar-live-badge {
+  min-height: var(--space-6);
+  margin-bottom: var(--space-3);
+  padding: 0 var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid color-mix(in srgb, var(--status-current) 28%, transparent);
+  border-radius: 999px;
+  background: var(--status-current-bg);
+  color: var(--status-current);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.calendar-live-badge::before {
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: 50%;
+  background: var(--status-current);
+  content: "";
+}
+
+.google-calendar-frame-wrap {
+  margin-top: var(--space-6);
+  overflow: hidden;
+  border: 1px solid var(--page-border);
+  border-radius: var(--radius-control);
+  background: var(--page-surface);
+}
+
+.google-calendar-frame {
+  width: 100%;
+  height: 680px;
+  display: block;
+  border: 0;
+  background: var(--page-surface);
+}
+
+.calendar-live-footer {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.calendar-live-footer .calendar-status {
+  margin: 0;
+}
+
+.calendar-refresh {
+  min-height: var(--space-10);
+  padding: 0 var(--space-4);
+  flex: 0 0 auto;
+  border: 1px solid var(--page-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--page-surface);
+  color: var(--page-primary-dark);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.calendar-refresh:hover {
+  border-color: var(--page-primary-dark);
+  background: var(--page-soft);
+}
+
+.calendar-refresh:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .calendar-ics-link {
   color: var(--brand-blue-accessible);
   font-size: 0.8125rem;
@@ -1796,6 +1872,18 @@ dialog::backdrop {
   .calendar-actions {
     margin-top: var(--space-4);
     justify-items: start;
+  }
+
+  .google-calendar-frame {
+    height: 640px;
+  }
+
+  .calendar-live-footer {
+    display: grid;
+  }
+
+  .calendar-refresh {
+    width: 100%;
   }
 
   .calendar-grid {

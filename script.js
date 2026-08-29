@@ -85,7 +85,7 @@ const heroVideo = document.querySelector("[data-hero-video]");
 const heroVideoButton = document.querySelector("[data-hero-video-load]");
 const heroVideoLabel = document.querySelector("[data-hero-video-label]");
 const heroVideoIcon = document.querySelector(".media-control-icon");
-let heroVideoLoaded = false;
+let heroVideoLoaded = Boolean(heroVideo?.querySelector("source"));
 
 function syncHeroVideoControl() {
   if (!heroVideo || !heroVideoButton || !heroVideoLabel) return;
@@ -132,7 +132,17 @@ heroVideoButton?.addEventListener("click", () => {
 
 if (heroVideo && reduceMotion.matches) {
   heroVideo.pause();
+} else if (heroVideo) {
+  heroVideo.muted = true;
+  heroVideo.loop = true;
+  loadHeroVideo();
 }
+
+reduceMotion.addEventListener("change", (event) => {
+  if (!heroVideo) return;
+  if (event.matches) heroVideo.pause();
+  else loadHeroVideo();
+});
 syncHeroVideoControl();
 
 const curriculumTriggers = [...document.querySelectorAll("[data-curriculum-trigger]")];
@@ -343,62 +353,56 @@ function createMonthGrid(year, monthIndex, events) {
   return grid;
 }
 
-function initGoogleCalendar() {
-  const root = document.querySelector("[data-google-calendar]");
-  const monthLabel = root?.querySelector("[data-calendar-month]");
-  const gridHost = root?.querySelector("[data-calendar-grid]");
-  const status = root?.querySelector("[data-calendar-status]");
-  const prevButton = root?.querySelector("[data-calendar-prev]");
-  const nextButton = root?.querySelector("[data-calendar-next]");
-  if (!root || !monthLabel || !gridHost || !status) return;
+function initLiveGoogleCalendar() {
+  const root = document.querySelector("[data-google-calendar-live]");
+  const frame = root?.querySelector("[data-google-calendar-frame]");
+  const status = root?.querySelector("[data-calendar-live-status]");
+  const refreshButton = root?.querySelector("[data-calendar-refresh]");
+  const subscribeLink = root?.querySelector("[data-calendar-subscribe]");
+  if (!root || !frame || !status) return;
 
-  const today = new Date();
-  let viewYear = today.getFullYear();
-  let viewMonth = today.getMonth();
-  let events = [];
+  const baseUrl = calendarConfig.embedUrl || frame.src;
+  const subscribeUrl = calendarConfig.subscribeUrl;
+  if (subscribeLink && subscribeUrl) setExternalLink(subscribeLink, subscribeUrl);
 
-  function renderMonth() {
-    monthLabel.textContent = `${viewYear}년 ${viewMonth + 1}월`;
-    gridHost.replaceChildren(createMonthGrid(viewYear, viewMonth, events));
+  function calendarMode() {
+    return mobileBreakpoint.matches ? "AGENDA" : "MONTH";
   }
 
-  prevButton?.addEventListener("click", () => {
-    const next = new Date(viewYear, viewMonth - 1, 1);
-    viewYear = next.getFullYear();
-    viewMonth = next.getMonth();
-    renderMonth();
-  });
-
-  nextButton?.addEventListener("click", () => {
-    const next = new Date(viewYear, viewMonth + 1, 1);
-    viewYear = next.getFullYear();
-    viewMonth = next.getMonth();
-    renderMonth();
-  });
-
-  renderMonth();
-  const snapshotUrl = calendarConfig.snapshotUrl || "assets/google-calendar.ics";
-  fetch(snapshotUrl, { cache: "force-cache" })
-    .then((response) => {
-      if (!response.ok) throw new Error(`calendar-${response.status}`);
-      return response.text();
-    })
-    .then((text) => {
-      if (!text.includes("BEGIN:VCALENDAR")) throw new Error("invalid-calendar");
-      events = parseIcsEvents(text);
-      renderMonth();
-      status.textContent = events.length
-        ? "저장된 공개 일정 스냅샷을 표시합니다. 최신 일정은 개인 카카오로 확인해주세요."
-        : "공개 스냅샷에 일정이 없습니다. 최신 일정은 개인 카카오로 확인해주세요.";
-    })
-    .catch(() => {
-      root.classList.add("is-error");
+  function loadCalendar(announce = false) {
+    try {
+      const nextUrl = new URL(baseUrl);
+      nextUrl.searchParams.set("mode", calendarMode());
+      nextUrl.searchParams.set("hl", "ko");
+      nextUrl.searchParams.set("ctz", "Asia/Seoul");
+      nextUrl.searchParams.set("siteRefresh", String(Date.now()));
+      frame.setAttribute("aria-busy", "true");
+      if (refreshButton) refreshButton.disabled = true;
+      status.textContent = announce
+        ? "Google Calendar의 최신 공개 일정을 다시 불러오는 중입니다."
+        : "Google Calendar 공개 일정을 연결하는 중입니다.";
+      frame.src = nextUrl.toString();
+    } catch {
       status.classList.add("is-error");
-      status.textContent = "일정 스냅샷을 읽지 못했습니다. 최신 일정은 개인 카카오로 확인해주세요.";
-    });
+      status.textContent = "Google Calendar 주소를 확인하지 못했습니다. 개인 카카오로 일정을 문의해주세요.";
+    }
+  }
+
+  frame.addEventListener("load", () => {
+    frame.removeAttribute("aria-busy");
+    if (refreshButton) refreshButton.disabled = false;
+    status.classList.remove("is-error");
+    status.textContent = mobileBreakpoint.matches
+      ? "Google Calendar의 최신 공개 일정을 목록으로 표시합니다."
+      : "Google Calendar의 최신 공개 일정을 월간 화면으로 표시합니다.";
+  });
+
+  refreshButton?.addEventListener("click", () => loadCalendar(true));
+  mobileBreakpoint.addEventListener("change", () => loadCalendar(false));
+  loadCalendar(false);
 }
 
-initGoogleCalendar();
+initLiveGoogleCalendar();
 
 const VISITOR_STATS_KEY = "ai-builders-visitor-stats";
 const VISITOR_HIT_KEY = "ai-builders-visitor-hit-on";

@@ -63,15 +63,18 @@ expect((indexHtml.match(/logo-shimmer/g) || []).length >= 3, "로고 금속성 �
 expect(indexHtml.includes("동탄") && indexHtml.includes("개인 노트북"), "지역 또는 준비물이 없습니다.");
 expect(indexHtml.includes('aria-controls="curriculum-part-0"'), "커리큘럼 아코디언 연결이 없습니다.");
 expect(indexHtml.includes("FAQPage") && indexHtml.includes('"@type": "Organization"') && indexHtml.includes('"@type": "Course"'), "JSON-LD 구조화 데이터가 없습니다.");
-expect(!/<video[^>]*\bautoplay\b/i.test(indexHtml), "히어로 영상 자동재생이 남아 있습니다.");
-expect(/<video[^>]*preload="none"/i.test(indexHtml), "히어로 영상의 지연 로드 설정이 없습니다.");
+expect(/<video[^>]*\bautoplay\b[^>]*\bmuted\b[^>]*\bloop\b[^>]*\bplaysinline\b/i.test(indexHtml), "히어로 영상 자동·반복 재생 설정이 없습니다.");
+expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes("hero-builders-character.mp4"), "히어로 영상의 즉시 로드 source가 없습니다.");
 expect(!/api\/google-calendar\.ics|googleapis\.com\/calendar|countapi\.mileshilliard|AIzaSy/i.test(scanned), "실패하는 외부 런타임 호출 또는 API 키가 남아 있습니다.");
-expect(script.includes("assets/google-calendar.ics") && script.includes("일정 스냅샷을 읽지 못했습니다"), "정적 ICS fallback 또는 오류 상태가 없습니다.");
+expect(indexHtml.includes("calendar.google.com/calendar/embed") && indexHtml.includes("data-google-calendar-frame"), "공개 Google Calendar 임베드가 없습니다.");
+expect(indexHtml.includes("data-calendar-refresh") && indexHtml.includes("내 Google Calendar에 추가"), "캘린더 새로고침 또는 구독 동작이 없습니다.");
+expect(script.includes("initLiveGoogleCalendar") && script.includes("AGENDA") && script.includes("MONTH"), "반응형 실시간 캘린더 초기화가 없습니다.");
+expect(!indexHtml.includes("assets/google-calendar.ics"), "메인 화면에 정적 캘린더 스냅샷이 남아 있습니다.");
 expect(!/[—–]/.test(scanned), "화면 문구에 긴 대시 문자가 남아 있습니다.");
 expect(!/data-airtable|Airtable|AIRTABLE|airtable\.com|신청 폼 준비/i.test(scanned), "Airtable 신청 흐름이 남아 있습니다.");
 expect(!/전화 문의|010-3065|821030657890|oneToOneInterest/i.test(scanned), "삭제 대상 전화 문의 정보가 남아 있습니다.");
 expect(!/api\.airtable\.com|Authorization:\s*Bearer|pat[A-Za-z0-9_-]{10,}/i.test(scanned), "외부 인증 정보가 남아 있습니다.");
-expect(config.includes("kakaoProfile") && config.includes("snapshotUrl"), "공개 사이트 설정이 없습니다.");
+expect(config.includes("kakaoProfile") && config.includes("embedUrl") && config.includes("subscribeUrl"), "공개 사이트 설정이 없습니다.");
 expect(source.get("robots.txt").includes("sitemap.xml"), "robots.txt에 sitemap 참조가 없습니다.");
 expect(source.get("sitemap.xml").includes("hermes.html") && source.get("sitemap.xml").includes("install/"), "sitemap.xml 경로가 부족합니다.");
 expect(indexHtml.includes('href="install/"'), "메인 내비게이션에 설치 안내 링크가 없습니다.");
@@ -103,6 +106,7 @@ const builtScript = await readFile(resolve(root, "dist", "client", "script.js"),
 const builtInstall = await readFile(resolve(root, "dist", "client", "install", "index.html"), "utf8");
 const builtLounge = await readFile(resolve(root, "dist", "client", "lounge", "index.html"), "utf8");
 expect(!/api\/google-calendar\.ics|googleapis\.com\/calendar|countapi\.mileshilliard|AIzaSy/i.test(`${builtIndex}\n${builtScript}`), "빌드 결과에 외부 런타임 호출 또는 API 키가 남아 있습니다.");
+expect(builtIndex.includes("calendar.google.com/calendar/embed") && builtIndex.includes("data-google-calendar-frame"), "빌드 결과에 실시간 Google Calendar가 없습니다.");
 expect(builtIndex.includes('id="curriculum"') && builtIndex.includes("FAQPage"), "빌드 결과에 전환형 홈페이지가 없습니다.");
 expect(builtInstall.includes("Codex 설치 요청문 복사"), "빌드 결과에 설치 페이지가 없습니다.");
 expect(builtLounge.includes("AI 회의록") && builtLounge.includes("AI 쇼츠 스튜디오"), "빌드 결과에 멤버 도구 화면이 없습니다.");
@@ -115,4 +119,4 @@ await access(resolve(root, "dist", "client", "lounge", "lounge.css"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.js"));
 await access(resolve(root, "dist", "client", "sitemap.xml"));
 
-console.log("전환형 홈페이지, 정적 캘린더, SEO, 신청 채널과 설치 페이지 정적 검사 통과");
+console.log("전환형 홈페이지, 실시간 Google Calendar, SEO, 신청 채널과 설치 페이지 정적 검사 통과");

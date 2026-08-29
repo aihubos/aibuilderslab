@@ -14,6 +14,7 @@ const contentTypes = new Map([
   [".md", "text/markdown; charset=utf-8"],
   [".png", "image/png"],
   [".avif", "image/avif"],
+  [".mp4", "video/mp4"],
   [".svg", "image/svg+xml"],
   [".webp", "image/webp"],
   [".txt", "text/plain; charset=utf-8"],

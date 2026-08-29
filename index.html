@@ -44,7 +44,7 @@
       type="image/jpeg"
       fetchpriority="high"
     />
-    <link rel="stylesheet" href="styles.css?v=20260829-personal-tone-courses-2" />
+    <link rel="stylesheet" href="styles.css?v=20260829-google-calendar-live" />
     <script>
       document.documentElement.classList.add("no-js");
     </script>
@@ -192,7 +192,9 @@
             </div>
 
             <figure class="hero-media" data-hero-media>
-              <video class="hero-video" data-hero-video preload="none" poster="assets/hero-builders-character-poster.jpg" width="1280" height="720" playsinline aria-label="AI 빌더 캐릭터가 파도 위에서 함께 움직이는 브랜드 영상"></video>
+              <video class="hero-video" data-hero-video preload="auto" poster="assets/hero-builders-character-poster.jpg" width="1280" height="720" autoplay muted loop playsinline aria-label="AI 빌더 캐릭터가 파도 위에서 함께 움직이는 브랜드 영상">
+                <source src="assets/hero-builders-character.mp4" type="video/mp4" />
+              </video>
               <button class="media-control" type="button" data-hero-video-load aria-pressed="false">
                 <span class="media-control-icon" aria-hidden="true">▶</span>
                 <span data-hero-video-label>브랜드 영상 재생</span>
@@ -415,7 +417,7 @@
         <div class="section-intro">
           <p class="eyebrow">일정·장소·정책</p>
           <h2 id="schedule-title">신청 전에 필요한 정보를<br />한곳에서 확인하세요.</h2>
-          <p>최신 확정 일정은 개인 카카오로 안내하고, 아래 달력은 저장소에 포함된 공개 스냅샷을 보여줍니다.</p>
+          <p>아래 달력은 AI 빌더스 랩 Google Calendar의 공개 일정과 직접 연결됩니다. 운영자가 일정을 수정하면 새로고침 후 같은 내용을 확인할 수 있습니다.</p>
         </div>
 
         <div class="schedule-grid">
@@ -436,22 +438,32 @@
             <a class="button button-primary" href="https://open.kakao.com/me/aibuilderslab" data-contact-key="kakaoProfile" data-primary-cta>다음 수업 일정 확인·신청</a>
           </div>
 
-          <div class="calendar-card" data-google-calendar>
+          <div class="calendar-card calendar-live-card" data-google-calendar-live>
             <div class="calendar-card-head">
-              <div><h3>공개 일정 스냅샷</h3><p>assets/google-calendar.ics 기준</p></div>
+              <div>
+                <span class="calendar-live-badge">실시간 연동</span>
+                <h3>AI 빌더스 랩 Google Calendar</h3>
+                <p>Google Calendar 공개 일정 기준</p>
+              </div>
               <div class="calendar-actions">
-                <a class="button button-small button-secondary" href="https://calendar.google.com/calendar/r?cid=aibuilderslab.kr@gmail.com" target="_blank" rel="noopener noreferrer">내 Google Calendar에 등록</a>
-                <a class="calendar-ics-link" href="assets/google-calendar.ics" download>ICS 저장</a>
+                <a class="button button-small button-secondary" href="https://calendar.google.com/calendar/r?cid=aibuilderslab.kr@gmail.com" data-calendar-subscribe target="_blank" rel="noopener noreferrer">내 Google Calendar에 추가</a>
               </div>
             </div>
-            <div class="calendar-toolbar">
-              <button type="button" class="calendar-nav" data-calendar-prev aria-label="이전 달">이전</button>
-              <h4 data-calendar-month>일정을 준비하는 중</h4>
-              <button type="button" class="calendar-nav" data-calendar-next aria-label="다음 달">다음</button>
+            <div class="google-calendar-frame-wrap">
+              <iframe
+                class="google-calendar-frame"
+                src="https://calendar.google.com/calendar/embed?src=aibuilderslab.kr%40gmail.com&amp;ctz=Asia%2FSeoul&amp;mode=MONTH&amp;showTitle=0&amp;showNav=1&amp;showDate=1&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;hl=ko&amp;wkst=2"
+                title="AI 빌더스 랩 실시간 Google Calendar"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                data-google-calendar-frame
+              ></iframe>
             </div>
-            <div class="calendar-grid-wrap" data-calendar-grid></div>
-            <p class="calendar-status" role="status" aria-live="polite" data-calendar-status>저장된 일정 스냅샷을 불러오는 중입니다.</p>
-            <p class="calendar-note">공개 스냅샷이 오래되었거나 읽히지 않으면 최신 일정은 개인 카카오로 확인해주세요.</p>
+            <div class="calendar-live-footer">
+              <p class="calendar-status" role="status" aria-live="polite" data-calendar-live-status>Google Calendar 공개 일정을 연결하는 중입니다.</p>
+              <button class="calendar-refresh" type="button" data-calendar-refresh>일정 새로고침</button>
+            </div>
+            <noscript><p class="calendar-note">JavaScript가 꺼져 있어 월간 Google Calendar 화면으로 표시합니다.</p></noscript>
           </div>
         </div>
       </section>
@@ -521,7 +533,7 @@
       </div>
     </footer>
 
-    <script src="site-config.js?v=20260829-personal-tone-courses"></script>
-    <script src="script.js?v=20260829-personal-tone-courses" defer></script>
+    <script src="site-config.js?v=20260829-google-calendar-live"></script>
+    <script src="script.js?v=20260829-google-calendar-live" defer></script>
   </body>
 </html>

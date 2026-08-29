@@ -15,9 +15,8 @@ window.AI_BUILDERS_CONFIG = Object.freeze({
     preparation: "개인 노트북과 충전기",
   }),
   calendar: Object.freeze({
-    snapshotUrl: "assets/google-calendar.ics",
+    embedUrl: "https://calendar.google.com/calendar/embed?src=aibuilderslab.kr%40gmail.com&ctz=Asia%2FSeoul&mode=MONTH&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&hl=ko&wkst=2",
     subscribeUrl: "https://calendar.google.com/calendar/r?cid=aibuilderslab.kr@gmail.com",
-    icsUrl: "assets/google-calendar.ics",
     email: "aibuilderslab.kr@gmail.com",
   }),
   contactNote: "환불·취소·노쇼 기준과 정확한 공간은 신청 전 개인 카카오로 확인합니다.",
