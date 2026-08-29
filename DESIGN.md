@@ -210,3 +210,59 @@ CSS에서는 작은 글 크기를 `--font-small: 0.875rem` 토큰으로 사용�
 - `--lounge-shadow: 0 4px 16px rgba(7, 19, 49, 0.08)`: 모바일 메뉴와 상단바에만 허용하는 낮은 그림자
 
 앱 본문은 흰색 배경과 1px 구분선을 기본으로 하며, 동일 크기 기능 카드를 반복하지 않는다. 회의록과 쇼츠 연결 자리는 비활성 상태와 `기존 기능 연결 예정` 문구를 함께 표시한다.
+
+## 2026-08-29 개인 홈페이지 톤 정렬
+
+이 절은 공개 홈페이지 `index.html`에 한해 앞선 홈페이지 전환 규칙과 충돌하는 값을 대체한다. `/install`, `/lounge`, `hermes.html`의 별도 화면 규칙은 유지한다.
+
+### 분위기와 구조
+
+- 차가운 흰색과 옅은 회색 바탕, 진한 네이비 글자, 코발트 한 가지 강조색으로 Jeremy 개인 홈페이지와 같은 브랜드 가족으로 보이게 한다.
+- 전체 가로형 AI 빌더스 랩 로고를 히어로와 푸터에 사용한다. 독립 심볼이나 텍스트로 다시 만든 로고는 사용하지 않는다.
+- 히어로는 큰 로고, `배우고, 나누고, 성장한다.`, 교육 선택 안내, 실제 브랜드 영상 순서로 읽힌다.
+- 교육 선택은 홈페이지, 대시보드, 게임, 웹 레포트, Hermes와 LLM Wiki 기본 설치의 다섯 과정이다.
+- 다섯 번째 설치 과정은 데스크톱에서 한 행을 넓게 사용해 같은 크기 카드 반복을 끊는다.
+
+### 공개 홈페이지 전용 토큰
+
+- `--page-canvas: #F7F9FC`
+- `--page-soft: #EEF3FB`
+- `--page-surface: #FFFFFF`
+- `--page-text: #172033`
+- `--page-muted: #5F6B7A`
+- `--page-primary: #2F6BFF`
+- `--page-primary-dark: #1747C9`
+- `--page-border: #E4E9F1`
+- `--page-border-strong: #C9D3E2`
+- `--brand-metal-soft: rgba(205, 224, 255, 0.32)`
+- `--brand-metal-bright: rgba(255, 255, 255, 0.98)`
+- `--font-sans: "Wanted Sans Variable", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif`
+- `--brand-wordmark-hero: clamp(320px, 66vw, 960px)`
+- `--course-image-width: 640px`
+- `--radius-control: 12px`
+- `--radius-card: 20px`
+- `--radius-media: 32px`
+- `--motion-brand-shimmer: 4.8s`
+- `--ease-brand-shimmer: cubic-bezier(0.45, 0, 0.55, 1)`
+- `--shadow-media: 0 24px 64px rgba(23, 32, 51, 0.12)`
+
+### 로고와 모션
+
+- 보이는 전체 로고에는 동일한 `logo-metal-sweep`을 적용한다. 좁은 은백색 반사가 왼쪽에서 오른쪽으로 지나가며 스크롤과 무관하게 4.8초마다 반복한다.
+- 반짝임은 로고의 알파 마스크 안에만 보이고 배경으로 번지지 않는다.
+- `prefers-reduced-motion: reduce`에서는 반짝임, 등장 이동, 스크롤 이동을 끈다.
+- 움직임은 `transform`, `opacity`, `filter`만 사용한다.
+
+### 교육 과정과 가격
+
+- 다섯 과정 모두 3:2 실제 생성 이미지를 사용하고, 이미지에는 사람, 로고, 문자, 워터마크를 넣지 않는다.
+- 홈페이지, 대시보드, 게임, 웹 레포트 과정은 계획, 제작, 확인, 공개의 결과물 흐름을 설명한다.
+- Hermes와 LLM Wiki 과정은 공식 설치 경로, 화면 구성, 기본 테스트 대화, 샘플 노트, 다시 실행하는 순서만 설명한다.
+- Telegram 연결, Gateway, 자동화, 외부 서비스 연동, 고급 에이전트 운영은 기본 설치 과정에 포함하지 않는다.
+- 기본 교육은 3시간 20,000원이다. 그 외 시간은 가격을 표시하지 않고 별도 연락 후 협의한다고 쓴다.
+
+### 서체 출처
+
+- Wanted Sans Variable 공식 저장소: `https://github.com/wanteddev/wanted-sans`
+- 라이선스: SIL Open Font License 1.1, `https://github.com/wanteddev/wanted-sans/blob/main/OFL.txt`
+- 사용 굵기: 400, 500, 600, 700. 합성 굵기를 사용하지 않는다.

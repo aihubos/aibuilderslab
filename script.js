@@ -16,6 +16,14 @@ const CONTACT_LINKS = Object.freeze({
 
 const mobileBreakpoint = window.matchMedia("(max-width: 767px)");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const siteHeader = document.querySelector("[data-header]");
+
+function syncHeaderState() {
+  siteHeader?.classList.toggle("is-scrolled", window.scrollY > 24);
+}
+
+window.addEventListener("scroll", syncHeaderState, { passive: true });
+syncHeaderState();
 
 function setExternalLink(anchor, url) {
   if (!anchor || !url) return;
@@ -170,7 +178,7 @@ accordionAllButton?.addEventListener("click", () => {
 });
 syncAccordionControl();
 
-const sectionIds = ["outcomes", "curriculum", "schedule", "faq"];
+const sectionIds = ["courses", "outcomes", "curriculum", "schedule", "faq"];
 const observedSections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
 
 function markActiveNav(id) {

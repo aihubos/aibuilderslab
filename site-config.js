@@ -8,6 +8,7 @@ window.AI_BUILDERS_CONFIG = Object.freeze({
   course: Object.freeze({
     duration: "3시간",
     price: "20,000원",
+    additionalTime: "그 외 시간 별도 협의",
     capacity: "최대 3명",
     locationLabel: "동탄",
     weekdays: "수요일·토요일",

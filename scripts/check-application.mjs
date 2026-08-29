@@ -41,6 +41,7 @@ function expect(condition, message) {
 }
 
 [
+  "courses",
   "outcomes",
   "proof",
   "curriculum",
@@ -55,6 +56,10 @@ expect((indexHtml.match(/data-primary-cta/g) || []).length >= 4, "주요 카카�
 expect(indexHtml.includes('data-contact-key="kakaoProfile"'), "개인 카카오 CTA 설정이 없습니다.");
 expect(indexHtml.includes("수요일·토요일"), "정기 운영 요일이 없습니다.");
 expect(indexHtml.includes("20,000원") && indexHtml.includes("최대 3명"), "현재 가격 또는 정원이 없습니다.");
+expect(indexHtml.includes("그 외 시간 별도 협의"), "추가 시간 협의 안내가 없습니다.");
+expect((indexHtml.match(/class="course-option(?: |")/g) || []).length === 5, "교육 과정 다섯 개가 모두 표시되지 않습니다.");
+expect(indexHtml.includes("텔레그램 연결, Gateway, 자동화는 포함하지 않습니다."), "기본 설치 과정의 제외 범위가 없습니다.");
+expect((indexHtml.match(/logo-shimmer/g) || []).length >= 3, "로고 금속성 스윕 대상이 부족합니다.");
 expect(indexHtml.includes("동탄") && indexHtml.includes("개인 노트북"), "지역 또는 준비물이 없습니다.");
 expect(indexHtml.includes('aria-controls="curriculum-part-0"'), "커리큘럼 아코디언 연결이 없습니다.");
 expect(indexHtml.includes("FAQPage") && indexHtml.includes('"@type": "Organization"') && indexHtml.includes('"@type": "Course"'), "JSON-LD 구조화 데이터가 없습니다.");

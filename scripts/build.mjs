@@ -61,7 +61,7 @@ await cp(
 );
 
 const html = await readFile(resolve(clientRoot, "index.html"), "utf8");
-if (!html.includes("Hermes와 LLM Wiki를") || !html.includes('id="curriculum"')) {
+if (!html.includes("Hermes와 LLM Wiki를") || !html.includes('id="courses"') || !html.includes('id="curriculum"')) {
   throw new Error("전환형 홈페이지 핵심 섹션이 없습니다.");
 }
 
