@@ -64,7 +64,7 @@ expect(indexHtml.includes("동탄") && indexHtml.includes("개인 노트북"), "
 expect(indexHtml.includes('aria-controls="curriculum-part-0"'), "커리큘럼 아코디언 연결이 없습니다.");
 expect(indexHtml.includes("FAQPage") && indexHtml.includes('"@type": "Organization"') && indexHtml.includes('"@type": "Course"'), "JSON-LD 구조화 데이터가 없습니다.");
 expect(/<video[^>]*\bautoplay\b[^>]*\bmuted\b[^>]*\bloop\b[^>]*\bplaysinline\b/i.test(indexHtml), "히어로 영상 자동·반복 재생 설정이 없습니다.");
-expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes("hero-builders-character.mp4"), "히어로 영상의 즉시 로드 source가 없습니다.");
+expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes("hero-builders-character-loop.mp4"), "히어로 영상의 즉시 로드 source가 없습니다.");
 expect(!/api\/google-calendar\.ics|googleapis\.com\/calendar|countapi\.mileshilliard|AIzaSy/i.test(scanned), "실패하는 외부 런타임 호출 또는 API 키가 남아 있습니다.");
 expect(indexHtml.includes("calendar.google.com/calendar/embed") && indexHtml.includes("data-google-calendar-frame"), "공개 Google Calendar 임베드가 없습니다.");
 expect(indexHtml.includes("data-calendar-refresh") && indexHtml.includes("내 Google Calendar에 추가"), "캘린더 새로고침 또는 구독 동작이 없습니다.");

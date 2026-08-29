@@ -107,7 +107,7 @@ function loadHeroVideo() {
   if (!heroVideo) return;
   if (!heroVideoLoaded) {
     const source = document.createElement("source");
-    source.src = "assets/hero-builders-character.mp4";
+    source.src = "assets/hero-builders-character-loop.mp4";
     source.type = "video/mp4";
     heroVideo.append(source);
     heroVideo.controls = false;
