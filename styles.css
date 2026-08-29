@@ -1960,7 +1960,7 @@ dialog::backdrop {
 .button-primary,
 .header-cta,
 .mobile-sticky-cta {
-  background: var(--page-primary);
+  background: var(--page-primary-dark);
 }
 
 .button-primary:hover,
@@ -2181,6 +2181,15 @@ dialog::backdrop {
 .final-cta-section h2,
 .final-cta-section .eyebrow {
   color: var(--page-text);
+}
+
+.trust-section .eyebrow {
+  color: var(--page-primary-dark);
+}
+
+.trust-section .section-intro > p:last-child,
+.final-cta-section > .section-shell > p:not(.eyebrow) {
+  color: var(--page-muted);
 }
 
 .trust-note,
