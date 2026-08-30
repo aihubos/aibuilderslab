@@ -271,6 +271,12 @@ CSS에서는 작은 글 크기를 `--font-small: 0.875rem` 토큰으로 사용�
 - JavaScript가 꺼져 있어도 기본 월간 캘린더가 표시되어야 한다.
 - 캘린더 계정의 공개 범위를 넘어서는 비공개 일정이나 개인정보를 표시하지 않는다.
 
+### YouTube 연결
+
+- 공식 AI 빌더스 랩 YouTube 채널은 `https://www.youtube.com/@AIBuildersLabKR` 하나만 사용한다.
+- 데스크톱과 모바일의 `더보기` 메뉴, 그리고 푸터 보조 링크에서 같은 채널을 새 탭으로 연다.
+- 외부 YouTube 로고를 다시 그리지 않고 기존 텍스트 링크와 포커스 상태를 재사용한다.
+
 ### 서체 출처
 
 - Wanted Sans Variable 공식 저장소: `https://github.com/wanteddev/wanted-sans`
