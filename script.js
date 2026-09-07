@@ -85,65 +85,118 @@ const heroVideo = document.querySelector("[data-hero-video]");
 const heroVideoButton = document.querySelector("[data-hero-video-load]");
 const heroVideoLabel = document.querySelector("[data-hero-video-label]");
 const heroVideoIcon = document.querySelector(".media-control-icon");
-let heroVideoLoaded = Boolean(heroVideo?.querySelector("source"));
+let heroVideoLoaded = Boolean(heroVideo?.querySelector("source[src]"));
+let motionPaused = reduceMotion.matches;
+let heroInView = true;
+let heroVideoFailed = false;
 
 function syncHeroVideoControl() {
   if (!heroVideo || !heroVideoButton || !heroVideoLabel) return;
-  const isPaused = heroVideo.paused;
-  heroVideoButton.setAttribute("aria-pressed", String(!isPaused));
-  heroVideoLabel.textContent = isPaused ? "브랜드 영상 재생" : "브랜드 영상 일시정지";
-  if (heroVideoIcon) heroVideoIcon.textContent = isPaused ? "▶" : "Ⅱ";
+  heroVideoButton.setAttribute("aria-pressed", String(motionPaused));
+  heroVideoLabel.textContent = motionPaused ? "모션 재생" : "모션 일시정지";
+  if (heroVideoIcon) heroVideoIcon.textContent = motionPaused ? "▶" : "Ⅱ";
 }
 
 function markHeroVideoError() {
-  if (!heroVideoButton || !heroVideoLabel) return;
-  heroVideoButton.disabled = true;
-  heroVideoButton.setAttribute("aria-label", "브랜드 영상을 재생할 수 없음");
-  heroVideoLabel.textContent = "포스터로 보기";
-  if (heroVideoIcon) heroVideoIcon.textContent = "i";
+  heroVideoFailed = true;
+  heroVideo?.setAttribute("aria-label", "브랜드 영상을 불러오지 못해 로고 포스터를 표시합니다.");
 }
 
 function loadHeroVideo() {
-  if (!heroVideo) return;
+  if (!heroVideo || heroVideoFailed) return;
   if (!heroVideoLoaded) {
-    const source = document.createElement("source");
-    source.src = "assets/hero-builders-character-loop.mp4";
-    source.type = "video/mp4";
-    heroVideo.append(source);
+    const source = heroVideo.querySelector("source[data-src]");
+    if (!source) return;
+    source.src = source.dataset.src;
     heroVideo.controls = false;
     heroVideoLoaded = true;
     heroVideo.load();
-    heroVideo.addEventListener("error", markHeroVideoError, { once: true });
   }
   heroVideo.muted = true;
-  heroVideo.play().catch(() => syncHeroVideoControl());
+  heroVideo.play().catch((error) => {
+    if (error.name === "NotAllowedError") {
+      motionPaused = true;
+      syncMotionState();
+    }
+  });
 }
 
-heroVideo?.addEventListener("play", syncHeroVideoControl);
-heroVideo?.addEventListener("pause", syncHeroVideoControl);
-heroVideoButton?.addEventListener("click", () => {
-  if (!heroVideoLoaded) {
-    loadHeroVideo();
-    return;
-  }
-  if (heroVideo.paused) heroVideo.play().catch(() => syncHeroVideoControl());
-  else heroVideo.pause();
-});
-
-if (heroVideo && reduceMotion.matches) {
-  heroVideo.pause();
-} else if (heroVideo) {
-  heroVideo.muted = true;
-  heroVideo.loop = true;
-  loadHeroVideo();
-}
-
-reduceMotion.addEventListener("change", (event) => {
-  if (!heroVideo) return;
-  if (event.matches) heroVideo.pause();
+function syncMotionState() {
+  document.documentElement.classList.toggle("motion-paused", motionPaused);
+  if (motionPaused || !heroInView || document.hidden) heroVideo?.pause();
   else loadHeroVideo();
+  syncHeroVideoControl();
+}
+
+heroVideo?.addEventListener("error", markHeroVideoError);
+heroVideo?.querySelector("source")?.addEventListener("error", markHeroVideoError);
+heroVideoButton?.addEventListener("click", () => {
+  motionPaused = !motionPaused;
+  syncMotionState();
 });
-syncHeroVideoControl();
+
+if (heroVideo && "IntersectionObserver" in window) {
+  new IntersectionObserver(([entry]) => {
+    heroInView = entry.isIntersecting;
+    syncMotionState();
+  }, { threshold: 0.01 }).observe(heroVideo);
+}
+document.addEventListener("visibilitychange", syncMotionState);
+reduceMotion.addEventListener("change", (event) => {
+  motionPaused = event.matches;
+  syncMotionState();
+});
+syncMotionState();
+
+const revealItems = document.querySelectorAll("[data-reveal]");
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.08 });
+  revealItems.forEach((item) => revealObserver.observe(item));
+} else {
+  revealItems.forEach((item) => item.classList.add("is-visible"));
+}
+
+const manifesto = document.querySelector("[data-manifesto]");
+const manifestoWords = [...document.querySelectorAll("[data-word]")];
+let manifestoVisible = false;
+let manifestoFrame = 0;
+
+function updateManifesto() {
+  manifestoFrame = 0;
+  if (!manifesto || motionPaused || reduceMotion.matches || mobileBreakpoint.matches) return;
+  const rect = manifesto.getBoundingClientRect();
+  const headerHeight = siteHeader?.offsetHeight || 0;
+  const progress = Math.max(0, Math.min(1, (headerHeight - rect.top) / Math.max(1, rect.height - innerHeight + headerHeight)));
+  const focus = progress * (manifestoWords.length - 1);
+  manifestoWords.forEach((word, index) => {
+    const distance = Math.min(1, Math.abs(focus - index));
+    word.style.setProperty("--word-opacity", String(1 - distance * 0.38));
+    word.style.setProperty("--word-shift", `${distance * 20}px`);
+  });
+  const indexLabel = manifesto.querySelector(".manifesto-index");
+  if (indexLabel) indexLabel.textContent = `0${Math.round(focus) + 1} / 03`;
+}
+
+function requestManifestoFrame() {
+  if (manifestoVisible && !manifestoFrame) manifestoFrame = requestAnimationFrame(updateManifesto);
+}
+
+if (manifesto && "IntersectionObserver" in window) {
+  new IntersectionObserver(([entry]) => {
+    manifestoVisible = entry.isIntersecting;
+    requestManifestoFrame();
+  }).observe(manifesto);
+  window.addEventListener("scroll", requestManifestoFrame, { passive: true });
+  window.addEventListener("resize", requestManifestoFrame, { passive: true });
+  reduceMotion.addEventListener("change", requestManifestoFrame);
+  heroVideoButton?.addEventListener("click", requestManifestoFrame);
+}
 
 const curriculumTriggers = [...document.querySelectorAll("[data-curriculum-trigger]")];
 const accordionAllButton = document.querySelector("[data-accordion-all]");
@@ -188,7 +241,7 @@ accordionAllButton?.addEventListener("click", () => {
 });
 syncAccordionControl();
 
-const sectionIds = ["courses", "outcomes", "curriculum", "schedule", "faq"];
+const sectionIds = ["courses", "proof", "outcomes", "curriculum", "schedule", "faq"];
 const observedSections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
 
 function markActiveNav(id) {

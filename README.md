@@ -18,7 +18,13 @@ npm run build
 npm run test
 ```
 
-`npm run test`는 전환 섹션, 단일 카카오 CTA, 지연 영상, 정적 ICS 캘린더, JSON-LD, sitemap, 설치 페이지 보존 조건을 검사합니다.
+`npm run test`는 교육 섹션, 카카오 CTA, 로고 MP4 연결, 공개 Google Calendar, JSON-LD, sitemap, 설치 페이지 보존 조건을 검사합니다. 실제 버튼 조작과 영상 재생은 브라우저에서 별도로 확인합니다.
+
+## 로고 영상과 홈페이지 스타일
+
+홈페이지는 `home.css`, 기존 상세·멤버 도구 화면은 `styles.css`를 사용합니다. 새 로고 영상은 `assets/builderslab-brand-motion.mp4`이며 12초·1920×1080·30fps·무음 반복 영상입니다. 기존 로고와 Wanted Sans를 사용하고 외부 영상 서비스나 브라우저 애니메이션 라이브러리를 추가하지 않습니다.
+
+오프라인 재렌더링에는 설치된 `@napi-rs/canvas`와 FFmpeg가 필요합니다. `NODE_PATH`를 해당 패키지 폴더로 지정하고 `node scripts/render-brand-motion.cjs`를 실행합니다. `--preview`를 붙이면 확인용 JPG만 생성합니다. 영상 인코딩이 성공한 뒤에만 기존 MP4를 교체합니다. Wanted Sans 공식 출처는 `https://github.com/wanteddev/wanted-sans`, 라이선스는 `assets/fonts/OFL.txt`에 포함합니다.
 
 ## 공개 운영 정보
 

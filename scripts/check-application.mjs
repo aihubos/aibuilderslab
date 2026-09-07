@@ -6,6 +6,7 @@ const sourceFiles = [
   "index.html",
   "hermes.html",
   "styles.css",
+  "home.css",
   "script.js",
   "site-config.js",
   "robots.txt",
@@ -62,9 +63,12 @@ expect(indexHtml.includes("텔레그램 연결, Gateway, 자동화는 포함하�
 expect((indexHtml.match(/logo-shimmer/g) || []).length >= 3, "로고 금속성 스윕 대상이 부족합니다.");
 expect(indexHtml.includes("동탄") && indexHtml.includes("개인 노트북"), "지역 또는 준비물이 없습니다.");
 expect(indexHtml.includes('aria-controls="curriculum-part-0"'), "커리큘럼 아코디언 연결이 없습니다.");
-expect(indexHtml.includes("FAQPage") && indexHtml.includes('"@type": "Organization"') && indexHtml.includes('"@type": "Course"'), "JSON-LD 구조화 데이터가 없습니다.");
+expect(indexHtml.includes("FAQPage") && /"@type"\s*:\s*"Organization"/.test(indexHtml) && /"@type"\s*:\s*"Course"/.test(indexHtml), "JSON-LD 구조화 데이터가 없습니다.");
 expect(/<video[^>]*\bautoplay\b[^>]*\bmuted\b[^>]*\bloop\b[^>]*\bplaysinline\b/i.test(indexHtml), "히어로 영상 자동·반복 재생 설정이 없습니다.");
-expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes("hero-builders-character-loop.mp4"), "히어로 영상의 즉시 로드 source가 없습니다.");
+expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes('data-src="assets/builderslab-brand-motion.mp4"'), "새 브랜드 MP4 연결이 없습니다.");
+expect(!indexHtml.includes("hero-builders-character"), "교체한 캐릭터 영상이 남아 있습니다.");
+expect(indexHtml.includes('href="home.css?v=20260907-kinetic"'), "홈페이지 전용 스타일이 없습니다.");
+expect(script.includes("syncMotionState") && script.includes("data-manifesto") && script.includes("prefers-reduced-motion"), "모션 제어 또는 감소 설정 처리가 없습니다.");
 expect(!/api\/google-calendar\.ics|googleapis\.com\/calendar|countapi\.mileshilliard|AIzaSy/i.test(scanned), "실패하는 외부 런타임 호출 또는 API 키가 남아 있습니다.");
 expect(indexHtml.includes("calendar.google.com/calendar/embed") && indexHtml.includes("data-google-calendar-frame"), "공개 Google Calendar 임베드가 없습니다.");
 expect(indexHtml.includes("data-calendar-refresh") && indexHtml.includes("내 Google Calendar에 추가"), "캘린더 새로고침 또는 구독 동작이 없습니다.");
@@ -118,5 +122,8 @@ await access(resolve(root, "dist", "client", "lounge", "index.html"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.css"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.js"));
 await access(resolve(root, "dist", "client", "sitemap.xml"));
+await access(resolve(root, "dist", "client", "home.css"));
+await access(resolve(root, "dist", "client", "assets", "builderslab-brand-motion.mp4"));
+await access(resolve(root, "dist", "client", "assets", "builderslab-brand-motion-poster.jpg"));
 
 console.log("전환형 홈페이지, 실시간 Google Calendar, SEO, 신청 채널과 설치 페이지 정적 검사 통과");
