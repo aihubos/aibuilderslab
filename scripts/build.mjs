@@ -1,5 +1,6 @@
 import { access, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import "./build-ai-world.mjs";
 
 const projectRoot = process.cwd();
 const distRoot = resolve(projectRoot, "dist");
@@ -12,6 +13,9 @@ const requiredFiles = [
   "hermes.html",
   "styles.css",
   "home.css",
+  "activities/ai-world-2026/index.html",
+  "activities/ai-world-2026/archive.css",
+  "activities/ai-world-2026/archive.js",
   "site-config.js",
   "script.js",
   "sitemap.xml",
@@ -54,6 +58,9 @@ await cp(resolve(projectRoot, "lounge"), resolve(clientRoot, "lounge"), {
   recursive: true,
 });
 await cp(resolve(projectRoot, "assets"), resolve(clientRoot, "assets"), {
+  recursive: true,
+});
+await cp(resolve(projectRoot, "activities"), resolve(clientRoot, "activities"), {
   recursive: true,
 });
 await cp(resolve(projectRoot, "worker", "index.js"), resolve(serverRoot, "index.js"));

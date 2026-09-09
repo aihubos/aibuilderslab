@@ -107,6 +107,21 @@ html:not(.js) .media-control { display: none; }
 .intro-note > p:first-child { font-size: 28px; line-height: 1.4; letter-spacing: -.025em; font-weight: 600; }
 .intro-note .muted { font-size: 18px; margin-block: 24px; }
 
+.field-feature { margin-top: 40px; }
+.field-feature-link { display: grid; grid-template-columns: 1fr 340px; background: #211630; color: #fff; border-radius: 6px; overflow: hidden; }
+.field-feature-copy { padding: 36px 40px; }
+.field-feature-copy > p:first-child { font-size: 11px; color: #cfbaf8; font-weight: 600; }
+.field-feature-copy > p:first-child span { margin-left: 16px; font-size: 10px; font-weight: 400; letter-spacing: .06em; }
+.field-feature h2 { margin-top: 16px; font-size: clamp(26px,2.6vw,38px); line-height: 1.25; word-break: keep-all; }
+.field-feature-description { color: #c6b7d4; margin-top: 14px; font-size: 14px; line-height: 1.7; }
+.field-feature-action { display: inline-flex; align-items: center; gap: 32px; margin-top: 20px; min-height: 36px; color: #e1d4f7; font-size: 12px; }
+.field-feature-action i { font-style: normal; font-size: 22px; }
+.field-feature-link > img { width: 100%; height: 100%; object-fit: cover; }
+.field-feature-link:hover { background: #312045; }
+.field-feature-link:focus-visible { outline-color: #7545df; }
+@media (max-width: 900px) { .field-feature-link { grid-template-columns: 1fr 260px; }.field-feature-copy { padding: 28px; } }
+@media (max-width: 600px) { .field-feature-link { grid-template-columns: 1fr; }.field-feature-link > img { height: auto; aspect-ratio: 4 / 3; max-height: 280px; order: -1; }.field-feature-copy { padding: 26px; }.field-feature-copy > p:first-child span { display: block; margin: 6px 0 0; }.field-feature-description { font-size: 13px; word-break: keep-all; }.field-feature { margin-top: 24px; } }
+
 /* Natural scroll only. With no JavaScript these are ordinary, visible paragraphs. */
 .manifesto { background: var(--blue); color: var(--white); padding-block: 96px; }
 .manifesto-stage { display: grid; grid-template-columns: 1fr 1.7fr; align-items: center; gap: 64px; }
@@ -380,6 +395,12 @@ html:not(.js) .media-control { display: none; }
   .footer-bottom { display: block; font-size: 11px; }
   .footer-admin-link { margin-top: 16px; }
   .calendar-admin-dialog { padding: 24px; }
+}
+
+@media (max-width: 380px) {
+  .nav-shell { gap: 8px; }
+  .brand { flex-basis: 100px; }
+  .header-cta { font-size: 11px; gap: 8px; padding-inline: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

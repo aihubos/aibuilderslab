@@ -67,7 +67,7 @@ expect(indexHtml.includes("FAQPage") && /"@type"\s*:\s*"Organization"/.test(inde
 expect(/<video[^>]*\bautoplay\b[^>]*\bmuted\b[^>]*\bloop\b[^>]*\bplaysinline\b/i.test(indexHtml), "히어로 영상 자동·반복 재생 설정이 없습니다.");
 expect(/<video[^>]*preload="auto"/i.test(indexHtml) && indexHtml.includes('data-src="assets/builderslab-brand-motion.mp4"'), "새 브랜드 MP4 연결이 없습니다.");
 expect(!indexHtml.includes("hero-builders-character"), "교체한 캐릭터 영상이 남아 있습니다.");
-expect(indexHtml.includes('href="home.css?v=20260907-kinetic"'), "홈페이지 전용 스타일이 없습니다.");
+expect(/href="home\.css(?:\?[^\"]*)?"/.test(indexHtml), "홈페이지 전용 스타일이 없습니다.");
 expect(script.includes("syncMotionState") && script.includes("data-manifesto") && script.includes("prefers-reduced-motion"), "모션 제어 또는 감소 설정 처리가 없습니다.");
 expect(!/api\/google-calendar\.ics|googleapis\.com\/calendar|countapi\.mileshilliard|AIzaSy/i.test(scanned), "실패하는 외부 런타임 호출 또는 API 키가 남아 있습니다.");
 expect(indexHtml.includes("calendar.google.com/calendar/embed") && indexHtml.includes("data-google-calendar-frame"), "공개 Google Calendar 임베드가 없습니다.");
