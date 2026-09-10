@@ -50,6 +50,8 @@ em { font-style: normal; color: var(--blue); }
 .skip-link { position: fixed; top: 12px; left: 20px; z-index: 100; transform: translateY(-160%); padding: 12px 20px; background: var(--ink); color: var(--white); }
 .skip-link:focus { transform: none; }
 .shell { width: min(100% - var(--gutter) * 2, 1440px); margin-inline: auto; }
+.mentor-character-card { max-width: 720px; }
+.mentor-character-card img { display: block; width: 100%; height: auto; border-radius: var(--radius); }
 .section-space { padding-block: var(--section-space); }
 .eyebrow { margin-bottom: 28px; font-size: 12px; font-weight: 600; letter-spacing: .1em; line-height: 1.4; }
 .muted { color: var(--muted); }
