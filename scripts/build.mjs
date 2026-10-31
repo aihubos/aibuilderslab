@@ -85,7 +85,7 @@ if (!loungeHtml.includes("AI 회의록") || !loungeHtml.includes("AI 쇼츠 스�
 }
 
 const sitemap = await readFile(resolve(clientRoot, "sitemap.xml"), "utf8");
-if (!sitemap.includes("https://builderslab.ai-hub-os.com/")) {
+if (!sitemap.includes("https://aibuilderslab.kr/")) {
   throw new Error("sitemap.xml의 홈페이지 주소가 없습니다.");
 }
 
