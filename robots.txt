@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://builderslab.ai-hub-os.com/sitemap.xml
+Sitemap: https://aibuilderslab.kr/sitemap.xml
