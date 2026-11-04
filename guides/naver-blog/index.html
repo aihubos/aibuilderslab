@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>손으로 하는 네이버 블로그 | 수강생 가이드 — AI 빌더스 랩</title>
+  <meta name="description" content="코딩을 몰라도 읽을 수 있는 네이버 블로그 수동 운영 가이드. 제한·검색 노출, 저작권, 대가 표시, 그리고 파워블로그 종료 이후의 공식 기준만 적었습니다.">
+  <meta name="theme-color" content="#f2f4f6">
+  <link rel="canonical" href="https://aibuilderslab.kr/guides/naver-blog/">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:url" content="https://aibuilderslab.kr/guides/naver-blog/">
+  <meta property="og:title" content="손으로 하는 네이버 블로그 | 수강생 가이드">
+  <meta property="og:description" content="자동 프로그램 없이 블로그를 운영할 때의 주의와, 지금 공개된 공식 기준. 숫자는 공식 문서에 있는 것만 적습니다.">
+  <meta property="og:image" content="https://aibuilderslab.kr/assets/builderslab-brand-motion-poster.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="손으로 하는 네이버 블로그 | 수강생 가이드">
+  <meta name="twitter:description" content="제한, 대가 표시, 이달의 블로그·인플루언서. 확인일은 2026년 11월 4일입니다.">
+  <meta name="twitter:image" content="https://aibuilderslab.kr/assets/builderslab-brand-motion-poster.jpg">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/WantedSansVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./guide.css?v=20261104">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": "손으로 하는 네이버 블로그",
+        "description": "비개발 수강생을 위한 네이버 블로그 수동 운영 가이드. 공식 출처만 사용합니다.",
+        "inLanguage": "ko",
+        "datePublished": "2026-11-04",
+        "dateModified": "2026-11-04",
+        "author": { "@type": "Organization", "name": "AI 빌더스 랩", "url": "https://aibuilderslab.kr/" },
+        "publisher": { "@type": "Organization", "name": "AI 빌더스 랩", "url": "https://aibuilderslab.kr/" },
+        "mainEntityOfPage": "https://aibuilderslab.kr/guides/naver-blog/",
+        "image": "https://aibuilderslab.kr/assets/builderslab-brand-motion-poster.jpg"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "파워블로그는 아직 뽑히나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "새 파워블로그 선정은 끝났습니다. 네이버 검색 공식 블로그는 2016년 4월에 블로그팀이 제도 폐지를 공지했다고 적습니다. 이달의 블로그는 검색 랭킹 가산점을 주지 않는다고 같은 글이 설명합니다." }
+          },
+          {
+            "@type": "Question",
+            "name": "이웃이 몇 명이면 인플루언서가 되나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "인플루언서 고객센터 도움말에는 이웃 수, 방문자 수, 글 개수 합격선이 없습니다. 심사는 전문 역량, 콘텐츠 품질, 채널 영향력을 보고, 지원한 주제의 정보성 글을 기준으로 합니다." }
+          },
+          {
+            "@type": "Question",
+            "name": "AI로 글을 쓰면 검색에서 빠지나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "네이버 검색은 좋은 문서라면 만든 방식과 관계없이 노출될 수 있다고 안내합니다. 생성형 AI로 저품질 문서를 많이 만들거나, 복사·키워드 반복·유사 글 대량 생성은 검색에 안 나올 수 있습니다. AI를 썼다면 그 사실을 글에 적으라고 권합니다." }
+          },
+          {
+            "@type": "Question",
+            "name": "체험단 글에 체험후기만 쓰면 되나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "공정위 추천·보증 심사지침은 체험 후기, 체험단, AD, PR 같은 표현을 경제적 이해관계를 명확히 표시한 예로 보지 않습니다. 블로그 글은 제목이나 첫 부분에, 본문과 구분되게 적습니다." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="AI 빌더스 랩 홈">
+        <img src="/assets/ai-builders-lab-logo-transparent-384.webp" width="384" height="128" alt="AI 빌더스 랩">
+      </a>
+      <nav class="site-nav" aria-label="가이드 목차">
+        <a href="#cautions">주의</a>
+        <a href="#disclose">대가 표시</a>
+        <a href="#programs">지금 기준</a>
+        <a href="#routine">30일</a>
+        <a class="home-link" href="/">홈</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="shell">
+        <p class="eyebrow">STUDENT GUIDE · NAVER BLOG</p>
+        <h1>블로그는<br><em>손으로</em> 운영합니다.</h1>
+        <p class="lede">코딩을 몰라도 됩니다. 이 페이지는 자동 프로그램 사용법을 알려주지 않습니다. 네이버와 공정위가 공개한 문장만 옮겼습니다. 문서에 없는 숫자는 적지 않았습니다.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#cautions">먼저 막히는 일 보기</a>
+          <a class="button button-quiet" href="#programs">지금 공식 기준 보기</a>
+        </div>
+        <div class="meta-row" aria-label="안내 범위">
+          <span class="pill">확인일 2026년 11월 4일</span>
+          <span class="pill">법률 자문이 아닙니다</span>
+          <span class="pill">기준은 바뀔 수 있습니다</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="snapshot" aria-labelledby="snapshot-title">
+      <div class="shell">
+        <h2 id="snapshot-title">지금 상태, 네 줄.</h2>
+        <p class="section-intro">파워블로그라는 옛 이름과, 오늘 열려 있는 공식 프로그램을 먼저 구분합니다.</p>
+        <div class="stack">
+          <article class="card">
+            <h3>새 파워블로그 선정은 끝났습니다.</h3>
+            <p>네이버 검색 공식 블로그는 2016년 8월 29일 글에서, 그해 4월 블로그팀이 파워블로그 제도 폐지를 공식 블로그에 공지했다고 적습니다. 같은 글은 이달의 블로그가 2016년 6월에 시작됐고, 예전 파워블로그와 달리 검색 랭킹 가산점을 주지 않는다고 설명합니다.</p>
+            <p>2014년 선정을 마지막으로 신규 선정을 마친다는 문장은, 네이버 블로그팀 공지를 전문 인용한 YTN 기사(2016년 4월 14일)에 남아 있습니다. 원문 게시물 주소는 2026년 11월 4일 확인에서 찾지 못했습니다.</p>
+            <p>공지는 후속을 “하나의 제도”로 바꾸지 않고, 블로그 여러 곳에 녹아 있는 방식으로 가겠다고 말합니다. 그래서 오늘의 합격 조건 하나를 파워블로그 후속으로 단정하지 않습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/naver_search/220799571182" target="_blank" rel="noopener noreferrer">네이버 검색 공식 블로그, 2016-08-29</a> · <a href="https://www.ytn.co.kr/_ln/0103_201604141700063095" target="_blank" rel="noopener noreferrer">YTN, 블로그팀 공지 전문 인용, 2016-04-14</a></span>
+          </article>
+          <article class="card">
+            <h3>오늘 공개된 길은 네 가지입니다.</h3>
+            <p>이달의 블로그, 네이버 인플루언서, 기간이 정해진 블로그 챌린지, 2026년 6월 4일부터 베타인 네이버 메이트. 각각의 공개된 조건은 아래 “지금 기준”에 나눠 적었습니다. 이웃 몇 명, 하루 방문자 몇 명이라는 합격선은 확인한 공식 도움말에 없습니다.</p>
+            <span class="source">출처는 각 절의 링크를 따릅니다. 숫자 기준이 없는 항목은 “공개되지 않음”으로 적습니다.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cautions" aria-labelledby="cautions-title">
+      <div class="shell">
+        <h2 id="cautions-title">손으로 운영할 때<br>막히는 일.</h2>
+        <p class="section-intro">사람들이 “저품질”이라고 부르는 상태는, 공식 문서에서는 이렇게 나뉩니다. 검색에서 빠지거나, 글·블로그 이용이 제한되는 일입니다. “이웃 ○명이면 저품질” 같은 공식 숫자는 확인하지 못했습니다.</p>
+        <div class="stack">
+          <article class="card">
+            <h3>1. 자동 프로그램, 매크로, 트래픽</h3>
+            <p>네이버는 허락한 경우를 빼고, 매크로·로봇·크롤러 같은 자동 수단으로 서비스에 접속하거나 정보를 모으는 행위를 금지합니다. 검색 순위에 영향을 주려는 어뷰징도 금지합니다. 예로 든 행위에는 과도한 트래픽, 리워드 앱으로 클릭·검색·구독을 부풀리는 일, 허락 범위를 넘는 여러 계정, 불법 프로그램, 캡차를 우회하는 일이 있습니다. 걸리면 필터링, 무효 처리, 패널티가 있을 수 있고, 법령상 문제까지 될 수 있다고 적혀 있습니다.</p>
+            <p>서치어드바이저는 웹 문서 기준으로, 여러 계정으로 댓글·방문·추천 수를 조작하거나 자동 프로그램으로 트래픽을 부풀리는 일을 “매크로 및 조작 행위”로 안내합니다. 이 페이지는 그 도구의 사용법을 적지 않습니다.</p>
+            <span class="source">출처: <a href="https://policy.naver.com/rules/disclaimer.html" target="_blank" rel="noopener noreferrer">책임의 한계와 법적 고지</a> · <a href="https://searchadvisor.naver.com/guide/content-abusing" target="_blank" rel="noopener noreferrer">서치어드바이저, 웹 콘텐츠 스팸사례</a></span>
+          </article>
+          <article class="card">
+            <h3>2. 이웃추가, 댓글, 공감, 방문</h3>
+            <p>블로그 운영정책은 다른 사람의 블로그에 피해를 주는 게시물을 반복하면 글쓰기가 제한될 수 있다고 합니다. 단계는 원칙적으로 경고, 그다음 일시 제한, 그다음 계속 제한입니다. 블로그를 팔거나 빌려주는 행위, 그 홍보는 경고 없이 바로 제한될 수 있습니다.</p>
+            <p>공감에는 공개된 숫자가 있습니다. 같은 글에서 공감과 취소를 6회 이상 반복하면 그 글에는 더 공감할 수 없습니다. 그 기준을 3회 반복하면 비정상 이용으로 보고 공감 기능을 7일간 제한합니다. 7일 전에는 풀 수 없습니다.</p>
+            <p>하루 이웃추가 횟수의 상한은, 확인한 블로그 도움말에서 찾지 못했습니다. 이웃 그룹 하나는 최대 500명까지입니다. 이 500명은 그룹에 있는 이웃과, 그 그룹의 서로이웃 신청을 합친 수입니다. 합격 점수가 아닙니다.</p>
+            <p>하루 발행 글 수(스크랩 포함)도 제한된다고 도움말이 적습니다. 정확한 개수는 적혀 있지 않습니다. 이유는 홍보·스팸 목적의 무분별한 등록을 막기 위해서라고 합니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">블로그 서비스 운영정책</a> · <a href="https://help.naver.com/service/5593/contents/15422" target="_blank" rel="noopener noreferrer">공감 제한 및 해제 안내</a> · <a href="https://help.naver.com/service/5593/contents/15406?osType=PC&lang=ko" target="_blank" rel="noopener noreferrer">이웃 그룹 설정 방법</a> · <a href="https://help.naver.com/service/5593/contents/20795?lang=ko" target="_blank" rel="noopener noreferrer">게시글이 더 이상 등록되지 않는 경우</a></span>
+          </article>
+          <article class="card">
+            <h3>3. 복사, 키워드 반복, AI로 많이 만들기</h3>
+            <p>네이버 검색은 2024년 2월 28일, 좋은 문서라면 생성 방식과 관계없이 검색에 나올 수 있다고 안내했습니다. 좋은 문서의 특성으로 적은 것은 신뢰할 수 있는 정보, 직접 경험한 솔직한 후기, 복사·짜깁기가 아닌 독창성, 도움이 될 만큼의 정보와 분석, 읽기 쉬운 글입니다. 생성형 AI를 썼다면 그 사실을 글에 적으라고 권합니다. 의무라는 단어는 쓰지 않았습니다.</p>
+            <p>같은 글이 어뷰징 예로 든 행위는 다음과 같습니다. 다른 문서를 그대로 복사하는 일. 검색에 나오려고 비슷한 키워드를 반복하는 일. 문맥이 끊기고 읽기 어려운 글을 AI로 반복 생성하는 일. 같거나 비슷한 글을 AI로 대량 생산하는 일. 뉴스·웹·블로그를 복사·짜깁기한 뒤 AI로 자동화해 많이 만드는 일. 저품질로 분류되면 검색에 노출되지 않을 수 있습니다.</p>
+            <p>서치어드바이저도 키워드 반복·남용, 스크래핑, 비슷 템플릿의 대량 발행을 스팸 유형으로 안내합니다. AI나 자동화 프로그램을 썼는지만으로 판단하지는 않는다고 적습니다. 스팸으로 보면 검색 제외나 순위 하락이 있을 수 있습니다.</p>
+            <p>블로그팀은 2020년 5월 6일에 API 글쓰기 기능을 종료한다고 공지했습니다. 이유로, 그 기능으로 비슷 글을 기계적으로 많이 발행하는 경우를 확인했다고 적었습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/naver_search/223367781299" target="_blank" rel="noopener noreferrer">네이버 검색, 생성형 AI 검색 노출 정책, 2024-02-28</a> · <a href="https://searchadvisor.naver.com/guide/content-abusing" target="_blank" rel="noopener noreferrer">서치어드바이저, 웹 콘텐츠 스팸사례</a> · <a href="https://blog.naver.com/blogpeople/221893702144" target="_blank" rel="noopener noreferrer">블로그팀, API 글쓰기 종료, 2020-04-06</a></span>
+          </article>
+          <article class="card">
+            <h3>4. 저작권과 내 글 보호</h3>
+            <p>운영정책의 권리 보호 안내는 이렇게 말합니다. 다른 글을 인용하려면 먼저 작성자에게 허락을 구하고, 출처와 원문 링크를 표시합니다. 글에 있는 CCL 표시가 허용한 범위만 사용합니다. 내 글 전문이 도용되거나, 내가 직접 찍은 사진이 도용되면 게시중단 요청으로 신고할 수 있습니다.</p>
+            <p>내 글은 스크랩 범위, 우클릭 복사 방지, CCL로 사용 범위를 정할 수 있습니다. CCL은 저작자가 이용 조건을 적는 표시이고, 저작자 표시는 필수라고 도움말이 적습니다.</p>
+            <p>부적절한 글이 많거나, 블로그 목적이 불법이거나, 법령 위반 신고 뒤 소명·시정이 없거나, 다른 사람 블로그로 오인되게 운영하면 블로그 자체가 제한될 수 있습니다. 그때는 다른 사람의 방문이 제한되고 검색에도 나오지 않습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">블로그 서비스 운영정책, 이용제한·글 권리보호</a> · <a href="https://help.naver.com/service/5593/contents/15551?lang=ko" target="_blank" rel="noopener noreferrer">저작물 이용 허락 표시 방법</a></span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="lists" aria-labelledby="lists-title">
+      <div class="shell">
+        <h2 id="lists-title">오늘 할 일, 하지 말 일.</h2>
+        <p class="section-intro">체크는 이 브라우저에만 저장됩니다. 공식 점수가 아닙니다.</p>
+        <p class="progress" role="status"><strong data-progress="habits">체크 0 / 10</strong><button type="button" data-reset="habits">이 목록 지우기</button></p>
+        <div class="grid-2">
+          <div class="check-card do">
+            <h3><span class="tag">할 일</span> 직접 쓴다</h3>
+            <ul class="check-list" data-group="habits">
+              <li><label><input type="checkbox" data-id="do-experience"><span>상품, 장소, 경험을 내가 실제로 한 뒤에 쓴다.</span></label></li>
+              <li><label><input type="checkbox" data-id="do-source"><span>다른 글을 가져오면 허락, 출처, 원문 링크를 적는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="do-ai"><span>AI를 보탰다면 글에 그 사실을 적는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="do-pay"><span>받은 돈·제품·할인이 있으면 제목이나 첫 부분에 표시한다.</span></label></li>
+              <li><label><input type="checkbox" data-id="do-read"><span>댓글과 공감은 내가 읽은 글에, 한 번만 손으로 남긴다.</span></label></li>
+            </ul>
+          </div>
+          <div class="check-card dont">
+            <h3><span class="tag">하지 말 일</span> 기계에 맡기지 않는다</h3>
+            <ul class="check-list" data-group="habits">
+              <li><label><input type="checkbox" data-id="dont-macro"><span>이웃추가, 댓글, 공감, 방문을 프로그램에 맡기지 않는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="dont-traffic"><span>클릭·방문 수를 돈이나 프로그램으로 올리지 않는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="dont-copy"><span>다른 글을 붙여 넣거나, 비슷한 글을 많이 만들지 않는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="dont-keyword"><span>검색되려고 같은 단어를 제목과 본문에 반복하지 않는다.</span></label></li>
+              <li><label><input type="checkbox" data-id="dont-sell"><span>블로그를 팔거나 빌리거나, 그 글을 올리지 않는다.</span></label></li>
+            </ul>
+          </div>
+        </div>
+        <p class="source">근거: 위 “막히는 일”의 운영정책, 법적 고지, 검색 정책, 공감 도움말. 체크리스트 문장은 그 문서를 수강생용으로 짧게 줄인 것입니다.</p>
+      </div>
+    </section>
+
+    <section class="section" id="disclose" aria-labelledby="disclose-title">
+      <div class="shell">
+        <h2 id="disclose-title">돈이나 물건을 받았다면<br>글 앞에 적습니다.</h2>
+        <p class="section-intro">2026년 6월 1일 시행 공정거래위원회예규 제499호, 「추천·보증 등에 관한 표시·광고 심사지침」입니다. 아래는 그 예규의 현재 문구를 짧게 옮긴 것입니다.</p>
+        <div class="callout">
+          <strong>이 절은 법률 자문이 아닙니다.</strong>
+          <p>내 글이 해당하는지 애매하면 예규 원문과 공정위 안내를 확인하세요. 블로그 운영정책도, 경제적 이익을 받고 쓴 리뷰는 표시광고법 등 관련 규정에 따라 그 사실을 밝혀야 한다고 적습니다. 어기면 제재와 노출 제한이 있을 수 있습니다.</p>
+        </div>
+        <div class="stack spaced">
+          <article class="card">
+            <h3>언제 밝혀야 하나요?</h3>
+            <p>광고주와 추천·보증인 사이에, 추천 내용이나 신뢰도에 영향을 줄 수 있는 경제적 이해관계가 있으면 공개해야 합니다. 예규는 현금, 해당 제품, 상품권, 적립포인트, 할인 혜택, 광고주에게 고용된 상태의 추천, 공동구매 주선을 예로 듭니다. 추천을 하는 매 건마다, 상업적 표시 또는 광고라는 점을 알 수 있게 적습니다.</p>
+            <p>경제적 이해관계를 공개하지 않으면 부당한 표시·광고에 해당될 수 있습니다. 예규는 실제로 쓰고 추천하는 것처럼 썼는지, 내용, 보통의 소비자가 받는 인상, 구매 선택에 미치는 영향을 함께 본다고 합니다.</p>
+            <p>이해관계가 있어도 신뢰도에 영향을 주지 않는 예외는 표시하지 않을 수 있습니다. 예규가 든 예는, 신청자 전원에게 주는 화장품 샘플을 쓰고 자발적으로 후기를 올리는 경우, 마라톤처럼 참가자 전원에게 준 기념품 후기를 자발적으로 올리는 경우입니다. “전원에게 주고, 요구 없이 자발적으로”가 예외의 핵심입니다. 후기를 조건으로 받은 할인과는 다릅니다.</p>
+            <span class="source">출처: <a href="https://www.law.go.kr/LSW/admRulInfoR.do?admRulSeq=2100000280130" target="_blank" rel="noopener noreferrer">국가법령정보센터, 추천·보증 심사지침 (시행 2026. 6. 1., 예규 제499호)</a> Ⅳ.2, Ⅴ.6.가 · <a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">블로그 서비스 운영정책 2.(2)</a></span>
+          </article>
+          <article class="card">
+            <h3>어디에, 어떤 말로 적나요?</h3>
+            <p>블로그처럼 글자로 쓰는 경우, 표시 문구는 각 글의 제목 또는 첫 부분에 둡니다. 첫 부분에 둘 때는 본문과 구분합니다. 글자를 본문보다 크게 하거나 색을 다르게 하는 등, 쉽게 보이게 합니다. 댓글만 적거나, ‘더보기’나 링크를 눌러야 보이는 방식은 적절한 표시가 아닐 수 있습니다.</p>
+            <p>예규가 “명확한 내용”의 예로 든 말에는 ‘#광고’, ‘#협찬’, ‘상품 협찬’, ‘대가성 광고’, ‘금전적 지원’, ‘무료 상품’, ‘상품 할인’이 있습니다. 블로그 예시에는 ‘소정의 수수료를 지급받음’이 있습니다.</p>
+            <p>명확하지 않다고 예규가 든 말에는 ‘체험 후기’, ‘체험단’, ‘일주일 동안 사용해 보았음’, ‘선물’, ‘이 글은 정보/홍보성 글임’이 있습니다. 우리나라 소비자를 향한 글에서 ‘AD’, ‘PR’, ‘Sponsor’, ‘spon’, ‘앰버서더’도 같은 언어로 보지 않는 예입니다. 브랜드 이름만 해시태그로 다는 것도 명확한 표시의 예가 아닙니다.</p>
+            <span class="source">출처: 같은 예규 Ⅴ.6.나, Ⅴ.6.다 (1)</span>
+          </article>
+          <article class="card">
+            <h3>내돈내산 표시는 따로입니다.</h3>
+            <p>블로그의 ‘내돈내산 리뷰’ 기능은, 스마트스토어 구매나 네이버예약 방문처럼 네이버에서 내 돈으로 이용한 내역이 확인될 때 쓸 수 있습니다. 판매자 등 광고주에게 리뷰의 대가로 경제적 이익을 받았거나 다른 수익이 끼어 있으면, 그 기능으로 발행할 수 없습니다. 어겨서 표시광고법 위반이 확인되면 노출 제한 등이 있을 수 있다고 운영정책이 적습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">블로그 서비스 운영정책 2.(1)</a></span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="programs" aria-labelledby="programs-title">
+      <div class="shell">
+        <h2 id="programs-title">지금 공개된 기준.</h2>
+        <p class="section-intro">“파워블로거가 되는 공식 점수표”는 없습니다. 아래는 각 프로그램이 도움말과 공식 글에 적어 둔 조건입니다.</p>
+        <div class="stack">
+          <article class="card">
+            <h3>이달의 블로그</h3>
+            <p>주제별로 블로그를 추천하는 서비스입니다. 블로그팀 2026년 9월 안내의 질의응답은 이렇게 적습니다. 매월 4~5개 주제를 중심으로, 그 주제의 글을 꾸준히 가꾼 블로그를 최대 20개 추천합니다. 보는 요인은 방문자와 이웃의 방문 수, 이웃추가 여부, 공감, 댓글, 글을 썼는지 같은 최근 활동입니다. 이용자 추천으로 발견되기도 합니다. 각 요인의 커트라인 숫자는 그 글에 없습니다.</p>
+            <p>추천은 매월 중순, 블로그팀 공식 블로그 공지로 받습니다. 운영정책에 어긋나는 활동이 확인되면 대상에서 빠지거나, 선정 뒤에도 취소될 수 있습니다.</p>
+            <p>선정 혜택으로 안내된 것은 모바일 프로필 배지, 선정 엠블럼, 퍼스나콘, 네이버플러스 멤버십 12개월 무료 이용권입니다. 단체 회원, 만 14세 미만처럼 멤버십 가입이 안 되면 이용권을 받지 못할 수 있습니다. 결제와 해지 조건은 같은 공지의 주의사항에 있습니다.</p>
+            <p>2016년 네이버 검색 공식 글은, 이달의 블로그에 검색 랭킹 가산점을 주지 않는다고 적습니다. 소개 페이지 주소는 아래에 있습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/blogpeople/224420222285" target="_blank" rel="noopener noreferrer">블로그팀, 2026년 9월 이달의 블로그</a> · <a href="https://section.blog.naver.com/ThisMonthDirectory.naver" target="_blank" rel="noopener noreferrer">이달의 블로그</a> · <a href="https://blog.naver.com/naver_search/220799571182" target="_blank" rel="noopener noreferrer">네이버 검색, 2016-08-29</a></span>
+          </article>
+          <article class="card">
+            <h3>네이버 인플루언서</h3>
+            <p>고객센터 문구는 “채널을 운영하고 있는 전문 창작자라면 누구나 지원할 수 있습니다”입니다. 심사는 지원 분야의 전문 역량, 콘텐츠 품질, 채널 영향력입니다. 지나친 광고성 콘텐츠나 청소년 유해 콘텐츠가 있으면 심사에서 제외됩니다. 채널 전체가 아니라, 지원한 주제와 관련된 정보성 콘텐츠를 기준으로 심사합니다.</p>
+            <p>이웃 수, 일 방문자, 글 개수 합격선은 이 도움말들에 없습니다. 그래서 이 페이지도 숫자를 만들지 않습니다.</p>
+            <p>주제는 1개입니다. 선정된 뒤에는 바꿀 수 없습니다. 채널은 1개 이상이며, 인플루언서 홈에 묶인 뒤에는 연동을 해제할 수 없습니다. 허위 정보면 승인이 취소되고 이용이 제한될 수 있습니다. 본인 네이버 아이디로 지원해야 합니다.</p>
+            <p>심사는 지원일부터 영업일 기준 약 15일이고, 늦어질 수 있습니다. 결과는 메일로 개별 안내됩니다. 2회 이상 지원했다면, 마지막 지원일부터 90일이 지난 뒤에 다시 지원할 수 있습니다.</p>
+            <p>키워드 챌린지는 내 주제가 속한 분야의 주제를 함께 할 수 있습니다. 도움말은 참여 주제가 총 20개이고, 키워드를 약 10만 개로 넓혔다고 적습니다. 다른 글을 복사하거나, 홍보·검색을 위해 글을 기계적으로 많이 만들면 노출 제한과 순위 하락이 있을 수 있습니다. 도움말은 부적합으로 보면 그 키워드의 다른 내 글도 30일간 순위가 내려간다고 적습니다.</p>
+            <span class="source">출처: <a href="https://help.naver.com/service/22665/contents/11166?lang=ko" target="_blank" rel="noopener noreferrer">지원 기준</a> · <a href="https://help.naver.com/service/22665/contents/11169?lang=ko" target="_blank" rel="noopener noreferrer">심사 기준과 기간</a> · <a href="https://help.naver.com/service/22665/contents/11168?lang=ko" target="_blank" rel="noopener noreferrer">지원 방법</a> · <a href="https://help.naver.com/service/22665/contents/11171?lang=ko" target="_blank" rel="noopener noreferrer">본인 아이디</a> · <a href="https://help.naver.com/service/22665/contents/14139?lang=ko" target="_blank" rel="noopener noreferrer">재지원 90일</a> · <a href="https://help.naver.com/service/22665/contents/11165?lang=ko" target="_blank" rel="noopener noreferrer">주제 20개</a> · <a href="https://help.naver.com/service/22665/contents/11163?lang=ko" target="_blank" rel="noopener noreferrer">부적합 콘텐츠</a></span>
+          </article>
+          <article class="card">
+            <h3>블로그 챌린지</h3>
+            <p>챌린지는 상시 등급이 아닙니다. 기간이 있는 참여 행사입니다. 끝나는 날이 지나면 그 방법으로는 참여할 수 없습니다.</p>
+            <p>네이버 회사 보도자료에 따르면 ‘2025 왓츠인마이블로그 챌린지’는 2025년 9월 1일부터 12월 21일까지 16주였습니다. 캠페인 페이지에서 참여하기를 눌러 카테고리를 만들고, 장소·공연·영화·책 등 지정 글감 1개 이상을 붙여 글을 쓰면 됐습니다. 이 기간은 2026년 11월 4일 기준으로 끝났습니다.</p>
+            <p>‘모두의 회고 프로젝트’ 글쓰기 기간은 2026년 6월 8일부터 8월 31일입니다. 회사 보도자료와 블로그팀 공지, 고객센터 안내가 같은 기간을 말합니다. 2026년 11월 4일에는 글쓰기 기간이 지난 상태입니다. 리워드를 받으려면 참여 글을 2026년 12월 31일까지 전체 공개와 검색 허용으로 유지해야 한다고 고객센터가 적습니다. 복사·붙여넣기, 자동화, 다른 사람 콘텐츠를 가져온 글은 참여와 당첨에서 빠질 수 있습니다.</p>
+            <p>2026년 11월에 글쓰기가 열려 있는 새 챌린지는, 이번 확인에서 찾지 못했습니다. 시작 여부는 블로그팀 공식 블로그에서 그달 공지를 보면 됩니다.</p>
+            <span class="source">출처: <a href="https://www.navercorp.com/media/pressReleasesDetail?seq=33253" target="_blank" rel="noopener noreferrer">네이버 보도자료, 2025 왓츠인마이블로그</a> · <a href="https://www.navercorp.com/media/pressReleasesDetail?seq=10034356" target="_blank" rel="noopener noreferrer">네이버 보도자료, 모두의 회고</a> · <a href="https://blog.naver.com/blogpeople/224309230211" target="_blank" rel="noopener noreferrer">블로그팀 오픈 알림</a> · <a href="https://help.naver.com/service/5593/bookmark/25241?osType=COMMONOS" target="_blank" rel="noopener noreferrer">고객센터, 모두의 회고</a> · <a href="https://blog.naver.com/blogpeople" target="_blank" rel="noopener noreferrer">블로그팀 공식 블로그</a></span>
+          </article>
+          <article class="card">
+            <h3>네이버 메이트 (베타)</h3>
+            <p>블로그팀은 2026년 6월 4일부터 네이버 메이트를 베타로 연다고 공지했습니다. 설명은 “네이버 AI 안에서 크리에이터와 커뮤니티가 계속 활동하도록 지원하는 프로그램”입니다. 선정은 “AI 브리핑 인용수를 중심으로 다양한 지표를 반영”한다고 적습니다. 인용수가 몇 회여야 하는지, 다른 지표가 무엇인지는 그 공지에 없습니다.</p>
+            <p>신청 페이지 주소도 그 공지에는 없습니다. 선정자에게 네이버앱 알림과 메일로 개별 안내한다고 합니다. 2026년 6월 선정 블로그는 그달 말일까지 프로필 엠블럼이 표시된다고 했습니다. 활동 지원금을 받으려면 안내 메일 기한 안에 개인정보를 입력해야 합니다.</p>
+            <p>AI 브리핑 인용수는 2026년 1월부터 누적해 프로필에 보입니다. 메이트로 선정된 블로그는 모든 이용자에게 숫자가 공개됩니다. 선정되지 않은 블로그는 로그인한 본인만 볼 수 있습니다.</p>
+            <span class="source">출처: <a href="https://blog.naver.com/blogpeople/224306111510" target="_blank" rel="noopener noreferrer">블로그팀, 네이버 메이트 오픈, 2026-06-04</a></span>
+          </article>
+        </div>
+        <div class="callout spaced">
+          <strong>공개되지 않은 것.</strong>
+          <p>인플루언서·이달의 블로그·메이트의 이웃 수, 방문자 수 합격선. 하루 이웃추가 허용 횟수. 하루 발행 글 수의 정확한 개수. 파워블로그 폐지 공지의 원문 URL. 2026년 11월에 열려 있는 새 챌린지.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="routine" aria-labelledby="routine-title">
+      <div class="shell">
+        <h2 id="routine-title">30일, 손으로 하는 루틴.</h2>
+        <p class="section-intro">빌더스랩이 위 공식 원칙으로 만든 연습입니다. 네이버의 선정 조건이 아닙니다. 30일을 채운다고 이달의 블로그나 인플루언서가 되지 않습니다. 자동화 단계는 없습니다.</p>
+        <p class="progress" role="status"><strong data-progress="routine">체크 0 / 16</strong><button type="button" data-reset="routine">이 목록 지우기</button></p>
+        <ol class="steps">
+          <li>
+            <span class="week-label">1–7일</span>
+            <h3>규칙을 읽고, 주제 하나를 정합니다.</h3>
+            <ul class="check-list" data-group="routine">
+              <li><label><input type="checkbox" data-id="w1-policy"><span>1–2일. 운영정책에서 “이웃과 함께”, “판매하거나 대여할 수 없다”, 글쓰기 제한 단계를 읽습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w1-topic"><span>3일. 앞으로 계속 쓸 주제 하나를 고릅니다. 인플루언서 주제는 선정 뒤 바꿀 수 없습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w1-profile"><span>4일. 프로필에 내가 누구인지 짧게 적습니다. 다른 사람으로 보이게 쓰지 않습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w1-posts"><span>5–7일. 직접 한 일을 글 2개로 씁니다. 한 일, 본 것, 느낀 점을 각각 넣습니다.</span></label></li>
+            </ul>
+          </li>
+          <li>
+            <span class="week-label">8–14일</span>
+            <h3>이웃과 반응은 읽은 뒤에만 남깁니다.</h3>
+            <ul class="check-list" data-group="routine">
+              <li><label><input type="checkbox" data-id="w2-read"><span>8–10일. 같은 주제 글을 직접 열고, 읽은 글에만 손으로 짧은 댓글을 남깁니다. 같은 문장을 붙여 넣지 않습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w2-neighbor"><span>11–12일. 계속 읽고 싶은 블로그만 이웃으로 추가합니다. 추가 버튼을 내가 누릅니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w2-like"><span>13일. 공감은 읽은 글에 한 번입니다. 같은 글에서 눌렀다 취소하기를 반복하지 않습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w2-limit"><span>14일. 글이 더 안 올라가면 그날은 멈춥니다. 하루 한도의 정확한 개수는 도움말에 없습니다.</span></label></li>
+            </ul>
+          </li>
+          <li>
+            <span class="week-label">15–23일</span>
+            <h3>글 하나를 더 깊게 고칩니다.</h3>
+            <ul class="check-list" data-group="routine">
+              <li><label><input type="checkbox" data-id="w3-good"><span>15–17일. 새 글 하나를, 검색 안내의 다섯 가지로 점검합니다. 신뢰, 직접 경험, 독창성, 충분한 설명, 읽기 쉬움.</span></label></li>
+              <li><label><input type="checkbox" data-id="w3-cite"><span>18–19일. 인용한 문장과 사진에 출처와 원문 링크가 있는지 확인합니다. CCL이 있으면 그 범위만 씁니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w3-ai"><span>20–21일. AI 문장을 썼다면 글 앞에 그 사실을 한 줄 적고, 내 경험으로 고칩니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w3-ad"><span>22–23일. 받은 제품·포인트·할인이 있으면 제목이나 첫 부분에 ‘광고’ 또는 ‘협찬’처럼 분명한 말을 넣습니다. ‘체험후기’만 쓰지 않습니다.</span></label></li>
+            </ul>
+          </li>
+          <li>
+            <span class="week-label">24–30일</span>
+            <h3>점수를 만들지 않고, 공식 글을 다시 봅니다.</h3>
+            <ul class="check-list" data-group="routine">
+              <li><label><input type="checkbox" data-id="w4-note"><span>24–25일. 사람이 댓글이나 공감을 남긴 글을 메모합니다. 왜 읽혔는지만 한 줄로 적습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w4-ads"><span>26–27일. 광고 글이 주제 글보다 많다면, 인플루언서 심사는 그 주제의 정보성 글만 본다는 도움말을 다시 읽습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w4-help"><span>28–29일. 인플루언서 지원 기준과 이달의 블로그 질의응답을 엽니다. 없는 숫자는 목표로 적지 않습니다.</span></label></li>
+              <li><label><input type="checkbox" data-id="w4-challenge"><span>30일. 블로그팀 공식 블로그에서 이번 달 챌린지 공지가 있는지 확인합니다. 없으면 지난 행사에 소급해 넣지 않습니다.</span></label></li>
+            </ul>
+          </li>
+        </ol>
+        <p class="source">연습의 근거: <a href="https://blog.naver.com/naver_search/223367781299" target="_blank" rel="noopener noreferrer">좋은 문서 특성</a>, <a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">운영정책</a>, <a href="https://help.naver.com/service/22665/contents/11169?lang=ko" target="_blank" rel="noopener noreferrer">인플루언서 심사</a>, <a href="https://www.law.go.kr/LSW/admRulInfoR.do?admRulSeq=2100000280130" target="_blank" rel="noopener noreferrer">대가 표시 예규</a>. 30일이라는 기간 자체는 네이버 선정 조건이 아닙니다.</p>
+      </div>
+    </section>
+
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="shell">
+        <h2 id="faq-title">자주 묻는 질문.</h2>
+        <div class="faq">
+          <details>
+            <summary>파워블로그는 아직 뽑히나요?</summary>
+            <p>새 선정은 끝났습니다. 네이버 검색 공식 블로그는 2016년 4월 폐지 공지를 확인시켜 줍니다. 이달의 블로그는 그 자리를 검색 가산점으로 대신하지 않는다고 같은 글이 적습니다. 2014년이 마지막 선정이라는 문장은 공지를 인용한 YTN 기사에서 확인했습니다. 원문 주소는 찾지 못했습니다.</p>
+          </details>
+          <details>
+            <summary>이웃이 몇 명이면 인플루언서인가요?</summary>
+            <p>도움말에 그 숫자가 없습니다. “전문 창작자라면 누구나 지원”이고, 심사는 전문 역량, 콘텐츠 품질, 채널 영향력입니다. 지원 주제의 정보성 글만 봅니다. 광고성 글이나 청소년 유해 글이 많으면 심사에서 빠질 수 있습니다.</p>
+          </details>
+          <details>
+            <summary>AI로 쓰면 검색에서 사라지나요?</summary>
+            <p>쓴 사실만으로 빠지는 구조라고 네이버 검색은 말하지 않습니다. 좋은 문서는 만든 방식과 관계없이 노출될 수 있습니다. 다만 저품질을 많이 만들거나, 복사·키워드 반복·유사 글 대량 생성은 노출되지 않을 수 있습니다. AI를 썼다면 적으라고 권합니다.</p>
+          </details>
+          <details>
+            <summary>체험단에 ‘체험후기’만 쓰면 되나요?</summary>
+            <p>예규는 그 말을 명확한 대가 표시의 예로 보지 않습니다. ‘#광고’, ‘#협찬’, ‘소정의 수수료를 지급받음’ 같은 말을 제목이나 첫 부분에 둡니다. ‘AD’, ‘PR’도 국내 소비자를 향한 명확한 표시의 예가 아닙니다.</p>
+          </details>
+          <details>
+            <summary>서로이웃을 프로그램으로 늘려도 되나요?</summary>
+            <p>이 페이지는 그 방법을 알려주지 않습니다. 자동 접속과 검색 순위 조작은 법적 고지에서 금지하는 이용에 들어갈 수 있습니다. 다른 사람에게 피해를 주는 반복 활동은 글쓰기 제한 사유가 될 수 있습니다.</p>
+          </details>
+          <details>
+            <summary>챌린지에 지금 들어갈 수 있나요?</summary>
+            <p>2025 왓츠인마이블로그는 2025년 12월 21일에 끝났습니다. 모두의 회고 글쓰기 기간은 2026년 8월 31일에 끝났습니다. 2026년 11월 4일 확인에서는 열려 있는 새 챌린지를 찾지 못했습니다. 블로그팀 공식 블로그의 이번 달 글을 보면 됩니다.</p>
+          </details>
+          <details>
+            <summary>메이트는 신청하면 되나요?</summary>
+            <p>2026년 6월 4일 오픈 공지에는 신청 주소와 인용수 합격선이 없습니다. AI 브리핑 인용수를 중심으로 여러 지표를 반영해 선정하고, 선정자에게 알림과 메일을 보낸다고 적혀 있습니다.</p>
+          </details>
+        </div>
+        <p class="source">답은 위 절과 같은 출처입니다. 새 공지가 나오면 그 공지가 이 페이지보다 우선합니다.</p>
+      </div>
+    </section>
+
+    <section class="section" id="sources" aria-labelledby="sources-title">
+      <div class="shell">
+        <h2 id="sources-title">이 페이지가 본 출처.</h2>
+        <p class="section-intro">확인일 2026년 11월 4일. 마케팅 블로그의 숫자는 쓰지 않았습니다.</p>
+        <ol class="source-list">
+          <li><a href="https://blog.naver.com/post/blog_use.htm" target="_blank" rel="noopener noreferrer">블로그 서비스 운영정책</a></li>
+          <li><a href="https://policy.naver.com/rules/disclaimer.html" target="_blank" rel="noopener noreferrer">책임의 한계와 법적 고지</a> — 자동 수단, 어뷰징</li>
+          <li><a href="https://searchadvisor.naver.com/guide/content-abusing" target="_blank" rel="noopener noreferrer">네이버 서치어드바이저, 웹 콘텐츠 스팸사례</a></li>
+          <li><a href="https://blog.naver.com/naver_search/223367781299" target="_blank" rel="noopener noreferrer">네이버 검색, 생성형 AI 검색 노출 정책 (2024-02-28)</a></li>
+          <li><a href="https://blog.naver.com/naver_search/220799571182" target="_blank" rel="noopener noreferrer">네이버 검색, 파워블로그 폐지와 이달의 블로그 (2016-08-29)</a></li>
+          <li><a href="https://www.ytn.co.kr/_ln/0103_201604141700063095" target="_blank" rel="noopener noreferrer">YTN, 블로그팀 파워블로그 종료 공지 전문 인용 (2016-04-14)</a> — 원문 URL은 미확인</li>
+          <li><a href="https://blog.naver.com/blogpeople/224420222285" target="_blank" rel="noopener noreferrer">블로그팀, 2026년 9월 이달의 블로그</a></li>
+          <li><a href="https://section.blog.naver.com/ThisMonthDirectory.naver" target="_blank" rel="noopener noreferrer">이달의 블로그 디렉터리</a></li>
+          <li><a href="https://help.naver.com/service/22665/contents/11166?lang=ko" target="_blank" rel="noopener noreferrer">인플루언서 지원 기준</a> · <a href="https://help.naver.com/service/22665/contents/11169?lang=ko" target="_blank" rel="noopener noreferrer">심사</a> · <a href="https://help.naver.com/service/22665/contents/11168?lang=ko" target="_blank" rel="noopener noreferrer">지원 방법</a> · <a href="https://help.naver.com/service/22665/contents/11163?lang=ko" target="_blank" rel="noopener noreferrer">부적합 콘텐츠</a></li>
+          <li><a href="https://blog.naver.com/blogpeople/224306111510" target="_blank" rel="noopener noreferrer">블로그팀, 네이버 메이트 베타 (2026-06-04)</a></li>
+          <li><a href="https://www.navercorp.com/media/pressReleasesDetail?seq=33253" target="_blank" rel="noopener noreferrer">네이버 보도자료, 2025 왓츠인마이블로그</a> · <a href="https://www.navercorp.com/media/pressReleasesDetail?seq=10034356" target="_blank" rel="noopener noreferrer">모두의 회고</a></li>
+          <li><a href="https://help.naver.com/service/5593/contents/15422" target="_blank" rel="noopener noreferrer">공감 제한</a> · <a href="https://help.naver.com/service/5593/contents/20795?lang=ko" target="_blank" rel="noopener noreferrer">하루 글 수 제한</a> · <a href="https://help.naver.com/service/5593/contents/15406?osType=PC&lang=ko" target="_blank" rel="noopener noreferrer">이웃 그룹 500명</a> · <a href="https://help.naver.com/service/5593/contents/15551?lang=ko" target="_blank" rel="noopener noreferrer">CCL</a></li>
+          <li><a href="https://www.law.go.kr/LSW/admRulInfoR.do?admRulSeq=2100000280130" target="_blank" rel="noopener noreferrer">공정위 예규 제499호, 추천·보증 심사지침 (시행 2026. 6. 1.)</a></li>
+          <li><a href="https://blog.naver.com/blogpeople/221893702144" target="_blank" rel="noopener noreferrer">블로그팀, API 글쓰기 종료 (2020-04-06)</a></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-row">
+        <a href="/">AI 빌더스 랩 홈</a>
+        <a href="/hermes.html">상세 교육 안내</a>
+        <a href="/install/">설치 안내</a>
+        <a href="https://blog.naver.com/blogpeople" target="_blank" rel="noopener noreferrer">블로그팀 공식 블로그 ↗</a>
+      </div>
+      <p>© AI BUILDERS LAB · 배우고, 나누고, 성장한다. 네이버·공정위와 제휴한 페이지가 아닙니다. 외부 명칭은 각 기관의 것입니다.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var key = "abl-naver-blog-checks-v1";
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch (e) { saved = {}; }
+
+      function boxes(group) {
+        return Array.prototype.slice.call(document.querySelectorAll('[data-group="' + group + '"] input[type="checkbox"]'));
+      }
+
+      function paint(group) {
+        var list = boxes(group);
+        var done = list.filter(function (box) { return box.checked; }).length;
+        var label = document.querySelector('[data-progress="' + group + '"]');
+        if (label) label.textContent = "체크 " + done + " / " + list.length;
+      }
+
+      function store() {
+        var next = {};
+        Array.prototype.forEach.call(document.querySelectorAll("input[data-id]"), function (box) {
+          if (box.checked) next[box.getAttribute("data-id")] = 1;
+        });
+        try { localStorage.setItem(key, JSON.stringify(next)); } catch (e) {}
+      }
+
+      ["habits", "routine"].forEach(function (group) {
+        boxes(group).forEach(function (box) {
+          if (saved[box.getAttribute("data-id")]) box.checked = true;
+          box.addEventListener("change", function () {
+            store();
+            paint(group);
+          });
+        });
+        paint(group);
+      });
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-reset]"), function (button) {
+        button.addEventListener("click", function () {
+          var group = button.getAttribute("data-reset");
+          boxes(group).forEach(function (box) { box.checked = false; });
+          store();
+          paint(group);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
