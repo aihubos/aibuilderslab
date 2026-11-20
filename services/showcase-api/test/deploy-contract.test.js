@@ -9,6 +9,7 @@ test("deploy files keep uploads outside the public rsync tree and apply the ngin
   const compose = await readFile(path.join(root, "deploy/docker-compose.showcase.yml"), "utf8");
   const nginx = await readFile(path.join(root, "deploy/nginx/showcase-locations.conf"), "utf8");
   const backup = await readFile(path.join(root, "deploy/backup-showcase.sh"), "utf8");
+  const guide = await readFile(path.join(root, "deploy/README.md"), "utf8");
   assert.match(compose, /aibl-showcase-api/);
   assert.match(compose, /mem_limit:\s*256m/);
   assert.match(compose, /cpus:\s*0\.5/);
@@ -23,6 +24,12 @@ test("deploy files keep uploads outside the public rsync tree and apply the ngin
   assert.match(nginx, /Content-Disposition "attachment"/);
   assert.match(nginx, /expires 30d/);
   assert.match(nginx, /CF-Connecting-IP/);
+  assert.equal((nginx.match(/location ~\* '[^']*\{16\}/g) || []).length, 2);
+  assert.doesNotMatch(nginx, /location ~\* \^/);
+  assert.match(nginx, /location ~\* '\^\/lounge\/uploads\/\(\[A-Za-z0-9_-\]\{16\}/);
+  assert.match(guide, /-m 751 \/opt\/aibl-showcase\/uploads/);
+  assert.match(guide, /-p aibl-showcase/);
+  assert.doesNotMatch(guide, /-m 750 \/opt\/aibl-showcase\/uploads/);
   assert.match(backup, /showcase\.db/);
   assert.match(backup, /mtime \+7/);
 });

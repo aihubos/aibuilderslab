@@ -108,9 +108,18 @@ export function renderHome(rootOrOptions, maybeOptions = {}) {
         <div>
           <p class="lounge-home-eyebrow">공개</p>
           <h2 id="lounge-showcase-title">빌더 결과물</h2>
-          <p>1기와 2기가 직접 올린 결과와 샘플 영상을 누구나 볼 수 있습니다.</p>
+          <p>1기와 2기가 직접 올린 결과를 누구나 볼 수 있습니다.</p>
         </div>
         <a class="lounge-home-button" href="/lounge/showcase/">결과물 보기</a>
+      </section>
+
+      <section class="lounge-home-next" aria-labelledby="lounge-samples-title">
+        <div>
+          <p class="lounge-home-eyebrow">공개</p>
+          <h2 id="lounge-samples-title">샘플 영상</h2>
+          <p>수업에서 만든 세로 쇼츠 11편을 모아 두었습니다.</p>
+        </div>
+        <a class="lounge-home-button" href="/lounge/samples/">영상 보기</a>
       </section>
 
       <section class="lounge-home-next" aria-labelledby="lounge-home-next-title">

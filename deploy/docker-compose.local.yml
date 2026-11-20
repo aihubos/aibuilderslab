@@ -1,6 +1,6 @@
 # Local stack without the production Docker network.
 # From the repo root:
-#   docker compose -f deploy/docker-compose.local.yml up --build
+#   docker compose -p aibl-showcase -f deploy/docker-compose.local.yml up --build
 services:
   aibl-showcase-api:
     build:
