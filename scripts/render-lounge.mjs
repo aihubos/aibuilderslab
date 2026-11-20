@@ -48,6 +48,86 @@ function kakaoButton(href, label, { assets, size = "lx-btn-lg", block = false } 
 
 /* ---------- 화면 조각 ---------- */
 
+/* 커리큘럼 주소는 https만 받습니다. 그 밖의 값은 ‘준비 중’으로 취급합니다. */
+export function curriculumUrlOf(value) {
+  try {
+    const url = new URL(String(value || ""));
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+/* 외부 사이트 링크: 모두 새 창 + ↗ 표시 + 화면 읽기용 안내로 통일합니다. */
+function externalAttrs(href) {
+  return `href="${esc(href)}" target="_blank" rel="noopener"`;
+}
+const EXT_MARK = `<span class="lx-ext" aria-hidden="true">↗</span><span class="lx-sr"> (새 창, 외부 사이트)</span>`;
+
+const byCohortNumber = (list) => [...list].sort((a, b) => Number(a.id) - Number(b.id));
+
+/* 홈 첫 화면: 기수별 커리큘럼 진입 카드. 가격·날짜는 넣지 않습니다. */
+export function curriculumHtml(cohorts = COHORTS) {
+  const sorted = byCohortNumber(cohorts);
+  const cards = sorted.map((cohort) => {
+    const url = curriculumUrlOf(cohort.curriculumUrl);
+    if (url) {
+      return `
+              <li>
+                <a class="lx-curri-card" ${externalAttrs(url)} data-curriculum="${esc(cohort.id)}">
+                  <span class="lx-curri-num" aria-hidden="true">${esc(cohort.label)}</span>
+                  <span class="lx-curri-copy"><strong>${esc(cohort.label)} 커리큘럼</strong><small>회차별로 무엇을 배우고 만드는지 보기</small></span>
+                  <span class="lx-curri-go">${EXT_MARK}</span>
+                </a>
+              </li>`;
+    }
+    return `
+              <li>
+                <a class="lx-curri-card is-pending" href="/lounge/apply/#cohort-${esc(cohort.id)}" data-curriculum="${esc(cohort.id)}" data-curriculum-pending>
+                  <span class="lx-curri-num" aria-hidden="true">${esc(cohort.label)}</span>
+                  <span class="lx-curri-copy"><strong>${esc(cohort.label)} 커리큘럼 <span class="lx-curri-state">준비 중</span></strong><small>페이지가 열리기 전까지 ${esc(cohort.label)} 안내 먼저 보기</small></span>
+                  <span class="lx-curri-go" aria-hidden="true">→</span>
+                </a>
+              </li>`;
+  }).join("");
+  const overviews = sorted
+    .map((cohort) => [cohort, curriculumUrlOf(cohort.curriculumOverviewUrl)])
+    .filter(([, url]) => url)
+    .map(([cohort, url]) => `<a ${externalAttrs(url)}>${esc(cohort.label)} 모집·커리큘럼 전체 페이지${EXT_MARK}</a>`)
+    .join("");
+  return `
+          <section class="lx-curri" id="curriculum" aria-labelledby="curriculum-title">
+            <h2 class="lx-curri-label" id="curriculum-title">기수별 커리큘럼 바로가기</h2>
+            <ul class="lx-curri-grid">${cards}
+            </ul>${overviews ? `
+            <p class="lx-curri-more">${overviews}</p>` : ""}
+          </section>
+          `;
+}
+
+/* 홈 아래쪽: 기수별 바로가기 목록 (커리큘럼 · 결과물 · 신청 안내) */
+export function cohortLinksHtml(cohorts = COHORTS) {
+  const rows = byCohortNumber(cohorts).map((cohort) => {
+    const url = curriculumUrlOf(cohort.curriculumUrl);
+    const curriculum = url
+      ? `<a class="lx-btn lx-btn-line" ${externalAttrs(url)}>커리큘럼${EXT_MARK}</a>`
+      : `<a class="lx-btn lx-btn-line" href="/lounge/apply/#cohort-${esc(cohort.id)}">커리큘럼 <span class="lx-curri-state">준비 중</span></a>`;
+    return `
+            <li class="lx-crow">
+              <span class="lx-crow-num">${esc(cohort.label)}</span>
+              <span class="lx-crow-links">
+                ${curriculum}
+                <a class="lx-btn lx-btn-line" href="/lounge/showcase/?cohort=${esc(cohort.id)}">${esc(cohort.label)} 결과물</a>
+                <a class="lx-btn lx-btn-line" href="/lounge/apply/#cohort-${esc(cohort.id)}">${esc(cohort.label)} 안내</a>
+              </span>
+            </li>`;
+  }).join("");
+  return `
+          <ul class="lx-crows">${rows}
+          </ul>
+          `;
+}
+
 function recruitHtml(kakao, assets) {
   const status = RECRUIT_STATUS[RECRUIT.status] || RECRUIT_STATUS.waitlist;
   const label = RECRUIT.label || "다음 기수";
@@ -100,9 +180,9 @@ function cohortHtml(cohort, kakao, assets) {
   const facts = [
     factRow("대상", cohort.target),
     factRow("일정", cohort.schedule),
-    factRow("진행 방식", cohort.sessions ? `${cohort.sessions.hours}시간 수업 ${cohort.sessions.count}회` : null, cohort.sessionsNote),
+    factRow("진행 방식", cohort.sessions ? `회당 ${cohort.sessions.hours}시간 수업 ${cohort.sessions.count}회` : null, cohort.sessionsNote),
     factRow("교육비", cohort.price != null ? `정규 교육비 ${won(cohort.price)}` : null, cohort.priceNote),
-    factRow("정원", cohort.capacity != null ? `${cohort.capacity}명` : null),
+    factRow("정원", cohort.capacity != null ? `${cohort.capacityUnit ? `${cohort.capacityUnit} ` : ""}${cohort.capacity}명` : null),
     factRow("신청 마감", cohort.deadline),
   ];
   const flow = cohort.flow?.length
@@ -114,6 +194,10 @@ function cohortHtml(cohort, kakao, assets) {
   const action = cohort.status === "closed"
     ? `<a class="lx-btn lx-btn-line" href="/lounge/showcase/?cohort=${esc(cohort.id)}">${esc(cohort.label)} 결과물 보기</a>`
     : kakaoButton(kakao, `카카오톡으로 ${cohort.label} 신청·문의`, { assets, size: "" });
+  const curriculumUrl = curriculumUrlOf(cohort.curriculumUrl);
+  const curriculum = curriculumUrl
+    ? `<a class="lx-btn lx-btn-soft" ${externalAttrs(curriculumUrl)}>${esc(cohort.label)} 커리큘럼 보기${EXT_MARK}</a>`
+    : `<span class="lx-badge">${esc(cohort.label)} 커리큘럼 준비 중</span>`;
   return `
             <article class="lx-cohort" id="cohort-${esc(cohort.id)}" aria-labelledby="cohort-${esc(cohort.id)}-title">
               <div class="lx-cohort-head"><h3 id="cohort-${esc(cohort.id)}-title">${esc(cohort.label)}</h3>${statusBadge}</div>
@@ -123,7 +207,7 @@ function cohortHtml(cohort, kakao, assets) {
                 ${facts.join("\n                ")}
               </dl>${flow}${pending ? `
               <p class="lx-cohort-note">‘확정 전’ 항목은 정해지는 대로 이곳에 안내합니다. 먼저 궁금하면 카카오톡으로 물어보세요.</p>` : ""}
-              <div class="lx-cohort-foot">${action}</div>
+              <div class="lx-cohort-foot">${curriculum}${action}</div>
             </article>`;
 }
 
@@ -329,7 +413,11 @@ export async function renderLounge({ write = true } = {}) {
   const pages = [
     {
       file: "lounge/index.html",
-      regions: { recruit: () => recruitHtml(kakao, "../assets/") },
+      regions: {
+        curriculum: () => curriculumHtml(),
+        recruit: () => recruitHtml(kakao, "../assets/"),
+        "cohort-links": () => cohortLinksHtml(),
+      },
     },
     {
       file: "lounge/apply/index.html",

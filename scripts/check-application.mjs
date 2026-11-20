@@ -226,6 +226,42 @@ expect(videos.length === samples.items.length && videos.every((video, index) => 
 }), "샘플 영상 VideoObject 목록이 samples.json과 다릅니다.");
 expect(!jsonLdOf(loungeHtml).length && !jsonLdOf(uploadHtml).length, "검색 제외 페이지에 JSON-LD가 들어 있습니다.");
 
+// 2026-11 커리큘럼 스타일: 1기·2기 커리큘럼 진입, 내비 커리큘럼 항목, 공통 토큰
+const { curriculumHtml, cohortLinksHtml, curriculumUrlOf } = await import(new URL("./render-lounge.mjs", import.meta.url).href);
+const COHORT1_CURRICULUM = "https://lounge.ai-hub-os.com/curriculum/cohort1.html";
+const cohort1 = cohortData.find((cohort) => cohort.id === "1");
+const cohort2 = cohortData.find((cohort) => cohort.id === "2");
+expect(cohort1?.curriculumUrl === COHORT1_CURRICULUM && cohort1?.curriculumOverviewUrl === "https://lounge.ai-hub-os.com/curriculum/", "1기 커리큘럼 주소가 cohorts.js에 없습니다.");
+expect(cohort2 && "curriculumUrl" in cohort2, "2기 항목에 curriculumUrl 칸이 없습니다(없으면 null).");
+const heroHtml = loungeHtml.slice(loungeHtml.indexOf('class="lx-hero"'), loungeHtml.indexOf("SAMPLE VIDEOS"));
+expect(heroHtml.includes('id="curriculum"'), "라운지 홈 첫 화면에 커리큘럼 바로가기(#curriculum)가 없습니다.");
+expect(heroHtml.indexOf('id="curriculum"') < heroHtml.indexOf('class="lx-recruit '), "커리큘럼 바로가기가 모집 카드보다 먼저 나와야 합니다.");
+expect(new RegExp(`<a class="lx-curri-card" href="${COHORT1_CURRICULUM.replaceAll(".", "\\.")}" target="_blank" rel="noopener" data-curriculum="1">`).test(heroHtml), "첫 화면에 1기 커리큘럼 링크 카드(새 창)가 없습니다.");
+const extLinks = [...loungeHtml.matchAll(/<a [^>]*href="https:\/\/lounge\.ai-hub-os\.com[^"]*"[^>]*>[\s\S]*?<\/a>/g)].map((match) => match[0]);
+expect(extLinks.length >= 3 && extLinks.every((link) => link.includes('target="_blank"') && link.includes('rel="noopener"') && link.includes("↗") && link.includes("(새 창, 외부 사이트)")), "외부 커리큘럼 링크는 모두 새 창 + ↗ 표시여야 합니다.");
+if (curriculumUrlOf(cohort2.curriculumUrl)) {
+  expect(heroHtml.includes(`href="${cohort2.curriculumUrl}"`) && !heroHtml.includes('data-curriculum="2" data-curriculum-pending'), "2기 커리큘럼 주소가 있는데 첫 화면 카드가 링크가 아닙니다.");
+} else {
+  expect(/<a class="lx-curri-card is-pending" href="\/lounge\/apply\/#cohort-2" data-curriculum="2" data-curriculum-pending>[\s\S]*?2기 커리큘럼 <span class="lx-curri-state">준비 중<\/span>/.test(heroHtml), "2기 커리큘럼 카드가 ‘준비 중’ + 기수 신청 2기 안내 링크가 아닙니다.");
+  expect(applyHtml.includes('id="cohort-2"') && applyHtml.includes("2기 커리큘럼 준비 중"), "2기 준비 중 링크가 가리키는 기수 신청 2기 안내가 없습니다.");
+}
+// 데이터에 2기 주소가 생기면 자동으로 링크 카드로 바뀌는지 (가짜 주소로 생성만 확인)
+const futureCohorts = cohortData.map((cohort) => (cohort.id === "2" ? { ...cohort, curriculumUrl: "https://example.com/cohort2.html" } : cohort));
+const futureHero = curriculumHtml(futureCohorts);
+expect(futureHero.includes('href="https://example.com/cohort2.html" target="_blank" rel="noopener" data-curriculum="2"') && !futureHero.includes("준비 중"), "2기 curriculumUrl을 넣어도 홈 카드가 링크로 바뀌지 않습니다.");
+expect(cohortLinksHtml(futureCohorts).includes('href="https://example.com/cohort2.html"'), "2기 curriculumUrl을 넣어도 기수별 바로가기가 링크로 바뀌지 않습니다.");
+expect(!curriculumHtml(cohortData.map((cohort) => ({ ...cohort, curriculumUrl: "javascript:alert(1)" }))).includes("javascript:"), "커리큘럼 주소는 https만 허용해야 합니다.");
+expect(!/(\d{1,3}(,\d{3})+원|\d+만\s?원|\d{1,2}월\s?\d{1,2}일)/.test(futureHero), "커리큘럼 진입 카드에는 가격·날짜를 넣지 않습니다.");
+const navPages = { home: loungeHtml, apply: applyHtml, samples: samplesHtml, showcase: showcaseHtml };
+for (const [name, html] of Object.entries(navPages)) {
+  const nav = html.match(/<nav class="lx-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+  expect(nav.includes('<a href="/lounge/#curriculum">커리큘럼</a>'), `${name} 상단 메뉴에 커리큘럼 항목이 없습니다.`);
+}
+const loungeCss = await readFile(resolve(root, "lounge/lounge.css"), "utf8");
+expect(/--lx-blue:\s*#2f6bff/i.test(loungeCss) && /--lx-navy:\s*#0d1b3a/i.test(loungeCss) && /--lx-neon:\s*#c6ff3d/i.test(loungeCss), "라운지 공통 색 토큰(블루·navy·형광)이 lounge.css 한 곳에 없습니다.");
+expect(!/@import|fonts\.googleapis|cdn\.jsdelivr|unpkg\.com/.test(loungeCss), "라운지 공통 CSS에 외부 CDN이 들어 있습니다.");
+expect(/prefers-reduced-motion/.test(loungeCss) && /word-break:\s*keep-all/.test(loungeCss), "움직임 줄이기 또는 한글 줄바꿈 설정이 없습니다.");
+
 const builtIndex = await readFile(resolve(root, "dist", "client", "index.html"), "utf8");
 const builtScript = await readFile(resolve(root, "dist", "client", "script.js"), "utf8");
 const builtInstall = await readFile(resolve(root, "dist", "client", "install", "index.html"), "utf8");

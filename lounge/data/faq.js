@@ -26,12 +26,12 @@ export const APPLY_FAQ = Object.freeze([
     a: `다음 기수 정원은 ${RECRUIT.capacity}명입니다.`,
   },
   {
-    q: "1기는 어떻게 진행됐나요?",
-    a: `${first.sessions.hours}시간 수업 ${first.sessions.count}회로 진행했습니다. ${first.sessionsNote} 매 회차는 ${first.flow.join(", ")} 순서로 흘러갑니다.`,
+    q: "1기는 어떻게 진행되나요?",
+    a: `${first.schedule}. 회당 ${first.sessions.hours}시간 수업 ${first.sessions.count}회로 진행합니다. ${first.sessionsNote} 회차별 주제는 ${first.flow.join(", ")}입니다.`,
   },
   {
     q: "교육비는 얼마인가요?",
-    a: `1기 정규 교육비는 ${won(first.price)}이었습니다. ${first.priceNote} 다음 기수 교육비는 신청 전에 카카오톡으로 확인해 주세요.`,
+    a: `1기 정규 교육비는 4회 ${won(first.price)}입니다. ${first.priceNote} 다음 기수 교육비는 신청 전에 카카오톡으로 확인해 주세요.`,
   },
   {
     q: "일정 변경, 취소, 환불 기준은 어디에서 확인하나요?",
