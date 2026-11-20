@@ -1,0 +1,44 @@
+# Local stack without the production Docker network.
+# From the repo root:
+#   docker compose -f deploy/docker-compose.local.yml up --build
+services:
+  aibl-showcase-api:
+    build:
+      context: ../services/showcase-api
+    image: aibl-showcase-api:local
+    container_name: aibl-showcase-api
+    init: true
+    read_only: true
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 128
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4331
+      DATA_DIR: /data
+      UPLOAD_DIR: /uploads
+      ADMIN_TOKEN_FILE: /secrets/admin-token
+      LOG_LEVEL: info
+    volumes:
+      - ../.preview/showcase/data:/data
+      - ../.preview/showcase/uploads:/uploads
+      - ../.preview/showcase/secrets:/secrets:ro
+    ports:
+      - "127.0.0.1:4332:4331"
+    restart: "no"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: aibl-showcase-local

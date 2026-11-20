@@ -1,0 +1,130 @@
+{
+  "categories": [
+    { "id": "short-drama", "label": "숏드라마·캐릭터" },
+    { "id": "store-promo", "label": "매장홍보·실사합성" },
+    { "id": "daangn-sample", "label": "당근홍보·샘플광고" }
+  ],
+  "items": [
+    {
+      "slug": "bartbang-blob-26s-07c36fc5",
+      "title": "바트방 블롭 교체",
+      "durationSec": 26.1,
+      "category": "short-drama",
+      "badge": null,
+      "source": "01_숏드라마_캐릭터/바트방_블롭교체_26s.mp4",
+      "posterSource": "thumbs/바트방_블롭교체_26s.jpg",
+      "file": "bartbang-blob-26s-07c36fc5.mp4",
+      "poster": "posters/bartbang-blob-26s-07c36fc5.webp"
+    },
+    {
+      "slug": "blob-not-perfect-51s-7987374a",
+      "title": "블롭, 인생은 완벽하지 않아",
+      "durationSec": 51.1,
+      "category": "short-drama",
+      "badge": null,
+      "source": "01_숏드라마_캐릭터/블롭_인생은완벽하지않아_51s.mp4",
+      "posterSource": "thumbs/블롭_인생은완벽하지않아_51s.jpg",
+      "file": "blob-not-perfect-51s-7987374a.mp4",
+      "poster": "posters/blob-not-perfect-51s-7987374a.webp"
+    },
+    {
+      "slug": "yakkong-shorts-54s-b3fe6f50",
+      "title": "약콩 쇼츠",
+      "durationSec": 54.4,
+      "category": "short-drama",
+      "badge": null,
+      "source": "01_숏드라마_캐릭터/약콩_쇼츠_v2.mp4",
+      "posterSource": "thumbs/약콩_쇼츠_v2.jpg",
+      "file": "yakkong-shorts-54s-b3fe6f50.mp4",
+      "poster": "posters/yakkong-shorts-54s-b3fe6f50.webp"
+    },
+    {
+      "slug": "ruascalp-scalp-30s-46117e1b",
+      "title": "루아스칼프 두피케어",
+      "durationSec": 30.3,
+      "category": "store-promo",
+      "badge": null,
+      "source": "02_매장홍보_실사합성/루아스칼프_두피케어_30s.mp4",
+      "posterSource": "thumbs/루아스칼프_두피케어_30s.jpg",
+      "file": "ruascalp-scalp-30s-46117e1b.mp4",
+      "poster": "posters/ruascalp-scalp-30s-46117e1b.webp"
+    },
+    {
+      "slug": "baeknyeon-galbi-27s-15985e5e",
+      "title": "백년손님 서서갈비 동탄점",
+      "durationSec": 27.2,
+      "category": "store-promo",
+      "badge": null,
+      "source": "02_매장홍보_실사합성/백년손님서서갈비_동탄점_27s.mp4",
+      "posterSource": "thumbs/백년손님서서갈비_동탄점_27s.jpg",
+      "file": "baeknyeon-galbi-27s-15985e5e.mp4",
+      "poster": "posters/baeknyeon-galbi-27s-15985e5e.webp"
+    },
+    {
+      "slug": "bread-morning-bakery-23s-a45ddc22",
+      "title": "브레드앤모닝 베이커리",
+      "durationSec": 22.9,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/01_브레드앤모닝_베이커리.mp4",
+      "posterSource": "thumbs/01_브레드앤모닝_베이커리.jpg",
+      "file": "bread-morning-bakery-23s-a45ddc22.mp4",
+      "poster": "posters/bread-morning-bakery-23s-a45ddc22.webp"
+    },
+    {
+      "slug": "nail-house-23s-3b30a6fd",
+      "title": "네일하우스",
+      "durationSec": 23.5,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/02_네일하우스_네일.mp4",
+      "posterSource": "thumbs/02_네일하우스_네일.jpg",
+      "file": "nail-house-23s-3b30a6fd.mp4",
+      "poster": "posters/nail-house-23s-3b30a6fd.webp"
+    },
+    {
+      "slug": "bodyline-pilates-24s-c54efc26",
+      "title": "바디라인 필라테스",
+      "durationSec": 23.8,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/03_바디라인_필라테스.mp4",
+      "posterSource": "thumbs/03_바디라인_필라테스.jpg",
+      "file": "bodyline-pilates-24s-c54efc26.mp4",
+      "poster": "posters/bodyline-pilates-24s-c54efc26.webp"
+    },
+    {
+      "slug": "ttinolsop-kids-24s-9ade7b02",
+      "title": "뛰놀숲 키즈카페",
+      "durationSec": 24.2,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/04_뛰놀숲_키즈카페.mp4",
+      "posterSource": "thumbs/04_뛰놀숲_키즈카페.jpg",
+      "file": "ttinolsop-kids-24s-9ade7b02.mp4",
+      "poster": "posters/ttinolsop-kids-24s-9ade7b02.webp"
+    },
+    {
+      "slug": "floraday-flower-25s-e7c00190",
+      "title": "플로라데이 꽃집",
+      "durationSec": 25.3,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/05_플로라데이_꽃집.mp4",
+      "posterSource": "thumbs/05_플로라데이_꽃집.jpg",
+      "file": "floraday-flower-25s-e7c00190.mp4",
+      "poster": "posters/floraday-flower-25s-e7c00190.webp"
+    },
+    {
+      "slug": "moms-banchan-25s-962f93ee",
+      "title": "엄마손반찬",
+      "durationSec": 25.4,
+      "category": "daangn-sample",
+      "badge": "샘플용 가상 광고",
+      "source": "03_당근홍보_더미광고/06_엄마손반찬_반찬가게.mp4",
+      "posterSource": "thumbs/06_엄마손반찬_반찬가게.jpg",
+      "file": "moms-banchan-25s-962f93ee.mp4",
+      "poster": "posters/moms-banchan-25s-962f93ee.webp"
+    }
+  ]
+}

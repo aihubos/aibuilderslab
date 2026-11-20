@@ -1,0 +1,54 @@
+# aibl-showcase-api
+# Keep this data outside the static site tree. rsync --delete must not see it.
+services:
+  aibl-showcase-api:
+    build:
+      context: ../services/showcase-api
+    image: aibl-showcase-api:1
+    container_name: aibl-showcase-api
+    init: true
+    read_only: true
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 128
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4331
+      DATA_DIR: /data
+      UPLOAD_DIR: /uploads
+      ADMIN_TOKEN_FILE: /secrets/admin-token
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+      LOG_LEVEL: info
+      NODE_OPTIONS: --max-old-space-size=192
+    volumes:
+      - /opt/aibl-showcase/data:/data
+      - /opt/aibl-showcase/uploads:/uploads
+      - /opt/aibl-showcase/secrets:/secrets:ro
+    ports:
+      - "127.0.0.1:4332:4331"
+    networks:
+      - aibuilderslab_default
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4331/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  aibuilderslab_default:
+    external: true
