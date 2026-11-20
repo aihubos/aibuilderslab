@@ -6,11 +6,8 @@ const FILE_EXT = new Set(["pdf", "zip", "pptx", "docx", "xlsx", "txt", "md"]);
 const LIMITS = { images: 4, files: 4, imageBytes: 5 * 1024 * 1024, fileBytes: 20 * 1024 * 1024, totalBytes: 25 * 1024 * 1024, links: 8 };
 
 const state = {
-  tab: "results",
   cohort: "1",
   entries: [],
-  samples: null,
-  sampleFilter: "all",
   config: { turnstileSiteKey: null },
   admin: new URLSearchParams(location.search).has("admin"),
   adminToken: "",
@@ -53,11 +50,6 @@ function formatBytes(size) {
   return `${(value / (1024 * 1024)).toFixed(1)}MB`;
 }
 
-function formatDuration(seconds) {
-  const total = Math.round(Number(seconds) || 0);
-  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
-}
-
 function safeHttpUrl(value) {
   try {
     const url = new URL(value);
@@ -97,18 +89,6 @@ async function api(path, options = {}) {
 
 function setStatus(message) {
   $("#status").textContent = message || "";
-}
-
-function showTab(tab) {
-  state.tab = tab;
-  const results = tab === "results";
-  $("#tab-results").setAttribute("aria-selected", String(results));
-  $("#tab-samples").setAttribute("aria-selected", String(!results));
-  $("#tab-results").tabIndex = results ? 0 : -1;
-  $("#tab-samples").tabIndex = results ? -1 : 0;
-  $("#panel-results").hidden = !results;
-  $("#panel-samples").hidden = results;
-  if (!results && !state.samples) loadSamples();
 }
 
 function cohortLabel(cohort) {
@@ -479,78 +459,7 @@ async function deleteOwn(entry) {
   }
 }
 
-function renderSamples() {
-  const data = state.samples;
-  const filters = $("#sample-filters");
-  filters.replaceChildren();
-  const categories = [{ id: "all", label: "전체" }, ...(data.categories || [])];
-  for (const category of categories) {
-    const count = category.id === "all" ? data.items.length : data.items.filter((item) => item.category === category.id).length;
-    const selected = state.sampleFilter === category.id;
-    filters.append(h("button", {
-      type: "button",
-      role: "tab",
-      "aria-selected": String(selected),
-      text: `${category.label} (${count})`,
-      onclick: () => {
-        state.sampleFilter = category.id;
-        renderSamples();
-      },
-    }));
-  }
-  const grid = $("#sample-grid");
-  grid.replaceChildren();
-  const items = data.items.filter((item) => state.sampleFilter === "all" || item.category === state.sampleFilter);
-  for (const item of items) grid.append(sampleCard(item));
-}
-
-function sampleCard(item) {
-  const media = h("div", { class: "media" });
-  if (item.badge) media.append(h("span", { class: "sample-badge", text: item.badge }));
-  media.append(h("img", { src: item.poster, alt: "" }));
-  media.append(h("span", { class: "duration-badge", text: formatDuration(item.durationSec) }));
-  return h("button", { class: "sample-card", type: "button", onclick: () => openPlayer(item) }, [
-    media,
-    h("div", { class: "caption" }, [h("strong", { text: item.title })]),
-  ]);
-}
-
-async function loadSamples() {
-  try {
-    if (!state.samples) {
-      const response = await fetch("samples.json", { cache: "no-store" });
-      if (!response.ok) throw new Error("샘플 목록을 불러오지 못했습니다.");
-      state.samples = await response.json();
-    }
-    renderSamples();
-  } catch (error) {
-    $("#sample-grid").replaceChildren(h("div", { class: "empty" }, [h("strong", { text: error.message })]));
-  }
-}
-
-function openPlayer(item) {
-  state.lastFocus = document.activeElement;
-  $("#player-title").textContent = item.title;
-  const badge = $("#player-badge");
-  badge.hidden = !item.badge;
-  if (item.badge) badge.textContent = item.badge;
-  const video = $("#player");
-  video.poster = item.poster;
-  if (!/^[A-Za-z0-9._-]+\.mp4$/.test(item.file || "")) return;
-  video.src = `/lounge/media/samples/${item.file}`;
-  video.load();
-  $("#player-dialog").showModal();
-}
-
-function closePlayer() {
-  const video = $("#player");
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-}
-
 function closeDialog(dialog) {
-  if (dialog.id === "player-dialog") closePlayer();
   dialog.close();
   state.lastFocus?.focus?.();
 }
@@ -572,8 +481,6 @@ async function loadConfig() {
 }
 
 function bind() {
-  $("#tab-results").addEventListener("click", () => showTab("results"));
-  $("#tab-samples").addEventListener("click", () => showTab("samples"));
   document.querySelectorAll("[data-cohort]").forEach((button) => {
     button.addEventListener("click", () => {
       state.cohort = button.dataset.cohort;
@@ -608,9 +515,6 @@ function bind() {
       if (event.target === dialog) closeDialog(dialog);
     });
     dialog.querySelectorAll("[data-close]").forEach((button) => button.addEventListener("click", () => closeDialog(dialog)));
-    dialog.addEventListener("close", () => {
-      if (dialog.id === "player-dialog") closePlayer();
-    });
   });
   if (state.admin) {
     $("#admin-bar").hidden = false;
@@ -627,5 +531,5 @@ function bind() {
 
 bind();
 loadConfig();
-if (location.hash === "#samples") showTab("samples");
+if (location.hash === "#samples") location.replace("/lounge/samples/");
 else loadEntries();

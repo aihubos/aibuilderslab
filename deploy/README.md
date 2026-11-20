@@ -4,7 +4,7 @@
 
 쇼케이스 API와 업로드는 `/opt/aibuilderslab/public` 안에 두면 안 됩니다. `deploy.sh`의 `rsync -a --delete`가 그 디렉터리를 지웁니다.
 
-정적 페이지는 `lounge/showcase/`입니다. 라운지 본문(`/lounge/`)은 계속 `noindex,nofollow`이고, 쇼케이스만 `index,follow`입니다.
+정적 페이지는 `lounge/showcase/`와 `lounge/samples/`입니다. 라운지 본문(`/lounge/`)은 계속 `noindex,nofollow`이고, 쇼케이스와 샘플 영상 페이지는 `index,follow`입니다.
 
 ## 1. 디렉터리와 관리 토큰
 
@@ -12,7 +12,7 @@
 
 ```bash
 sudo install -d -o 1000 -g 1000 -m 750 /opt/aibl-showcase/data
-sudo install -d -o 1000 -g 1000 -m 750 /opt/aibl-showcase/uploads
+sudo install -d -o 1000 -g 1000 -m 751 /opt/aibl-showcase/uploads
 sudo install -d -o 1000 -g 1000 -m 755 /opt/aibl-showcase/media/samples
 sudo install -d -o 1000 -g 1000 -m 700 /opt/aibl-showcase/secrets
 sudo install -d -o root -g root -m 750 /opt/backups/aibl-showcase
@@ -21,6 +21,8 @@ openssl rand -base64 32 | sudo tee /opt/aibl-showcase/secrets/admin-token >/dev/
 sudo chown 1000:1000 /opt/aibl-showcase/secrets/admin-token
 sudo chmod 600 /opt/aibl-showcase/secrets/admin-token
 ```
+
+업로드 디렉터리는 751입니다. nginx는 다른 사용자로 실행되므로 디렉터리를 통과할 실행 권한이 필요합니다. 750이면 이미지와 첨부 주소가 403이 됩니다. 이미 만든 디렉터리는 `sudo chmod 751 /opt/aibl-showcase/uploads`로 고칩니다. 데이터베이스 디렉터리는 nginx가 읽지 않으므로 750을 유지합니다.
 
 관리 화면은 `https://aibuilderslab.kr/lounge/showcase/?admin` 입니다. 토큰은 페이지 입력칸에 넣고, 요청 헤더 `X-Admin-Token`으로만 전송합니다. URL에 붙이지 않습니다.
 
@@ -32,11 +34,13 @@ Turnstile을 쓰려면 컨테이너 환경변수 `TURNSTILE_SITE_KEY`와 `TURNST
 
 ```bash
 cd /opt/aibuilderslab/src
-sudo docker compose -f deploy/docker-compose.showcase.yml build
-sudo docker compose -f deploy/docker-compose.showcase.yml up -d
-sudo docker compose -f deploy/docker-compose.showcase.yml ps
+sudo docker compose -p aibl-showcase -f deploy/docker-compose.showcase.yml build
+sudo docker compose -p aibl-showcase -f deploy/docker-compose.showcase.yml up -d
+sudo docker compose -p aibl-showcase -f deploy/docker-compose.showcase.yml ps
 curl -fsS http://127.0.0.1:4332/health
 ```
+
+compose는 반드시 `-p aibl-showcase`로 실행합니다. 파일 위치의 기본 프로젝트 이름은 `deploy`라서 blogos의 compose 프로젝트와 충돌합니다.
 
 서비스 이름과 컨테이너 이름은 `aibl-showcase-api`입니다. `aibuilderslab_default` 네트워크에만 붙고, 공개 포트는 없습니다. 디버그는 `127.0.0.1:4332`입니다. 루트 파일시스템은 읽기 전용이고, 데이터는 `/opt/aibl-showcase/data/showcase.db`, 업로드는 `/opt/aibl-showcase/uploads/`입니다. 메모리 256MB, CPU 0.5입니다.
 
@@ -59,7 +63,7 @@ curl -fsS http://127.0.0.1:4332/health
 sudo cp -a /opt/aibuilderslab/nginx.conf /opt/aibuilderslab/nginx.conf.bak-showcase
 ```
 
-`deploy/nginx/showcase-locations.conf`의 `location` 블록만 기존 `server { }` 안에 붙여 넣습니다. 파일 전체를 교체하지 않습니다. 확인 후 컨테이너 설정 파일을 다시 읽힙니다.
+`deploy/nginx/showcase-locations.conf`의 `location` 블록만 기존 `server { }` 안에 붙여 넣습니다. 파일 전체를 교체하지 않습니다. `{16}`이 들어 있는 정규식은 작은따옴표로 감싸야 합니다. 따옴표가 없으면 `nginx -t`가 중괄호를 블록으로 읽습니다. 확인 후 컨테이너 설정 파일을 다시 읽힙니다.
 
 ```bash
 sudo docker exec aibuilderslab-web nginx -t
@@ -80,7 +84,7 @@ sudo docker exec aibuilderslab-web nginx -s reload
 sudo /opt/aibuilderslab/deploy.sh
 ```
 
-`lounge/showcase/`와 포스터 webp가 `public/`로 복사됩니다. 업로드 디렉터리는 rsync 대상이 아닙니다.
+`lounge/showcase/`, `lounge/samples/`, 포스터 webp가 `public/`로 복사됩니다. 업로드 디렉터리는 rsync 대상이 아닙니다. 샘플 영상만 바꿀 때는 이 정적 배포로 충분합니다. API 컨테이너를 다시 만들지 않습니다.
 
 ## 6. 샘플 영상
 
@@ -118,7 +122,7 @@ cron 예:
 - `https://aibuilderslab.kr/lounge/showcase/` 빈 목록
 - 테스트 항목 1개 등록. 수정 코드가 한 번 보이는지 확인
 - 이미지, 첨부, 유튜브 임베드, 외부 링크의 `rel="ugc nofollow noopener"`
-- 샘플 영상 탭과 모달 재생
+- `https://aibuilderslab.kr/lounge/samples/` 샘플 영상과 모달 재생
 - `/?admin`은 경로가 아니라 `https://aibuilderslab.kr/lounge/showcase/?admin`
 
 제한: 이미지 jpg/png/webp/gif 각 5MB, 4장. 첨부 pdf/zip/pptx/docx/xlsx/txt/md 각 20MB, 4개. 요청 합계 25MB. 전체 업로드 3GB를 넘으면 새 파일을 거절합니다. 같은 IP는 한 시간에 5번, 하루에 20번까지 등록·수정·삭제할 수 있습니다. 허니팟 칸은 `company_website`입니다.
@@ -128,7 +132,7 @@ cron 예:
 데이터 디렉터리는 지우지 않습니다.
 
 ```bash
-sudo docker compose -f /opt/aibuilderslab/src/deploy/docker-compose.showcase.yml down
+sudo docker compose -p aibl-showcase -f /opt/aibuilderslab/src/deploy/docker-compose.showcase.yml down
 sudo cp -a /opt/aibuilderslab/nginx.conf.bak-showcase /opt/aibuilderslab/nginx.conf
 ```
 

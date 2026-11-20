@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="robots" content="index,follow" />
+    <meta name="description" content="AI Builders Lab 수업용 세로 쇼츠입니다. 당근 홍보 6편은 샘플용 가상 광고입니다." />
+    <link rel="canonical" href="https://aibuilderslab.kr/lounge/samples/" />
+    <meta property="og:title" content="샘플 영상 | AI Builders Lab" />
+    <meta property="og:description" content="AI Builders Lab 수업용 세로 쇼츠입니다. 당근 홍보 6편은 샘플용 가상 광고입니다." />
+    <meta property="og:url" content="https://aibuilderslab.kr/lounge/samples/" />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="stylesheet" href="../showcase/showcase.css" />
+    <title>샘플 영상 | AI Builders Lab</title>
+  </head>
+  <body class="showcase">
+    <a class="skip" href="#main">본문으로 바로가기</a>
+    <header class="topbar">
+      <a class="brand" href="/lounge/">
+        <img src="../../assets/ai-builders-lab-logo-transparent-384.webp" width="384" height="128" alt="AI Builders Lab" />
+        <span><strong>Builders Lounge</strong><small>샘플 영상</small></span>
+      </a>
+      <nav class="top-links" aria-label="바로가기">
+        <a href="/lounge/showcase/">빌더 결과물</a>
+        <a href="/lounge/">작업공간</a>
+        <a href="/">공개 홈페이지</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <p class="kicker">BUILDERS LOUNGE</p>
+        <h1>샘플 영상</h1>
+        <p class="lead">수업에서 만든 세로 쇼츠 11편입니다. 포스터를 누르면 이 페이지에서 재생됩니다.</p>
+      </section>
+      <p class="disclaimer">당근 홍보 영상 6개는 수업과 포트폴리오를 위한 샘플용 가상 광고입니다. 실제 매장, 가격, 연락처가 아닙니다.</p>
+      <div id="sample-filters" class="subtabs" role="tablist" aria-label="샘플 분류"></div>
+      <div id="sample-grid" class="sample-groups"></div>
+    </main>
+
+    <footer class="footer">
+      <p>AI Builders Lab · 동탄</p>
+      <a href="mailto:hello@ai-hub-os.com">문의·오류 신고</a>
+    </footer>
+
+    <dialog id="player-dialog" aria-labelledby="player-title">
+      <div class="dialog-head">
+        <h2 id="player-title">샘플 영상</h2>
+        <button class="text-button" type="button" data-close>닫기</button>
+      </div>
+      <p id="player-badge" class="sample-badge player-badge" hidden>샘플용 가상 광고</p>
+      <div class="stage">
+        <video id="player" controls playsinline preload="none"></video>
+      </div>
+    </dialog>
+    <noscript>
+      <p class="noscript">샘플 영상을 보려면 자바스크립트를 켜 주세요.</p>
+    </noscript>
+    <script type="module" src="samples.js"></script>
+  </body>
+</html>

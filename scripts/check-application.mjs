@@ -99,11 +99,22 @@ expect(hermesHtml.includes("Hermes + LLM Wiki 3시간"), "기존 Hermes 입문�
 
 expect(indexHtml.includes('href="lounge/"'), "공개 홈페이지에 멤버 도구 진입 링크가 없습니다.");
 expect(loungeHtml.includes('href="/lounge/showcase/"'), "라운지에서 공개 쇼케이스로 가는 링크가 없습니다.");
+expect(loungeHtml.includes('href="/lounge/samples/"'), "라운지에서 샘플 영상으로 가는 링크가 없습니다.");
 expect(source.get("sitemap.xml").includes("https://aibuilderslab.kr/lounge/showcase/"), "sitemap.xml에 쇼케이스 주소가 없습니다.");
+expect(source.get("sitemap.xml").includes("https://aibuilderslab.kr/lounge/samples/"), "sitemap.xml에 샘플 영상 주소가 없습니다.");
 const showcaseHtml = await readFile(resolve(root, "lounge/showcase/index.html"), "utf8");
 const showcaseScript = await readFile(resolve(root, "lounge/showcase/showcase.js"), "utf8");
+const samplesHtml = await readFile(resolve(root, "lounge/samples/index.html"), "utf8");
+const samplesScript = await readFile(resolve(root, "lounge/samples/samples.js"), "utf8");
 const samples = JSON.parse(await readFile(resolve(root, "lounge/showcase/samples.json"), "utf8"));
 expect(/<meta\s+name=["']robots["']\s+content=["']index,follow["']/i.test(showcaseHtml), "쇼케이스 검색 허용이 없습니다.");
+expect(showcaseHtml.includes('href="/lounge/samples/"'), "쇼케이스에서 샘플 영상으로 가는 링크가 없습니다.");
+expect(!showcaseHtml.includes('id="tab-samples"'), "쇼케이스에 샘플 영상 탭이 남아 있습니다.");
+expect(/<meta\s+name=["']robots["']\s+content=["']index,follow["']/i.test(samplesHtml), "샘플 영상 검색 허용이 없습니다.");
+expect(samplesHtml.includes('href="https://aibuilderslab.kr/lounge/samples/"'), "샘플 영상 canonical 주소가 없습니다.");
+expect(samplesScript.includes("/lounge/showcase/samples.json"), "샘플 페이지가 기존 목록을 재사용하지 않습니다.");
+expect(samplesScript.includes("/lounge/media/samples/"), "샘플 페이지의 영상 경로가 없습니다.");
+expect(samplesScript.includes("샘플용 가상 광고") || samplesHtml.includes("샘플용 가상 광고"), "샘플 광고 안내가 없습니다.");
 expect(showcaseScript.includes('rel: "ugc nofollow noopener noreferrer"'), "외부 링크 rel 속성이 없습니다.");
 const daangn = samples.items.filter((item) => item.category === "daangn-sample");
 expect(daangn.length === 6 && daangn.every((item) => item.badge === "샘플용 가상 광고"), "당근 샘플 광고 배지가 없습니다.");
