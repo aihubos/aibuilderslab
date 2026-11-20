@@ -41,10 +41,22 @@
             <p class="lx-kicker">BUILDERS LOUNGE</p>
             <h1 id="hero-title">배우고, 공유하고,<br /><em>함께 만드는</em> 빌더 라운지</h1>
             <p class="lx-lead">AI 빌더스 랩 수업에서 만든 샘플 영상과 1기·2기 빌더의 결과물을 한곳에 모았습니다. 다음 기수 신청도 여기서 시작하세요.</p>
-            <div class="lx-actions lx-actions-stack">
-              <a class="lx-btn lx-btn-primary lx-btn-lg" href="/lounge/apply/">다음 기수 신청 안내</a>
-              <a class="lx-btn lx-btn-soft lx-btn-lg" href="/lounge/samples/">샘플 영상 보기</a>
-            </div>
+            <!-- 모집 상태: lounge/data/cohorts.js의 RECRUIT 값으로 scripts/render-lounge.mjs가 만듭니다. -->
+            <!-- lounge:recruit -->
+          <section class="lx-recruit lx-recruit-waitlist" aria-labelledby="recruit-status">
+            <p class="lx-recruit-kicker">다음 기수 모집 상태</p>
+            <p class="lx-recruit-status" id="recruit-status"><span class="lx-recruit-dot" aria-hidden="true"></span>대기 신청</p>
+            <p class="lx-recruit-lead">일정이 정해지면 대기 신청한 분께 먼저 안내해요.</p>
+            <dl class="lx-recruit-facts">
+              <div><dt>정원</dt><dd>15명</dd></div>
+              <div><dt>현재 신청</dt><dd><span class="lx-placeholder">인원 입력 필요</span></dd></div>
+            </dl>
+            <a class="lx-btn lx-btn-kakao lx-btn-lg lx-btn-block" href="https://open.kakao.com/me/aibuilderslab" target="_blank" rel="noopener noreferrer" data-config-link="kakaoProfile"
+            ><img src="../assets/kakao-openchat-icon-84.webp" width="84" height="84" alt="" />카카오톡으로 대기 신청<span class="lx-sr"> (새 창)</span></a
+          >
+          </section>
+          <!-- /lounge:recruit -->
+            <a class="lx-link" href="/lounge/apply/">기수별 진행 방식과 자주 묻는 질문 보기</a>
           </div>
 
           <nav class="lx-paths" aria-label="나에게 맞는 길">
@@ -230,7 +242,7 @@
 
     <footer class="lx-footer">
       <div class="lx-wrap">
-        <p>AI Builders Lab · 동탄</p>
+        <p>AI 빌더스랩 (AI Builders Lab) · 동탄</p>
         <nav aria-label="바닥 메뉴">
           <a href="/lounge/apply/">기수 신청</a>
           <a href="/lounge/samples/">샘플 영상</a>

@@ -12,7 +12,8 @@ const IMAGE_EXT = new Set(["jpg", "jpeg", "png", "webp", "gif"]);
 const FILE_EXT = new Set(["pdf", "zip", "pptx", "docx", "xlsx", "txt", "md"]);
 const MB = 1024 * 1024;
 const LIMITS = Object.freeze({ images: 4, files: 4, imageBytes: 5 * MB, fileBytes: 20 * MB, totalBytes: 25 * MB, links: 8 });
-const STEPS = Object.freeze(["name", "cohort", "title", "links", "images", "files", "tools", "review"]);
+const STEPS = Object.freeze(["name", "cohort", "title", "links", "images", "files", "tools", "contact", "review"]);
+const EMAIL = /^[^\s@,<>"]+@[^\s@,<>"]+\.[^\s@,<>"]+$/;
 const COHORT_LABEL = Object.freeze({ "1": "1기", "2": "2기" });
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -62,6 +63,26 @@ function safeHttpUrl(value) {
     return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : "";
   } catch {
     return "";
+  }
+}
+
+/*
+ * 연락 링크: https 주소 또는 이메일(mailto)만 받습니다. 서버(parseContact)도 같은 규칙으로 다시 검사합니다.
+ * "open.kakao.com/o/..."처럼 적으면 https://를 붙여 줍니다.
+ */
+function normalizeContact(value) {
+  const text = String(value || "").trim();
+  if (!text) return { value: "", ok: true };
+  if (EMAIL.test(text)) return { value: text, ok: true };
+  const candidate = /^[a-z][a-z0-9+.-]*:/i.test(text) ? text : `https://${text}`;
+  try {
+    const url = new URL(candidate);
+    if (url.protocol === "mailto:") {
+      return { value: candidate, ok: !url.search && EMAIL.test(decodeURIComponent(url.pathname)) };
+    }
+    return { value: url.toString(), ok: url.protocol === "https:" && !url.username && !url.password && /\./.test(url.hostname) };
+  } catch {
+    return { value: text, ok: false };
   }
 }
 
@@ -128,6 +149,13 @@ function validateStep(name) {
     }
   }
 
+  if (name === "contact") {
+    const field = form.elements.contact;
+    const contact = normalizeContact(field.value);
+    if (!contact.ok) return fail("e-contact", "https:// 로 시작하는 주소나 이메일만 넣을 수 있어요. (http, 전화번호는 안 돼요)", field);
+    field.value = contact.value;
+  }
+
   if (name === "links") {
     for (const input of $$("[data-link-input]")) {
       const value = normalizeLink(input.value);
@@ -153,6 +181,7 @@ function stepHasInput(name) {
   if (name === "images") return state.images.length > 0;
   if (name === "files") return state.files.length > 0;
   if (name === "tools") return Boolean(form.elements.tools.value.trim() || form.elements.prompt.value.trim());
+  if (name === "contact") return Boolean(form.elements.contact.value.trim());
   return true;
 }
 
@@ -193,7 +222,7 @@ function showStep(index, { focus = true, push = true } = {}) {
   const question = $(".up-question", section)?.textContent?.trim() || "";
   announce(`${STEPS.length}단계 중 ${clamped + 1}단계. ${question}`);
   if (!focus) return;
-  const target = name === "name" || name === "title" || name === "tools"
+  const target = name === "name" || name === "title" || name === "tools" || name === "contact"
     ? $("input:not([type=hidden]), textarea", section)
     : name === "cohort"
       ? ($('[name="cohort"]:checked') || $("#q-cohort"))
@@ -361,6 +390,7 @@ function renderReview() {
     ["파일", state.files.map((item) => item.file.name).join("\n"), "files"],
     ["사용한 도구", form.elements.tools.value.trim(), "tools"],
     ["프롬프트", form.elements.prompt.value.trim() ? `${form.elements.prompt.value.trim().slice(0, 120)}${form.elements.prompt.value.trim().length > 120 ? "…" : ""}` : "", "tools"],
+    ["연락 링크", form.elements.contact.value.trim(), "contact"],
   ];
   $("[data-review]").replaceChildren(...rows.map(([label, value, step]) => h("div", {}, [
     h("dt", { text: label }),
@@ -385,6 +415,7 @@ function buildPayload() {
   for (const link of linkValues()) data.append("link", link);
   data.set("tools", form.elements.tools.value.trim());
   data.set("prompt", form.elements.prompt.value);
+  data.set("contact", normalizeContact(form.elements.contact.value).value);
   data.set("company_website", form.elements.company_website.value);
   const token = $('[name="cf-turnstile-response"]')?.value;
   if (token) data.set("turnstileToken", token);
@@ -394,7 +425,7 @@ function buildPayload() {
 }
 
 function firstInvalidStep() {
-  for (const name of ["name", "cohort", "title", "links"]) {
+  for (const name of ["name", "cohort", "title", "links", "contact"]) {
     if (!validateStep(name)) return name;
   }
   return "";

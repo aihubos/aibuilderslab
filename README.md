@@ -50,7 +50,8 @@ npm run test
 - 메인 교육 선택: 홈페이지, 대시보드, 게임, 웹 레포트, Hermes와 LLM Wiki 기본 설치
 - `install/`: macOS·Windows 설치 사전 안내
 - `lounge/`: 빌더스 라운지 홈(검색 제외). 다음 기수 신청, 샘플 영상 미리보기, 빌더 결과물, 참여 안내를 한 화면에 모읍니다. `AI 회의록`과 `AI 쇼츠 스튜디오`는 이름과 연결 자리만 제공하며 OAuth, 업로드, 생성, 결제는 포함하지 않습니다.
-- `lounge/apply/`: 기수별 신청 안내. 신청은 `site-config.js`의 개인 카카오톡 링크로만 받습니다. 새 기수는 `lounge/apply/cohorts.js` 배열에 항목만 추가합니다.
+- `lounge/apply/`: 기수별 신청 안내. 신청은 `site-config.js`의 개인 카카오톡 링크로만 받습니다.
+- `lounge/data/cohorts.js`: 다음 기수 모집 상태(`모집 중`·`대기 신청`·`마감`, 정원, 신청 인원)와 기수별 정보·수료생 수. `lounge/data/faq.js`: 공개 페이지 FAQ. 바꾼 뒤 `npm run build`(또는 `npm run lounge:render`)를 실행하면 `scripts/render-lounge.mjs`가 홈·신청·샘플·쇼케이스 HTML과 JSON-LD를 다시 씁니다. `npm test`는 HTML이 데이터와 다르면 실패합니다.
 - `lounge/upload/`: 로그인 없이 한 화면에 한 질문씩 답하는 결과물 올리기(검색 제외). 기존 `/lounge/api/entries`를 그대로 사용합니다.
 - `lounge/showcase/`: 로그인 없는 공개 결과물 쇼케이스. 파일은 `services/showcase-api`가 VPS 디스크에 저장합니다.
 - `lounge/samples/`: 수업용 샘플 영상 11편. 영상 파일은 서버의 `/lounge/media/samples/`에 있습니다.

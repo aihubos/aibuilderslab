@@ -1,4 +1,8 @@
+import { COHORTS } from "../data/cohorts.js";
+import { loadStats } from "../data/stats.js";
+
 const API = "/lounge/api";
+const LIKED_KEY = "aibl-showcase-liked";
 const SECRET_KEY = "aibl-showcase-secrets";
 const ADMIN_KEY = "aibl-showcase-admin-token";
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -61,6 +65,88 @@ function safeHttpUrl(value) {
   } catch { return ""; }
 }
 
+/* "이 빌더에게 질문하기": https 또는 mailto만 링크로 만듭니다. 서버도 같은 규칙으로 검증합니다. */
+function safeContactUrl(value) {
+  try {
+    const url = new URL(String(value || ""));
+    if (url.protocol === "https:" && !url.username && !url.password) return url.toString();
+    if (url.protocol === "mailto:" && !url.search && /^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/.test(decodeURIComponent(url.pathname))) return url.toString();
+    return "";
+  } catch { return ""; }
+}
+
+function contactButton(entry, className) {
+  const href = safeContactUrl(entry.contact);
+  if (!href) return null;
+  const isMail = href.startsWith("mailto:");
+  return h("a", {
+    class: className,
+    href,
+    target: isMail ? null : "_blank",
+    rel: "ugc nofollow noopener noreferrer",
+    "aria-label": `${entry.name || "빌더"}에게 질문하기${isMail ? " (메일)" : " (새 창)"}`,
+  }, ["이 빌더에게 질문하기"]);
+}
+
+function readLiked() {
+  try { return new Set(JSON.parse(localStorage.getItem(LIKED_KEY) || "[]")); } catch { return new Set(); }
+}
+
+function rememberLiked(id) {
+  const liked = readLiked();
+  liked.add(id);
+  try { localStorage.setItem(LIKED_KEY, JSON.stringify([...liked].slice(-500))); } catch { /* 저장이 막혀도 좋아요 수는 서버 기준으로 보여 줍니다. */ }
+}
+
+function likeButton(entry) {
+  const liked = readLiked().has(entry.id);
+  const count = h("span", { class: "like-count", text: String(Number(entry.likes) || 0) });
+  const button = h("button", {
+    class: "like-button",
+    type: "button",
+    "aria-pressed": String(liked),
+    "aria-label": `좋아요 ${Number(entry.likes) || 0}개${liked ? ", 눌렀어요" : ""}`,
+  }, [h("span", { class: "like-heart", "aria-hidden": "true", text: liked ? "♥" : "♡" }), " 좋아요 ", count]);
+  button.addEventListener("click", () => likeEntry(entry, button, count));
+  return button;
+}
+
+async function likeEntry(entry, button, count) {
+  if (button.getAttribute("aria-pressed") === "true" || button.disabled) return;
+  button.disabled = true;
+  try {
+    const data = await api(`/entries/${entry.id}/like`, { method: "POST" });
+    entry.likes = data.likes;
+    rememberLiked(entry.id);
+    document.querySelectorAll(`[data-like-for="${entry.id}"]`).forEach((node) => {
+      node.querySelector(".like-count").textContent = String(data.likes);
+      node.querySelector(".like-heart").textContent = "♥";
+      node.setAttribute("aria-pressed", "true");
+      node.setAttribute("aria-label", `좋아요 ${data.likes}개, 눌렀어요`);
+    });
+    count.textContent = String(data.likes);
+  } catch (error) {
+    setStatus(error.message || "좋아요를 보내지 못했습니다.");
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function renderCohortStats() {
+  const box = document.querySelector("[data-cohort-stats]");
+  if (!box) return;
+  const cohort = COHORTS.find((item) => item.id === state.cohort);
+  const graduates = Number.isInteger(cohort?.graduates)
+    ? h("span", { class: "chip", text: `수료생 ${cohort.graduates}명` })
+    : h("span", { class: "lx-placeholder", text: "수료생 수 입력 필요" });
+  const entries = h("span", { class: "chip", text: "결과물 집계 중" });
+  box.replaceChildren(graduates, entries);
+  loadStats().then((counts) => {
+    const count = counts.get(state.cohort);
+    entries.textContent = Number.isInteger(count) ? `결과물 ${count}개` : "결과물 수 확인 불가";
+  });
+}
+
 function safeMediaPath(value) {
   const text = String(value || "");
   if (!text.startsWith("/lounge/") || text.includes("..") || text.includes("\\")) return "";
@@ -111,6 +197,7 @@ function syncCohortUi() {
   });
   const upload = document.querySelector("[data-open-upload]");
   if (upload) upload.href = uploadHref();
+  renderCohortStats();
 }
 
 function renderEntries() {
@@ -140,9 +227,14 @@ function entryCard(entry) {
     h("span", { class: "hint", text: entry.name || "" }),
   ];
   if (entry.hidden) copy.push(h("span", { class: "hidden-flag", text: "숨김" }));
-  return h("button", { class: "entry-card", type: "button", onclick: () => openDetail(entry) }, [
-    media,
-    h("div", { class: "card-copy" }, copy),
+  const like = likeButton(entry);
+  like.dataset.likeFor = entry.id;
+  return h("article", { class: "entry-card" }, [
+    h("button", { class: "entry-open", type: "button", onclick: () => openDetail(entry), "aria-label": `${entry.title || "결과물"} 자세히 보기` }, [
+      media,
+      h("div", { class: "card-copy" }, copy),
+    ]),
+    h("div", { class: "card-actions" }, [like, contactButton(entry, "ask-button")]),
   ]);
 }
 
@@ -172,6 +264,9 @@ function openDetail(entry) {
     h("p", {}, [h("span", { class: "chip", text: entry.cohortLabel || cohortLabel(entry.cohort) }), " ", entry.name || ""]),
     h("p", { text: entry.summary || "" }),
   );
+  const detailLike = likeButton(entry);
+  detailLike.dataset.likeFor = entry.id;
+  body.append(h("div", { class: "card-actions detail-reactions" }, [detailLike, contactButton(entry, "ask-button")]));
   if (entry.images?.length) body.append(gallery(entry.images));
   for (const link of entry.links || []) {
     const href = safeHttpUrl(link.url);
@@ -325,6 +420,7 @@ function openUpload(entry) {
     form.summary.value = entry.summary || "";
     form.tools.value = entry.tools || "";
     form.prompt.value = entry.prompt || "";
+    form.contact.value = entry.contact ? entry.contact.replace(/^mailto:/, "") : "";
   } else {
     form.cohort.value = state.cohort;
   }
@@ -353,6 +449,10 @@ function validateForm(form) {
   const links = [...form.querySelectorAll("[name=link]")].map((input) => input.value.trim()).filter(Boolean);
   if (links.length > LIMITS.links) errors.push("링크는 8개까지 넣을 수 있습니다.");
   for (const link of links) if (!safeHttpUrl(link)) errors.push("링크는 http 또는 https 주소만 넣을 수 있습니다.");
+  const contact = form.contact.value.trim();
+  if (contact && !safeContactUrl(contact) && !/^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/.test(contact)) {
+    errors.push("연락 링크는 https:// 주소나 이메일만 넣을 수 있습니다.");
+  }
   const images = [...(form.image.files || [])];
   const files = [...(form.file.files || [])];
   if (images.length > LIMITS.images) errors.push("이미지는 4장까지 올릴 수 있습니다.");

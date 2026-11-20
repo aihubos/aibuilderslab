@@ -52,13 +52,49 @@ CREATE INDEX IF NOT EXISTS idx_reports_entry ON reports(entry_id, created_at DES
 CREATE INDEX IF NOT EXISTS idx_rate_hits ON rate_hits(action, ip_hash, created_at);
 `;
 
+/*
+ * 마이그레이션: 기존 데이터를 지우지 않고 필요한 것만 더합니다.
+ * - v2: entries.contact 열 추가 (ALTER TABLE ADD COLUMN, 기존 행은 빈 문자열)
+ *       likes 새 테이블 (결과물당 IP 해시 1회, 결과물 삭제 시 함께 삭제)
+ * 여러 번 실행해도 결과가 같습니다.
+ */
+const SCHEMA_VERSION = 2;
+
+function columnNames(db, table) {
+  return new Set(db.prepare(`PRAGMA table_info(${table})`).all().map((column) => column.name));
+}
+
+export function migrate(db) {
+  db.transaction(() => {
+    if (!columnNames(db, "entries").has("contact")) {
+      db.exec("ALTER TABLE entries ADD COLUMN contact TEXT NOT NULL DEFAULT ''");
+    }
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS likes (
+        entry_id TEXT NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
+        ip_hash TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        PRIMARY KEY (entry_id, ip_hash)
+      );
+    `);
+    if (Number(db.pragma("user_version", { simple: true })) < SCHEMA_VERSION) {
+      db.pragma(`user_version = ${SCHEMA_VERSION}`);
+    }
+  })();
+}
+
 export function openDatabase(file) {
   const db = new Database(file);
   db.pragma("journal_mode = WAL");
   db.pragma("foreign_keys = ON");
   db.pragma("busy_timeout = 5000");
   db.exec(SCHEMA);
+  migrate(db);
   return db;
+}
+
+export function likeCount(db, entryId) {
+  return Number(db.prepare("SELECT COUNT(*) AS n FROM likes WHERE entry_id = ?").get(entryId).n);
 }
 
 export function totalUploadBytes(db) {

@@ -89,6 +89,36 @@ export function youtubeIdFromUrl(url) {
   return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
 }
 
+const EMAIL = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
+
+/*
+ * "이 빌더에게 질문하기" 연락 링크: https 또는 mailto만 받습니다.
+ * - 이메일만 적으면 mailto:로 바꿉니다.
+ * - mailto에 ?subject= 같은 추가 값, 여러 주소는 받지 않습니다.
+ * - https에 아이디·비밀번호를 넣은 주소는 받지 않습니다.
+ */
+export function parseContact(value, limits) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+  if (text.length > limits.maxContactLength) throw new RequestError(400, `연락 링크는 ${limits.maxContactLength}자 이내로 적어 주세요.`);
+  if (/[\u0000-\u001F\u007F\s<>"]/.test(text)) throw new RequestError(400, "연락 링크에 사용할 수 없는 문자가 있습니다.");
+  if (EMAIL.test(text)) return `mailto:${text}`;
+  let url;
+  try {
+    url = new URL(text);
+  } catch {
+    throw new RequestError(400, "연락 링크는 https:// 주소나 이메일만 넣을 수 있습니다.");
+  }
+  if (url.protocol === "mailto:") {
+    const address = decodeURIComponent(url.pathname);
+    if (url.search || url.hash || !EMAIL.test(address)) throw new RequestError(400, "이메일 주소를 다시 확인해 주세요.");
+    return `mailto:${address}`;
+  }
+  if (url.protocol !== "https:") throw new RequestError(400, "연락 링크는 https:// 주소나 이메일만 넣을 수 있습니다.");
+  if (url.username || url.password) throw new RequestError(400, "링크에 아이디나 비밀번호를 넣지 말아 주세요.");
+  return url.toString();
+}
+
 export function parseLinks(values, limits) {
   const links = [];
   for (const raw of values) {

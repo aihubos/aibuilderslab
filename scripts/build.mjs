@@ -1,6 +1,11 @@
 import { access, cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import "./build-ai-world.mjs";
+import { renderLounge } from "./render-lounge.mjs";
+
+// 라운지 데이터(lounge/data)로 모집 상태·기수·FAQ·JSON-LD를 HTML에 먼저 반영합니다.
+const rendered = await renderLounge();
+if (rendered.changed.length) console.log(`라운지 HTML 갱신: ${rendered.changed.join(", ")}`);
 
 const projectRoot = process.cwd();
 const distRoot = resolve(projectRoot, "dist");
@@ -26,8 +31,10 @@ const requiredFiles = [
   "lounge/lounge.css",
   "lounge/lounge.js",
   "lounge/apply/index.html",
-  "lounge/apply/cohorts.js",
   "lounge/apply/apply.js",
+  "lounge/data/cohorts.js",
+  "lounge/data/faq.js",
+  "lounge/data/stats.js",
   "lounge/upload/index.html",
   "lounge/upload/upload.css",
   "lounge/upload/upload.js",

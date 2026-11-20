@@ -2,7 +2,7 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 import Fastify from "fastify";
 import multipart from "@fastify/multipart";
-import { openDatabase, totalUploadBytes, countHits, addHit, purgeHits } from "./db.js";
+import { openDatabase, totalUploadBytes, countHits, addHit, purgeHits, likeCount } from "./db.js";
 import { RequestError } from "./errors.js";
 import { processImage, writeNamed, removeStored, removeEntryDir } from "./files.js";
 import { resolveLimits } from "./limits.js";
@@ -17,7 +17,9 @@ import {
   safeEqual,
   verifySecret,
 } from "./security.js";
-import { assertFile, cleanBlock, cleanLine, parseCohort, parseLinks } from "./validate.js";
+import { assertFile, cleanBlock, cleanLine, parseCohort, parseContact, parseLinks } from "./validate.js";
+
+const COHORTS = Object.freeze(["1", "2"]);
 
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
@@ -142,6 +144,38 @@ export async function buildApp(options = {}) {
     return { entries: rows.map((row) => present(db, row, false)) };
   });
 
+  /* 기수별 공개 결과물 수 (숨김 제외). 목록의 200개 제한과 상관없이 정확한 수를 줍니다. */
+  app.get("/stats", async (_request, reply) => {
+    reply.header("Cache-Control", "public, max-age=60");
+    const counts = new Map(
+      db.prepare("SELECT cohort, COUNT(*) AS n FROM entries WHERE hidden = 0 GROUP BY cohort").all()
+        .map((row) => [row.cohort, Number(row.n)]),
+    );
+    return {
+      cohorts: COHORTS.map((cohort) => ({
+        cohort,
+        cohortLabel: `${cohort}기`,
+        entries: counts.get(cohort) || 0,
+      })),
+    };
+  });
+
+  /* 좋아요: IP 해시 기준 결과물당 1회. 반복 요청은 기존 rate-limit 패턴으로 제한합니다. */
+  app.post("/entries/:id/like", async (request, reply) => {
+    const row = loadVisible(db, request.params.id);
+    const ipHash = ipHashOf(request);
+    let inserted = false;
+    db.transaction(() => {
+      const now = enforceRate("like", ipHash, limits.likeHour, limits.likeDay);
+      inserted = db.prepare(
+        "INSERT OR IGNORE INTO likes (entry_id, ip_hash, created_at) VALUES (?, ?, ?)",
+      ).run(row.id, ipHash, new Date().toISOString()).changes === 1;
+      record("like", ipHash, now);
+    })();
+    reply.header("Cache-Control", "no-store");
+    return reply.code(inserted ? 201 : 200).send({ likes: likeCount(db, row.id), liked: true, already: !inserted });
+  });
+
   app.get("/entries/:id", async (request, reply) => {
     reply.header("Cache-Control", "no-store");
     const row = loadVisible(db, request.params.id);
@@ -174,8 +208,8 @@ export async function buildApp(options = {}) {
         }
         db.prepare(
           `INSERT INTO entries
-            (id, name, cohort, title, summary, links_json, tools, prompt, secret_salt, secret_hash, hidden, created_at, updated_at)
-           VALUES (@id, @name, @cohort, @title, @summary, @links_json, @tools, @prompt, @secret_salt, @secret_hash, 0, @created_at, @updated_at)`,
+            (id, name, cohort, title, summary, links_json, tools, prompt, contact, secret_salt, secret_hash, hidden, created_at, updated_at)
+           VALUES (@id, @name, @cohort, @title, @summary, @links_json, @tools, @prompt, @contact, @secret_salt, @secret_hash, 0, @created_at, @updated_at)`,
         ).run({
           id,
           ...parsed,
@@ -225,7 +259,7 @@ export async function buildApp(options = {}) {
         db.prepare(
           `UPDATE entries
            SET name = @name, cohort = @cohort, title = @title, summary = @summary, links_json = @links_json,
-               tools = @tools, prompt = @prompt, updated_at = @updated_at
+               tools = @tools, prompt = @prompt, contact = @contact, updated_at = @updated_at
            WHERE id = @id`,
         ).run({
           id: row.id,
@@ -339,6 +373,7 @@ function parseSubmission(fields, limits, previous) {
     summary: cleanLine(fields.summary ?? previous?.summary, limits.maxSummary, "한 줄 설명", { required: true }),
     tools: cleanLine(fields.tools ?? previous?.tools ?? "", limits.maxTools, "사용한 도구", { allowMarkup: true }),
     prompt: cleanBlock(fields.prompt ?? previous?.prompt ?? "", limits.maxPrompt, "프롬프트"),
+    contact: fields.contact == null && previous ? previous.contact || "" : parseContact(fields.contact ?? "", limits),
     links: links == null && previous ? JSON.parse(previous.links_json) : parseLinks(links || [], limits),
   };
 }
@@ -512,6 +547,8 @@ function present(db, row, admin) {
     links: JSON.parse(row.links_json),
     tools: row.tools,
     prompt: row.prompt,
+    contact: row.contact || null,
+    likes: likeCount(db, row.id),
     images: assets.filter((asset) => asset.kind === "image").map((asset) => ({
       id: asset.id,
       name: asset.original_name,
