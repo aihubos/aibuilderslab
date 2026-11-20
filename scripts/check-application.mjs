@@ -98,6 +98,17 @@ expect(installScript.includes("navigator.clipboard"), "클립보드 복사 동�
 expect(hermesHtml.includes("Hermes + LLM Wiki 3시간"), "기존 Hermes 입문교육 페이지가 바뀌었습니다.");
 
 expect(indexHtml.includes('href="lounge/"'), "공개 홈페이지에 멤버 도구 진입 링크가 없습니다.");
+expect(loungeHtml.includes('href="/lounge/showcase/"'), "라운지에서 공개 쇼케이스로 가는 링크가 없습니다.");
+expect(source.get("sitemap.xml").includes("https://aibuilderslab.kr/lounge/showcase/"), "sitemap.xml에 쇼케이스 주소가 없습니다.");
+const showcaseHtml = await readFile(resolve(root, "lounge/showcase/index.html"), "utf8");
+const showcaseScript = await readFile(resolve(root, "lounge/showcase/showcase.js"), "utf8");
+const samples = JSON.parse(await readFile(resolve(root, "lounge/showcase/samples.json"), "utf8"));
+expect(/<meta\s+name=["']robots["']\s+content=["']index,follow["']/i.test(showcaseHtml), "쇼케이스 검색 허용이 없습니다.");
+expect(showcaseScript.includes('rel: "ugc nofollow noopener noreferrer"'), "외부 링크 rel 속성이 없습니다.");
+const daangn = samples.items.filter((item) => item.category === "daangn-sample");
+expect(daangn.length === 6 && daangn.every((item) => item.badge === "샘플용 가상 광고"), "당근 샘플 광고 배지가 없습니다.");
+expect(samples.items.filter((item) => item.category === "short-drama").length === 3, "숏드라마 샘플 수가 맞지 않습니다.");
+expect(samples.items.filter((item) => item.category === "store-promo").length === 2, "매장홍보 샘플 수가 맞지 않습니다.");
 expect(loungeHtml.includes("AI 회의록") && loungeHtml.includes("AI 쇼츠 스튜디오"), "두 기존 기능의 정확한 표기명이 없습니다.");
 expect((loungeHtml.match(/기존 기능 연결 예정/g) || []).length >= 2, "기존 기능 연결 자리가 부족합니다.");
 expect(/<meta\s+name=["']robots["']\s+content=["']noindex,nofollow["']/i.test(loungeHtml), "연결 전 멤버 작업공간의 검색 제외 설정이 없습니다.");

@@ -243,6 +243,13 @@
   background: var(--brand-blue-accessible);
 }
 
+a.lounge-home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .lounge-home-button:hover {
   background: var(--brand-navy);
 }

@@ -104,6 +104,15 @@ export function renderHome(rootOrOptions, maybeOptions = {}) {
         </section>
       </div>
 
+      <section class="lounge-home-next" aria-labelledby="lounge-showcase-title">
+        <div>
+          <p class="lounge-home-eyebrow">공개</p>
+          <h2 id="lounge-showcase-title">빌더 결과물</h2>
+          <p>1기와 2기가 직접 올린 결과와 샘플 영상을 누구나 볼 수 있습니다.</p>
+        </div>
+        <a class="lounge-home-button" href="/lounge/showcase/">결과물 보기</a>
+      </section>
+
       <section class="lounge-home-next" aria-labelledby="lounge-home-next-title">
         <div>
           <p class="lounge-home-eyebrow">다음 단계</p>

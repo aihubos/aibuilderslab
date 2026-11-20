@@ -50,6 +50,7 @@ npm run test
 - 메인 교육 선택: 홈페이지, 대시보드, 게임, 웹 레포트, Hermes와 LLM Wiki 기본 설치
 - `install/`: macOS·Windows 설치 사전 안내
 - `lounge/`: 기존 도구 연결 전의 멤버 작업공간 UI. `AI 회의록`과 `AI 쇼츠 스튜디오`는 이름과 연결 자리만 제공하며 OAuth, 업로드, 생성, 결제는 포함하지 않습니다.
+- `lounge/showcase/`: 로그인 없는 공개 결과물 쇼케이스와 샘플 영상. 파일은 `services/showcase-api`가 VPS 디스크에 저장합니다. 적용 순서는 `deploy/README.md`를 따릅니다.
 - `site-config.js`: 공개 신청 채널, 교육 정보, 캘린더 주소
 
 비밀키, 토큰, 비밀번호, 결제정보를 저장소나 공개 문서에 넣지 않습니다.
