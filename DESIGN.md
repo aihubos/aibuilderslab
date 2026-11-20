@@ -304,6 +304,13 @@ CSS에서는 작은 글 크기를 `--font-small: 0.875rem` 토큰으로 사용�
 
 ## Lounge 2026-11 개편 토큰
 
+> **2026-11-20 커리큘럼 스타일로 갱신**: 아래 목록의 색·글꼴·반지름 값 일부는 `lounge.ai-hub-os.com/curriculum/` 디자인 언어로 바뀌었다. 현재 값의 기준은 `lounge/lounge.css` `:root`이다.
+> - 색: `--lx-blue #2F6BFF`(버튼 배경, 흰 글자 4.5:1), `--lx-blue-ink #1F4FD6`(글자·링크 6.7:1), `--lx-blue-press #1A43B8`, `--lx-blue-soft #E7EFFF`, `--lx-blue-hl #D6E4FF`, `--lx-navy #0D1B3A`(홈 첫 화면 배경, 위쪽 `#24438A` 빛), `--lx-neon #C6FF3D`(핵심 문구 `<mark>`, 글자는 navy 14:1), `--lx-ink #12213B`, `--lx-muted #5A6880`(5.3:1 이상), `--lx-line #E1E7F0`, `--lx-surface-soft #F4F7FC`. 토스 블루로 되돌릴 때는 `:root`의 파란색 네 줄만 바꾼다.
+> - 글꼴: `Pretendard`(설치된 기기만) → Apple SD Gothic Neo → 맑은 고딕. 웹폰트 다운로드 없음.
+> - 모양: 버튼 반지름 12px(헤더 신청 버튼 10px), 카드 20px, 목록 14px. 섹션 위아래 64px(모바일)·92px(900px 이상). 섹션 제목 `clamp(1.625rem, 3.4vw, 2.25rem)` 자간 -0.04em.
+> - 홈 첫 화면: navy 가운데 정렬. 칩 배지 → 제목(형광 mark 한 곳) → 부제 → **1기·2기 커리큘럼 카드 2개**(모바일도 나란히) → 알약형 이용 순서 → 모집 상태 흰 카드 + 세 갈래 길. 커리큘럼 주소는 `lounge/data/cohorts.js`의 `curriculumUrl`.
+> - 상단 메뉴는 6개(`커리큘럼` 추가)라 한 줄 전환 폭을 1040px로 올렸다.
+
 `/lounge/` 이하 공개 화면(홈, 기수 신청, 결과물 올리기, 샘플 영상, 빌더 결과물)은 `lounge/lounge.css` 한 파일의 `--lx-*` 토큰을 공유한다. 기존 작업공간 사이드바 구조와 `Lounge 앱 토큰`은 더 이상 홈에서 쓰지 않는다.
 
 - 색: `--lx-blue: #3182F6`(토스 블루, 진행 바·포커스 링·강조선 전용), `--lx-blue-ink: #1B64DA`(버튼 배경·링크 글자, 흰 배경 대비 5.4:1), `--lx-blue-press: #1957C2`, `--lx-blue-soft: #E8F3FF`, `--lx-ink: #191F28`, `--lx-ink-2: #333D4B`, `--lx-muted: #4E5968`(대비 7.1:1), `--lx-line: #E5E8EB`, `--lx-surface-soft: #F2F4F6`, `--lx-kakao: #FEE500`, `--lx-kakao-ink: #191919`.

@@ -1,21 +1,22 @@
-/* 2026-11 라운지 개편: 공통 상단 메뉴와 색은 ../lounge.css 토큰을 따릅니다. 웹폰트 대신 시스템 한글 글꼴. */
+/* 2026-11 라운지 개편: 공통 상단 메뉴와 색은 ../lounge.css 토큰을 따릅니다. 웹폰트 대신 시스템 한글 글꼴.
+ * 2026-11 커리큘럼 스타일: 색·글꼴은 lounge.css의 --lx-* 토큰을 그대로 가리킵니다(색은 그 파일 한 곳에서 바꿈). */
 :root {
-  --bg: #f9fafb;
-  --surface: #ffffff;
-  --ink: #191f28;
-  --muted: #4e5968;
-  --line: #e5e8eb;
-  --blue: #1b64da;
-  --blue-soft: #e8f3ff;
-  --green: #0b6e4f;
-  --green-bg: #e7f6ef;
+  --bg: var(--lx-surface-soft, #f4f7fc);
+  --surface: var(--lx-surface, #ffffff);
+  --ink: var(--lx-ink, #12213b);
+  --muted: var(--lx-muted, #5a6880);
+  --line: var(--lx-line, #e1e7f0);
+  --blue: var(--lx-blue-ink, #1f4fd6);
+  --blue-soft: var(--lx-blue-soft, #e7efff);
+  --green: var(--lx-green, #0b6e4f);
+  --green-bg: var(--lx-green-bg, #e3f6ea);
   --amber: #6b4500;
   --amber-bg: #fff3d6;
   --danger: #8f1d14;
   --danger-bg: #fff1f0;
   --shadow: 0 4px 16px rgba(7, 19, 49, 0.08);
   --radius: 16px;
-  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font: var(--lx-font, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif);
 }
 
 * { box-sizing: border-box; }

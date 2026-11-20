@@ -46,6 +46,10 @@ export const COHORTS = Object.freeze([
     deadline: null, // TODO(운영자)
     flowTitle: null,
     flow: [],
+    // 커리큘럼 페이지: 아직 없습니다(2026-11-20 기준 cohort2.html 등 404).
+    // 페이지 생기면 여기에 URL을 넣고 npm run build 하세요. 홈 카드가 ‘준비 중’에서 링크 카드로 바뀝니다.
+    curriculumUrl: null,
+    curriculumOverviewUrl: null,
   },
   {
     id: "1",
@@ -69,6 +73,9 @@ export const COHORTS = Object.freeze([
       "기능 확장과 회귀 검수",
       "완성 범위 확인과 다음 행동 정하기",
     ],
+    // 커리큘럼 페이지 (외부 사이트 lounge.ai-hub-os.com, 2026-11-20 200 응답 확인)
+    curriculumUrl: "https://lounge.ai-hub-os.com/curriculum/cohort1.html", // 회차별 안내
+    curriculumOverviewUrl: "https://lounge.ai-hub-os.com/curriculum/", // 모집·커리큘럼 전체
   },
 ]);
 

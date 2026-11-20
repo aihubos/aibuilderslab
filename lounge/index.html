@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#0D1B3A" />
     <meta name="robots" content="noindex,nofollow" />
     <meta
       name="description"
-      content="AI Builders Lab 빌더스 라운지. 샘플 영상과 1기·2기 빌더 결과물을 보고, 다음 기수 신청과 결과물 올리기를 시작합니다."
+      content="AI Builders Lab 빌더스 라운지. 1기·2기 커리큘럼, 샘플 영상, 빌더 결과물을 보고 다음 기수 신청과 결과물 올리기를 시작합니다."
     />
     <link rel="icon" type="image/png" href="../assets/favicon.png" />
     <link rel="stylesheet" href="lounge.css" />
     <title>Builders Lounge | AI Builders Lab</title>
   </head>
-  <body class="lx">
+  <body class="lx lx-home">
     <a class="lx-skip" href="#main">본문으로 바로가기</a>
 
     <header class="lx-header">
@@ -24,6 +24,7 @@
         </a>
         <nav class="lx-nav" aria-label="라운지 메뉴">
           <a href="/lounge/" aria-current="page">라운지 홈</a>
+          <a href="/lounge/#curriculum">커리큘럼</a>
           <a class="lx-nav-feature" href="/lounge/samples/"><span class="lx-nav-play" aria-hidden="true"></span>샘플 영상</a>
           <a href="/lounge/showcase/">빌더 결과물</a>
           <a href="/lounge/upload/">결과물 올리기</a>
@@ -34,13 +35,42 @@
     </header>
 
     <main id="main" tabindex="-1">
-      <!-- 1. 첫 화면: 신청(a) · 결과물(b) · 참여(c) 세 갈래 길 -->
+      <!-- 1. 첫 화면 (navy): 커리큘럼 진입 → 모집 상태 → 세 갈래 길 -->
       <section class="lx-hero" aria-labelledby="hero-title">
-        <div class="lx-wrap lx-hero-grid">
-          <div class="lx-hero-copy">
-            <p class="lx-kicker">BUILDERS LOUNGE</p>
-            <h1 id="hero-title">배우고, 공유하고,<br /><em>함께 만드는</em> 빌더 라운지</h1>
-            <p class="lx-lead">AI 빌더스 랩 수업에서 만든 샘플 영상과 1기·2기 빌더의 결과물을 한곳에 모았습니다. 다음 기수 신청도 여기서 시작하세요.</p>
+        <div class="lx-wrap lx-hero-inner">
+          <p class="lx-chip"><b>Builders Lounge</b>AI 빌더스랩 1기·2기 빌더 공간</p>
+          <h1 id="hero-title">배우고, 공유하고,<br /><mark>함께 만드는</mark> 빌더 라운지</h1>
+          <p class="lx-hero-lede">커리큘럼, 샘플 영상, 1기·2기 빌더 결과물을 한곳에 모았어요.<br class="lx-br-wide" /> <strong>보고, 따라 만들고, 올려 보세요.</strong></p>
+
+          <!-- 커리큘럼 진입 카드: lounge/data/cohorts.js의 curriculumUrl로 scripts/render-lounge.mjs가 만듭니다. -->
+          <!-- lounge:curriculum -->
+          <section class="lx-curri" id="curriculum" aria-labelledby="curriculum-title">
+            <h2 class="lx-curri-label" id="curriculum-title">기수별 커리큘럼 바로가기</h2>
+            <ul class="lx-curri-grid">
+              <li>
+                <a class="lx-curri-card" href="https://lounge.ai-hub-os.com/curriculum/cohort1.html" target="_blank" rel="noopener" data-curriculum="1">
+                  <span class="lx-curri-num" aria-hidden="true">1기</span>
+                  <span class="lx-curri-copy"><strong>1기 커리큘럼</strong><small>회차별로 무엇을 배우고 만드는지 보기</small></span>
+                  <span class="lx-curri-go"><span class="lx-ext" aria-hidden="true">↗</span><span class="lx-sr"> (새 창, 외부 사이트)</span></span>
+                </a>
+              </li>
+              <li>
+                <a class="lx-curri-card is-pending" href="/lounge/apply/#cohort-2" data-curriculum="2" data-curriculum-pending>
+                  <span class="lx-curri-num" aria-hidden="true">2기</span>
+                  <span class="lx-curri-copy"><strong>2기 커리큘럼 <span class="lx-curri-state">준비 중</span></strong><small>페이지가 열리기 전까지 2기 안내 먼저 보기</small></span>
+                  <span class="lx-curri-go" aria-hidden="true">→</span>
+                </a>
+              </li>
+            </ul>
+            <p class="lx-curri-more"><a href="https://lounge.ai-hub-os.com/curriculum/" target="_blank" rel="noopener">1기 모집·커리큘럼 전체 페이지<span class="lx-ext" aria-hidden="true">↗</span><span class="lx-sr"> (새 창, 외부 사이트)</span></a></p>
+          </section>
+          <!-- /lounge:curriculum -->
+
+          <p class="lx-route" aria-label="라운지 이용 순서">
+            <span>샘플 영상 보기</span><b aria-hidden="true">→</b><span>커리큘럼 확인</span><b aria-hidden="true">→</b><span>카카오톡 신청</span>
+          </p>
+
+          <div class="lx-hero-grid">
             <!-- 모집 상태: lounge/data/cohorts.js의 RECRUIT 값으로 scripts/render-lounge.mjs가 만듭니다. -->
             <!-- lounge:recruit -->
           <section class="lx-recruit lx-recruit-waitlist" aria-labelledby="recruit-status">
@@ -56,26 +86,26 @@
           >
           </section>
           <!-- /lounge:recruit -->
-            <a class="lx-link" href="/lounge/apply/">기수별 진행 방식과 자주 묻는 질문 보기</a>
-          </div>
 
-          <nav class="lx-paths" aria-label="나에게 맞는 길">
-            <a class="lx-path" href="/lounge/apply/">
-              <span class="lx-path-index" aria-hidden="true">01</span>
-              <span class="lx-path-copy"><small>처음 오셨나요?</small><strong>기수별 안내 보고 카톡으로 신청하기</strong></span>
-              <span class="lx-path-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="lx-path" href="/lounge/showcase/">
-              <span class="lx-path-index" aria-hidden="true">02</span>
-              <span class="lx-path-copy"><small>무엇을 만드는지 궁금하다면</small><strong>1기·2기 빌더 결과물 구경하기</strong></span>
-              <span class="lx-path-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="lx-path" href="/lounge/upload/">
-              <span class="lx-path-index" aria-hidden="true">03</span>
-              <span class="lx-path-copy"><small>이미 빌더라면</small><strong>로그인 없이 내 결과물 올리기</strong></span>
-              <span class="lx-path-arrow" aria-hidden="true">→</span>
-            </a>
-          </nav>
+            <nav class="lx-paths" aria-label="나에게 맞는 길">
+              <a class="lx-path" href="/lounge/apply/">
+                <span class="lx-path-index" aria-hidden="true">01</span>
+                <span class="lx-path-copy"><small>처음 오셨나요?</small><strong>기수별 안내 보고 카톡으로 신청하기</strong></span>
+                <span class="lx-path-arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="lx-path" href="/lounge/showcase/">
+                <span class="lx-path-index" aria-hidden="true">02</span>
+                <span class="lx-path-copy"><small>무엇을 만드는지 궁금하다면</small><strong>1기·2기 빌더 결과물 구경하기</strong></span>
+                <span class="lx-path-arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="lx-path" href="/lounge/upload/">
+                <span class="lx-path-index" aria-hidden="true">03</span>
+                <span class="lx-path-copy"><small>이미 빌더라면</small><strong>로그인 없이 내 결과물 올리기</strong></span>
+                <span class="lx-path-arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="lx-link" href="/lounge/apply/">기수별 진행 방식과 자주 묻는 질문 보기</a>
+            </nav>
+          </div>
         </div>
       </section>
 
@@ -85,9 +115,10 @@
           <div class="lx-section-head">
             <div>
               <p class="lx-kicker">SAMPLE VIDEOS</p>
-              <h2 class="lx-title" id="samples-title">수업에서 이런 영상을 만들어요</h2>
+              <h2 class="lx-title" id="samples-title">수업에서 <mark>이런 영상</mark>을 만들어요</h2>
               <p class="lx-lead">AI로 만든 세로 쇼츠 11편 가운데 4편입니다. 누르면 바로 재생됩니다.</p>
             </div>
+            <a class="lx-link" href="/lounge/samples/">샘플 영상 전체 보기</a>
           </div>
 
           <ul class="lx-sample-grid">
@@ -145,29 +176,37 @@
         </div>
       </section>
 
-      <!-- 3. 빌더 결과물 (신뢰) -->
+      <!-- 3. 기수별 바로가기: 커리큘럼 · 결과물 · 안내 -->
       <section class="lx-section" aria-labelledby="showcase-title">
-        <div class="lx-wrap">
+        <div class="lx-wrap lx-narrow">
           <div class="lx-section-head">
             <div>
-              <p class="lx-kicker">BUILDER SHOWCASE</p>
-              <h2 class="lx-title" id="showcase-title">빌더가 직접 만든 결과물</h2>
-              <p class="lx-lead">1기와 2기 빌더가 수업 뒤 직접 올린 홈페이지, 영상, 문서, 자동화 결과를 누구나 볼 수 있어요.</p>
+              <p class="lx-kicker">BY COHORT</p>
+              <h2 class="lx-title" id="showcase-title">1기·2기, 여기서 바로 들어가세요</h2>
+              <p class="lx-lead">기수마다 커리큘럼, 빌더가 직접 올린 결과물, 진행 안내를 한 줄에 모았어요.</p>
             </div>
             <a class="lx-link" href="/lounge/showcase/">전체 결과물 보기</a>
           </div>
-          <div class="lx-cohort-links">
-            <a class="lx-cohort-link" href="/lounge/showcase/?cohort=1">
-              <span class="lx-cohort-num" aria-hidden="true">1기</span>
-              <span><strong>1기 결과물</strong><small>1기 빌더가 올린 결과 보기</small></span>
-              <span class="lx-path-arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="lx-cohort-link" href="/lounge/showcase/?cohort=2">
-              <span class="lx-cohort-num" aria-hidden="true">2기</span>
-              <span><strong>2기 결과물</strong><small>2기 빌더가 올린 결과 보기</small></span>
-              <span class="lx-path-arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
+          <!-- lounge:cohort-links -->
+          <ul class="lx-crows">
+            <li class="lx-crow">
+              <span class="lx-crow-num">1기</span>
+              <span class="lx-crow-links">
+                <a class="lx-btn lx-btn-line" href="https://lounge.ai-hub-os.com/curriculum/cohort1.html" target="_blank" rel="noopener">커리큘럼<span class="lx-ext" aria-hidden="true">↗</span><span class="lx-sr"> (새 창, 외부 사이트)</span></a>
+                <a class="lx-btn lx-btn-line" href="/lounge/showcase/?cohort=1">1기 결과물</a>
+                <a class="lx-btn lx-btn-line" href="/lounge/apply/#cohort-1">1기 안내</a>
+              </span>
+            </li>
+            <li class="lx-crow">
+              <span class="lx-crow-num">2기</span>
+              <span class="lx-crow-links">
+                <a class="lx-btn lx-btn-line" href="/lounge/apply/#cohort-2">커리큘럼 <span class="lx-curri-state">준비 중</span></a>
+                <a class="lx-btn lx-btn-line" href="/lounge/showcase/?cohort=2">2기 결과물</a>
+                <a class="lx-btn lx-btn-line" href="/lounge/apply/#cohort-2">2기 안내</a>
+              </span>
+            </li>
+          </ul>
+          <!-- /lounge:cohort-links -->
         </div>
       </section>
 
@@ -177,19 +216,22 @@
           <div class="lx-section-head lx-flush">
             <div>
               <p class="lx-kicker">NEXT COHORT</p>
-              <h2 class="lx-title" id="apply-title">다음 기수 신청은<br />카카오톡 한 번이면 돼요</h2>
+              <h2 class="lx-title" id="apply-title">다음 기수 신청은<br /><mark>카카오톡 한 번</mark>이면 돼요</h2>
               <p class="lx-lead">기수별 대상과 진행 방식은 신청 안내 페이지에 정리했어요. 일정, 비용, 환불 기준은 신청 전에 카카오톡으로 한 번 더 확인합니다.</p>
               <div class="lx-actions lx-actions-stack" data-gap="top-sm">
                 <a class="lx-btn lx-btn-primary lx-btn-lg" href="/lounge/apply/">기수별 신청 안내 보기</a>
               </div>
             </div>
           </div>
-          <dl class="lx-facts">
-            <div><dt>신청 방법</dt><dd>개인 카카오톡으로 신청<small>홈페이지에 개인정보를 입력하지 않아요.</small></dd></div>
-            <div><dt>장소</dt><dd>동탄<small>정확한 공간은 신청 전 카카오톡으로 안내해요.</small></dd></div>
-            <div><dt>준비물</dt><dd>개인 노트북과 충전기</dd></div>
-            <div><dt>다음 일정</dt><dd><span class="lx-placeholder">다음 기수 일정 입력 필요</span></dd></div>
-          </dl>
+          <div class="lx-card">
+            <p class="lx-card-badge">신청 전에 알아 두세요</p>
+            <dl class="lx-facts">
+              <div><dt>신청 방법</dt><dd>개인 카카오톡으로 신청<small>홈페이지에 개인정보를 입력하지 않아요.</small></dd></div>
+              <div><dt>장소</dt><dd>동탄<small>정확한 공간은 신청 전 카카오톡으로 안내해요.</small></dd></div>
+              <div><dt>준비물</dt><dd>개인 노트북과 충전기</dd></div>
+              <div><dt>다음 일정</dt><dd><span class="lx-placeholder">다음 기수 일정 입력 필요</span></dd></div>
+            </dl>
+          </div>
         </div>
       </section>
 
@@ -223,7 +265,7 @@
       </section>
 
       <!-- 6. 멤버 도구: 연결 전 상태만 낮은 위계로 표시 -->
-      <section class="lx-section" aria-labelledby="tools-title">
+      <section class="lx-section lx-section-soft" aria-labelledby="tools-title">
         <div class="lx-wrap">
           <div class="lx-section-head">
             <div>
@@ -245,6 +287,7 @@
         <p>AI 빌더스랩 (AI Builders Lab) · 동탄</p>
         <nav aria-label="바닥 메뉴">
           <a href="/lounge/apply/">기수 신청</a>
+          <a href="/lounge/#curriculum">커리큘럼</a>
           <a href="/lounge/samples/">샘플 영상</a>
           <a href="/lounge/showcase/">빌더 결과물</a>
           <a href="/">공개 홈페이지</a>
