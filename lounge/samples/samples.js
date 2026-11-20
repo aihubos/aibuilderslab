@@ -60,7 +60,7 @@ function sampleCard(item) {
   const poster = posterUrl(item);
   if (poster) media.append(h("img", { src: poster, alt: "" }));
   media.append(h("span", { class: "duration-badge", text: formatDuration(item.durationSec) }));
-  return h("button", { class: "sample-card", type: "button", onclick: () => openPlayer(item) }, [
+  return h("button", { class: "sample-card", type: "button", "data-slug": item.slug, onclick: () => openPlayer(item) }, [
     media,
     h("div", { class: "caption" }, [h("strong", { text: item.title || "샘플 영상" })]),
   ]);
@@ -112,6 +112,19 @@ function stopVideo() {
   video.load();
 }
 
+/* 라운지 홈의 미리보기(/lounge/samples/#slug)에서 들어오면 해당 영상을 바로 엽니다. */
+function openFromHash() {
+  const slug = decodeURIComponent(location.hash.slice(1));
+  if (!/^[A-Za-z0-9-]{1,80}$/.test(slug)) return;
+  const item = (state.data?.items || []).find((entry) => entry.slug === slug);
+  if (!item) return;
+  const card = [...document.querySelectorAll(".sample-card")].find((node) => node.dataset.slug === slug);
+  card?.scrollIntoView({ block: "center" });
+  card?.focus({ preventScroll: true });
+  openPlayer(item);
+  history.replaceState(null, "", location.pathname + location.search);
+}
+
 function closePlayer() {
   stopVideo();
   $("#player-dialog").close();
@@ -125,6 +138,7 @@ async function load() {
     if (!response.ok) throw new Error("샘플 목록을 불러오지 못했습니다.");
     state.data = await response.json();
     render();
+    openFromHash();
   } catch (error) {
     grid.replaceChildren(h("div", { class: "empty" }, [h("strong", { text: error.message })]));
   }

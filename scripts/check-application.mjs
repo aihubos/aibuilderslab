@@ -19,6 +19,14 @@ const sourceFiles = [
   "lounge/lounge.js",
   "lounge/settings.js",
   "lounge/placeholders.js",
+  "lounge/apply/index.html",
+  "lounge/apply/cohorts.js",
+  "lounge/apply/apply.js",
+  "lounge/upload/index.html",
+  "lounge/upload/upload.js",
+  "lounge/data/cohorts.js",
+  "lounge/data/faq.js",
+  "lounge/data/stats.js",
 ];
 
 const contents = await Promise.all(
@@ -127,6 +135,97 @@ expect(!/type\s*=\s*["']file/i.test(loungeHtml), "연결 전 멤버 작업공간
 expect(!/\b(fetch|XMLHttpRequest|FormData)\b/.test(`${loungeScript}\n${loungeSettingsScript}\n${loungePlaceholdersScript}`), "연결 전 멤버 작업공간에 외부 요청 또는 업로드 로직이 추가되었습니다.");
 expect(loungeSettingsScript.includes("localStorage"), "작업공간의 로컬 화면 설정 저장이 없습니다.");
 
+// 2026-11 라운지 개편: 홈 첫 화면, 기수 신청, 결과물 올리기
+const applyHtml = await readFile(resolve(root, "lounge/apply/index.html"), "utf8");
+const applyScript = await readFile(resolve(root, "lounge/apply/apply.js"), "utf8");
+const cohortsScript = await readFile(resolve(root, "lounge/data/cohorts.js"), "utf8");
+const uploadHtml = await readFile(resolve(root, "lounge/upload/index.html"), "utf8");
+const uploadScript = await readFile(resolve(root, "lounge/upload/upload.js"), "utf8");
+const kakaoProfile = config.match(/kakaoProfile:\s*"([^"]+)"/)?.[1] || "";
+const kakaoGroup = config.match(/kakaoGroup:\s*"([^"]+)"/)?.[1] || "";
+expect(loungeHtml.includes('href="/lounge/apply/"'), "라운지 홈에서 기수 신청으로 가는 링크가 없습니다.");
+expect(loungeHtml.includes('href="/lounge/upload/"'), "라운지 홈에서 결과물 올리기로 가는 링크가 없습니다.");
+expect((loungeHtml.match(/href="\/lounge\/samples\/#[a-z0-9-]+"/g) || []).length >= 3, "라운지 홈에 대표 샘플 미리보기가 3개 이상 없습니다.");
+expect(loungeHtml.includes("샘플 영상 전체 보기"), "라운지 홈에 샘플 영상 전체 보기 버튼이 없습니다.");
+expect(loungeHtml.includes("샘플용 가상 광고"), "라운지 홈의 당근 샘플에 가상 광고 표시가 없습니다.");
+expect(!loungeHtml.includes(kakaoGroup) || loungeHtml.includes('data-config-link="kakaoGroup"'), "라운지 홈의 단체방 링크가 설정값과 연결되지 않았습니다.");
+expect(/<meta\s+name=["']robots["']\s+content=["']index,follow["']/i.test(applyHtml), "기수 신청 검색 허용이 없습니다.");
+expect(applyHtml.includes('href="https://aibuilderslab.kr/lounge/apply/"'), "기수 신청 canonical 주소가 없습니다.");
+expect(source.get("sitemap.xml").includes("https://aibuilderslab.kr/lounge/apply/"), "sitemap.xml에 기수 신청 주소가 없습니다.");
+expect(kakaoProfile && applyHtml.includes(`href="${kakaoProfile}"`) && applyHtml.includes('data-config-link="kakaoProfile"'), "기수 신청의 카카오 링크가 site-config.js 값과 다릅니다.");
+expect(!/<form\b/i.test(applyHtml) && !/\b(fetch|XMLHttpRequest|FormData)\b/.test(`${applyScript}\n${cohortsScript}`), "기수 신청에 서버 폼이나 외부 요청이 추가되었습니다.");
+expect(/id:\s*"1"/.test(cohortsScript) && /id:\s*"2"/.test(cohortsScript), "기수 데이터에 1기와 2기가 없습니다.");
+expect(/<meta\s+name=["']robots["']\s+content=["']noindex,nofollow["']/i.test(uploadHtml), "결과물 올리기 화면은 검색에서 제외해야 합니다.");
+expect(!source.get("sitemap.xml").includes("/lounge/upload/"), "결과물 올리기 화면이 sitemap.xml에 들어 있습니다.");
+expect(uploadHtml.includes('name="company_website"'), "결과물 올리기에 허니팟 칸이 없습니다.");
+expect(uploadScript.includes("`${API}/entries`") && uploadScript.includes('const API = "/lounge/api"'), "결과물 올리기가 기존 API를 사용하지 않습니다.");
+expect(/imageBytes:\s*5 \* MB/.test(uploadScript) && /fileBytes:\s*20 \* MB/.test(uploadScript) && /images:\s*4/.test(uploadScript), "결과물 올리기 제한이 기존 API와 다릅니다.");
+expect(['"name"', '"cohort"', '"title"', '"summary"', '"link"', '"tools"', '"prompt"', '"image"', '"file"', '"company_website"', '"turnstileToken"'].every((field) => uploadScript.includes(field)), "결과물 올리기 필드명이 기존 API와 다릅니다.");
+expect(uploadScript.includes('"aibl-showcase-secrets"') && uploadHtml.includes("수정 코드"), "수정 코드 안내 또는 저장이 없습니다.");
+expect(showcaseHtml.includes('href="/lounge/upload/?cohort=1"'), "쇼케이스의 결과물 올리기가 새 단계 화면으로 연결되지 않았습니다.");
+
+// 2026-11 추가: 모집 상태, 반응, 기수 숫자, FAQ·구조화 데이터
+const { renderLounge } = await import(new URL("./render-lounge.mjs", import.meta.url).href);
+const { RECRUIT, RECRUIT_STATUS, COHORTS: cohortData } = await import(new URL("../lounge/data/cohorts.js", import.meta.url).href);
+const rendered = await renderLounge({ write: false });
+expect(rendered.changed.length === 0, `라운지 HTML이 lounge/data와 다릅니다. npm run lounge:render 를 실행하세요: ${rendered.changed.join(", ")}`);
+expect(["open", "waitlist", "closed"].includes(RECRUIT.status), "모집 상태는 open, waitlist, closed 중 하나여야 합니다.");
+expect(Number.isInteger(RECRUIT.capacity) && RECRUIT.capacity > 0, "정원이 숫자가 아닙니다.");
+expect(loungeHtml.includes('class="lx-recruit ') && loungeHtml.includes(RECRUIT_STATUS[RECRUIT.status].text) && loungeHtml.includes(`${RECRUIT.capacity}명`), "라운지 홈 첫 화면에 모집 상태가 없습니다.");
+expect(/class="lx-recruit [^"]*"[\s\S]*?data-config-link="kakaoProfile"/.test(loungeHtml), "모집 상태 카드에 카카오톡 버튼이 없습니다.");
+expect(loungeHtml.indexOf("lx-recruit") < loungeHtml.indexOf("SAMPLE VIDEOS"), "모집 상태가 홈 첫 화면 히어로에 있지 않습니다.");
+expect(cohortData.every((cohort) => applyHtml.includes(`data-entries-badge="${cohort.id}"`)), "기수별 결과물 수 배지가 없습니다.");
+expect(cohortData.every((cohort) => applyHtml.includes(Number.isInteger(cohort.graduates) ? `수료생 ${cohort.graduates}명` : "수료생 수 입력 필요")), "기수별 수료생 배지가 없습니다.");
+const statsScript = await readFile(resolve(root, "lounge/data/stats.js"), "utf8");
+expect(statsScript.includes('"/lounge/api/stats"') && !/method:\s*"(POST|PUT|PATCH|DELETE)"/.test(statsScript), "기수 통계는 읽기 전용 /stats API를 써야 합니다.");
+expect(showcaseScript.includes("/like`") && showcaseScript.includes("이 빌더에게 질문하기") && showcaseScript.includes("safeContactUrl"), "결과물 카드 반응(좋아요·질문하기)이 없습니다.");
+expect(!/comment|댓글 달기|댓글 쓰기/i.test(showcaseScript), "공개 댓글 기능은 만들지 않습니다.");
+expect(uploadScript.includes('"contact"') && uploadHtml.includes('id="f-contact"'), "결과물 올리기에 연락 링크 질문이 없습니다.");
+expect(showcaseHtml.includes('name="contact"'), "결과물 수정 화면에 연락 링크 칸이 없습니다.");
+expect(source.get("robots.txt").includes("Disallow: /lounge/api/") && !/Disallow:\s*\/lounge\/?$/m.test(source.get("robots.txt")), "robots.txt의 라운지 규칙이 맞지 않습니다.");
+
+function decodeHtml(text) {
+  return text.replace(/<[^>]+>/g, " ").replaceAll("&quot;", '"').replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&").replace(/\s+/g, " ");
+}
+function jsonLdOf(html) {
+  return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap((match) => {
+    const data = JSON.parse(match[1]);
+    return data["@graph"] || [data];
+  });
+}
+const publicPages = { apply: applyHtml, samples: samplesHtml, showcase: showcaseHtml };
+for (const [name, html] of Object.entries(publicPages)) {
+  const nodes = jsonLdOf(html);
+  const types = new Set(nodes.map((node) => node["@type"]));
+  const visible = decodeHtml(html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<head>[\s\S]*?<\/head>/, ""));
+  for (const type of ["Organization", "WebPage", "BreadcrumbList", "FAQPage"]) expect(types.has(type), `${name} 페이지에 ${type} JSON-LD가 없습니다.`);
+  const org = nodes.find((node) => node["@type"] === "Organization");
+  expect(org.name === "AI 빌더스랩" && org.url === "https://aibuilderslab.kr/", `${name} 페이지 Organization 정보가 다릅니다.`);
+  const faq = nodes.find((node) => node["@type"] === "FAQPage");
+  const shown = (html.match(/class="lx-faq-item"/g) || []).length;
+  expect(shown >= 5 && shown <= 8, `${name} 페이지 FAQ는 5~8문항이어야 합니다. (지금 ${shown})`);
+  for (const question of faq.mainEntity) {
+    expect(visible.includes(question.name) && visible.includes(question.acceptedAnswer.text), `${name} FAQ JSON-LD가 화면 내용과 다릅니다: ${question.name}`);
+  }
+  const crumbs = nodes.find((node) => node["@type"] === "BreadcrumbList").itemListElement;
+  expect(crumbs.every((crumb) => visible.includes(crumb.name)) && html.includes('class="lx-crumbs"'), `${name} 페이지 현재 위치 표시가 JSON-LD와 다릅니다.`);
+  expect(html.includes(`<link rel="canonical" href="https://aibuilderslab.kr/lounge/${name}/" />`) && html.includes('property="og:image"') && html.includes('property="og:site_name" content="AI 빌더스랩"'), `${name} 페이지 canonical·OG가 부족합니다.`);
+  expect(/<title>[^<]+\| AI 빌더스랩<\/title>/.test(html), `${name} 페이지 title 형식이 다릅니다.`);
+}
+const course = jsonLdOf(applyHtml).find((node) => node["@type"] === "Course");
+expect(course && course.provider?.["@id"] === "https://aibuilderslab.kr/#organization" && course.hasCourseInstance?.length >= 1, "기수 신청 페이지 Course JSON-LD가 없습니다.");
+expect(decodeHtml(applyHtml).includes(course.name) && decodeHtml(applyHtml).includes(course.description), "Course JSON-LD 이름·설명이 화면에 없습니다.");
+const videoList = jsonLdOf(samplesHtml).find((node) => node["@type"] === "ItemList");
+const videos = videoList?.itemListElement?.map((entry) => entry.item) || [];
+expect(videos.length === samples.items.length && videos.every((video, index) => {
+  const item = samples.items[index];
+  return video["@type"] === "VideoObject"
+    && video.name === item.title
+    && video.thumbnailUrl === `https://aibuilderslab.kr/lounge/showcase/${item.poster}`
+    && video.contentUrl === `https://aibuilderslab.kr/lounge/media/samples/${item.file}`;
+}), "샘플 영상 VideoObject 목록이 samples.json과 다릅니다.");
+expect(!jsonLdOf(loungeHtml).length && !jsonLdOf(uploadHtml).length, "검색 제외 페이지에 JSON-LD가 들어 있습니다.");
+
 const builtIndex = await readFile(resolve(root, "dist", "client", "index.html"), "utf8");
 const builtScript = await readFile(resolve(root, "dist", "client", "script.js"), "utf8");
 const builtInstall = await readFile(resolve(root, "dist", "client", "install", "index.html"), "utf8");
@@ -143,6 +242,10 @@ await access(resolve(root, "dist", "client", "install", "install.js"));
 await access(resolve(root, "dist", "client", "lounge", "index.html"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.css"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.js"));
+await access(resolve(root, "dist", "client", "lounge", "apply", "index.html"));
+await access(resolve(root, "dist", "client", "lounge", "apply", "cohorts.js"));
+await access(resolve(root, "dist", "client", "lounge", "upload", "index.html"));
+await access(resolve(root, "dist", "client", "lounge", "upload", "upload.js"));
 await access(resolve(root, "dist", "client", "sitemap.xml"));
 await access(resolve(root, "dist", "client", "home.css"));
 await access(resolve(root, "dist", "client", "assets", "builderslab-brand-motion.mp4"));

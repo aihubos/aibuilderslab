@@ -5,35 +5,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#FFFFFF" />
     <meta name="robots" content="index,follow" />
-    <meta name="description" content="AI Builders Lab 1기와 2기 빌더가 직접 올린 결과물입니다." />
+    <meta name="description" content="AI 빌더스랩 1기와 2기 빌더가 직접 만든 결과물. 홈페이지, 영상, 문서와 사용한 AI 도구·프롬프트를 로그인 없이 볼 수 있습니다." />
     <link rel="canonical" href="https://aibuilderslab.kr/lounge/showcase/" />
-    <meta property="og:title" content="빌더 결과물 | AI Builders Lab" />
-    <meta property="og:description" content="AI Builders Lab 1기와 2기 빌더가 직접 올린 결과물입니다." />
-    <meta property="og:url" content="https://aibuilderslab.kr/lounge/showcase/" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AI 빌더스랩" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:title" content="빌더 결과물 | AI 빌더스랩" />
+    <meta property="og:description" content="AI 빌더스랩 1기와 2기 빌더가 직접 만든 결과물과 사용한 도구·프롬프트입니다." />
+    <meta property="og:url" content="https://aibuilderslab.kr/lounge/showcase/" />
+    <meta property="og:image" content="https://aibuilderslab.kr/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href="../../assets/favicon.png" />
+    <link rel="stylesheet" href="../lounge.css" />
     <link rel="stylesheet" href="showcase.css" />
-    <title>빌더 결과물 | AI Builders Lab</title>
+    <title>빌더 결과물 | AI 빌더스랩</title>
+    <!-- lounge:jsonld -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aibuilderslab.kr/#organization",
+      "name": "AI 빌더스랩",
+      "alternateName": [
+        "AI 빌더스 랩",
+        "AI Builders Lab"
+      ],
+      "url": "https://aibuilderslab.kr/",
+      "logo": "https://aibuilderslab.kr/assets/ai-builders-lab-logo-transparent.png",
+      "email": "hello@ai-hub-os.com",
+      "sameAs": [
+        "https://www.youtube.com/@AIBuildersLabKR",
+        "https://open.kakao.com/me/aibuilderslab"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://aibuilderslab.kr/lounge/showcase/#webpage",
+      "url": "https://aibuilderslab.kr/lounge/showcase/",
+      "name": "빌더 결과물 | AI 빌더스랩",
+      "description": "AI 빌더스랩 1기와 2기 빌더가 직접 만든 결과물. 홈페이지, 영상, 문서와 사용한 AI 도구·프롬프트를 로그인 없이 볼 수 있습니다.",
+      "inLanguage": "ko-KR",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://aibuilderslab.kr/#website",
+        "url": "https://aibuilderslab.kr/",
+        "name": "AI 빌더스랩"
+      },
+      "publisher": {
+        "@id": "https://aibuilderslab.kr/#organization"
+      },
+      "breadcrumb": {
+        "@id": "https://aibuilderslab.kr/lounge/showcase/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://aibuilderslab.kr/lounge/showcase/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "홈",
+          "item": "https://aibuilderslab.kr/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "빌더스 라운지",
+          "item": "https://aibuilderslab.kr/lounge/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "빌더 결과물",
+          "item": "https://aibuilderslab.kr/lounge/showcase/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://aibuilderslab.kr/lounge/showcase/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "누가 올린 결과물인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AI 빌더스랩 1기와 2기 빌더가 직접 만든 결과물을 직접 올렸습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "로그인해야 올릴 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아니요. 로그인 없이 결과물 올리기 화면에서 한 화면에 한 질문씩 답하면 올릴 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "무엇을 올릴 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "링크 8개, 이미지 4장(jpg·png·webp·gif, 한 장 5MB), 파일 4개(pdf·zip·pptx·docx·xlsx·txt·md, 하나 20MB)까지 올릴 수 있고 한 번에 25MB까지입니다. 사용한 도구와 프롬프트도 함께 적을 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "올린 결과물을 고치거나 지우려면 어떻게 하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "올릴 때 한 번만 보여 드리는 수정 코드가 필요합니다. 결과물 상세 화면에서 수정이나 삭제를 누르고 수정 코드를 입력하세요."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "만든 빌더에게 질문할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "빌더가 연락 링크를 남긴 결과물에는 ‘이 빌더에게 질문하기’ 버튼이 보입니다. 공개 댓글 기능은 없습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "좋아요는 몇 번 누를 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "결과물마다 한 번 누를 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "부적절한 결과물은 어떻게 알리나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "결과물 상세 화면의 신고하기 버튼으로 알려 주세요."
+          }
+        }
+      ]
+    }
+  ]
+}
+    </script>
+    <!-- /lounge:jsonld -->
   </head>
   <body class="showcase">
     <a class="skip" href="#main">본문으로 바로가기</a>
-    <header class="topbar">
-      <a class="brand" href="/lounge/">
-        <img src="../../assets/ai-builders-lab-logo-transparent-384.webp" width="384" height="128" alt="AI Builders Lab" />
-        <span><strong>Builders Lounge</strong><small>공개 쇼케이스</small></span>
-      </a>
-      <nav class="top-links" aria-label="바로가기">
-        <a href="/lounge/samples/">샘플 영상</a>
-        <a href="/lounge/">작업공간</a>
-        <a href="/">공개 홈페이지</a>
-      </nav>
+    <header class="lx-header">
+      <div class="lx-header-inner">
+        <a class="lx-brand" href="/lounge/">
+          <img src="../../assets/ai-builders-lab-logo-transparent-384.webp" width="384" height="128" alt="AI Builders Lab" />
+          <span>Builders Lounge</span>
+        </a>
+        <nav class="lx-nav" aria-label="라운지 메뉴">
+          <a href="/lounge/">라운지 홈</a>
+          <a class="lx-nav-feature" href="/lounge/samples/"><span class="lx-nav-play" aria-hidden="true"></span>샘플 영상</a>
+          <a href="/lounge/showcase/" aria-current="page">빌더 결과물</a>
+          <a href="/lounge/upload/">결과물 올리기</a>
+          <a href="/">공개 홈페이지</a>
+        </nav>
+        <a class="lx-btn lx-btn-primary lx-btn-sm lx-header-cta" href="/lounge/apply/">기수 신청</a>
+      </div>
     </header>
 
     <main id="main">
+      <!-- lounge:crumbs -->
+      <nav class="lx-crumbs" aria-label="현재 위치"><ol><li><a href="/">홈</a></li><li><a href="/lounge/">빌더스 라운지</a></li><li aria-current="page">빌더 결과물</li></ol></nav>
+      <!-- /lounge:crumbs -->
       <section class="hero">
         <p class="kicker">BUILDERS LOUNGE</p>
         <h1>빌더 결과물</h1>
-        <p class="lead">1기와 2기가 직접 만든 결과물을 누구나 볼 수 있습니다. 로그인 없이 올리고, 수정 코드는 올린 사람에게만 한 번 보여 드립니다.</p>
+        <p class="lead">1기와 2기가 직접 만든 결과물을 누구나 볼 수 있습니다. 로그인 없이 한 화면에 한 질문씩 답하면 올릴 수 있고, 수정 코드는 올린 사람에게만 한 번 보여 드립니다.</p>
       </section>
 
       <aside class="sample-callout">
@@ -60,8 +204,9 @@
             <button type="button" role="tab" data-cohort="1" aria-selected="true">1기</button>
             <button type="button" role="tab" data-cohort="2" aria-selected="false" tabindex="-1">2기</button>
           </div>
-          <button class="primary" type="button" data-open-upload>결과물 올리기</button>
+          <a class="primary" href="/lounge/upload/?cohort=1" data-open-upload>결과물 올리기</a>
         </div>
+        <p class="cohort-stats" data-cohort-stats aria-live="polite"></p>
 
         <div id="status" class="status" role="status"></div>
         <section id="secret-banner" class="secret-banner" hidden>
@@ -72,10 +217,50 @@
         </section>
         <div id="entry-grid" class="entry-grid" aria-live="polite"></div>
       </section>
+      <!-- lounge:faq -->
+      <section class="lx-faq-section lx-faq-bare" aria-labelledby="faq-title">
+            <div class="lx-section-head">
+              <div>
+                <p class="lx-kicker">FAQ</p>
+                <h2 class="lx-title" id="faq-title">자주 묻는 질문</h2>
+              </div>
+            </div>
+            <dl class="lx-faq">
+              <div class="lx-faq-item" id="faq-1">
+                <dt>누가 올린 결과물인가요?</dt>
+                <dd>AI 빌더스랩 1기와 2기 빌더가 직접 만든 결과물을 직접 올렸습니다.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-2">
+                <dt>로그인해야 올릴 수 있나요?</dt>
+                <dd>아니요. 로그인 없이 결과물 올리기 화면에서 한 화면에 한 질문씩 답하면 올릴 수 있습니다.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-3">
+                <dt>무엇을 올릴 수 있나요?</dt>
+                <dd>링크 8개, 이미지 4장(jpg·png·webp·gif, 한 장 5MB), 파일 4개(pdf·zip·pptx·docx·xlsx·txt·md, 하나 20MB)까지 올릴 수 있고 한 번에 25MB까지입니다. 사용한 도구와 프롬프트도 함께 적을 수 있습니다.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-4">
+                <dt>올린 결과물을 고치거나 지우려면 어떻게 하나요?</dt>
+                <dd>올릴 때 한 번만 보여 드리는 수정 코드가 필요합니다. 결과물 상세 화면에서 수정이나 삭제를 누르고 수정 코드를 입력하세요.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-5">
+                <dt>만든 빌더에게 질문할 수 있나요?</dt>
+                <dd>빌더가 연락 링크를 남긴 결과물에는 ‘이 빌더에게 질문하기’ 버튼이 보입니다. 공개 댓글 기능은 없습니다.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-6">
+                <dt>좋아요는 몇 번 누를 수 있나요?</dt>
+                <dd>결과물마다 한 번 누를 수 있습니다.</dd>
+              </div>
+              <div class="lx-faq-item" id="faq-7">
+                <dt>부적절한 결과물은 어떻게 알리나요?</dt>
+                <dd>결과물 상세 화면의 신고하기 버튼으로 알려 주세요.</dd>
+              </div>
+            </dl>
+      </section>
+      <!-- /lounge:faq -->
     </main>
 
     <footer class="footer">
-      <p>AI Builders Lab · 동탄</p>
+      <p>AI 빌더스랩 (AI Builders Lab) · 동탄</p>
       <a href="mailto:hello@ai-hub-os.com">문의·오류 신고</a>
     </footer>
 
@@ -123,6 +308,10 @@
 
         <label for="field-prompt">사용한 프롬프트</label>
         <textarea id="field-prompt" name="prompt" maxlength="8000" rows="6"></textarea>
+
+        <label for="field-contact">연락 링크 (선택)</label>
+        <input id="field-contact" name="contact" maxlength="300" inputmode="url" placeholder="카카오 오픈채팅·인스타 https 주소 또는 이메일" />
+        <p class="hint">넣으면 결과물 카드에 ‘이 빌더에게 질문하기’ 버튼이 보여요. 비우면 버튼이 사라져요.</p>
 
         <label class="check" id="clear-images-label" hidden><input id="field-clear-images" name="clearImages" type="checkbox" value="1" /> 기존 이미지 지우기</label>
         <label class="check" id="clear-files-label" hidden><input id="field-clear-files" name="clearFiles" type="checkbox" value="1" /> 기존 첨부 파일 지우기</label>

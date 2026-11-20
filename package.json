@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/serve.mjs",
-    "check": "node --check script.js && node --check site-config.js && node --check install/install.js && node --check lounge/lounge.js && node --check lounge/jobs.js && node --check lounge/settings.js && node --check lounge/placeholders.js && node --check lounge/js/pages/home.js && node --check lounge/showcase/showcase.js && node --check lounge/samples/samples.js",
+    "check": "node --check script.js && node --check site-config.js && node --check install/install.js && node --check lounge/lounge.js && node --check lounge/jobs.js && node --check lounge/settings.js && node --check lounge/placeholders.js && node --check lounge/js/pages/home.js && node --check lounge/showcase/showcase.js && node --check lounge/samples/samples.js && node --check lounge/apply/cohorts.js && node --check lounge/apply/apply.js && node --check lounge/upload/upload.js && node --check lounge/data/cohorts.js && node --check lounge/data/faq.js && node --check lounge/data/stats.js && node --check scripts/render-lounge.mjs",
+    "lounge:render": "node scripts/render-lounge.mjs",
     "test": "node scripts/check-application.mjs",
     "build": "node scripts/build.mjs",
     "test:archive": "node scripts/build-ai-world.mjs && node scripts/check-ai-world.mjs"
