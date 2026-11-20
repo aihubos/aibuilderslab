@@ -1,19 +1,12 @@
-@font-face {
-  font-family: "Wanted Sans Variable";
-  src: url("../../assets/fonts/WantedSansVariable-page.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
+/* 2026-11 라운지 개편: 공통 상단 메뉴와 색은 ../lounge.css 토큰을 따릅니다. 웹폰트 대신 시스템 한글 글꼴. */
 :root {
-  --bg: #f7f9fc;
+  --bg: #f9fafb;
   --surface: #ffffff;
-  --ink: #172033;
-  --muted: #5f6b7a;
-  --line: #e4e9f1;
-  --blue: #1747c9;
-  --blue-soft: #eef3fb;
+  --ink: #191f28;
+  --muted: #4e5968;
+  --line: #e5e8eb;
+  --blue: #1b64da;
+  --blue-soft: #e8f3ff;
   --green: #0b6e4f;
   --green-bg: #e7f6ef;
   --amber: #6b4500;
@@ -22,7 +15,7 @@
   --danger-bg: #fff1f0;
   --shadow: 0 4px 16px rgba(7, 19, 49, 0.08);
   --radius: 16px;
-  --font: "Wanted Sans Variable", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", Pretendard, "Noto Sans KR", "Malgun Gothic", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -95,7 +88,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 main { padding-bottom: 48px; }
 
-.hero { padding: 12px 0 8px; }
+.hero { padding: 32px 0 16px; }
+.primary { font-weight: 700; }
+.footer a { min-height: 44px; }
+.showcase { word-break: keep-all; overflow-wrap: anywhere; }
 .kicker {
   margin: 0 0 8px;
   color: var(--blue);

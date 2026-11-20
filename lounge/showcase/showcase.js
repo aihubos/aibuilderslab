@@ -5,8 +5,11 @@ const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif
 const FILE_EXT = new Set(["pdf", "zip", "pptx", "docx", "xlsx", "txt", "md"]);
 const LIMITS = { images: 4, files: 4, imageBytes: 5 * 1024 * 1024, fileBytes: 20 * 1024 * 1024, totalBytes: 25 * 1024 * 1024, links: 8 };
 
+const UPLOAD_PAGE = "/lounge/upload/";
+const initialCohort = new URLSearchParams(location.search).get("cohort");
+
 const state = {
-  cohort: "1",
+  cohort: initialCohort === "2" ? "2" : "1",
   entries: [],
   config: { turnstileSiteKey: null },
   admin: new URLSearchParams(location.search).has("admin"),
@@ -95,6 +98,21 @@ function cohortLabel(cohort) {
   return cohort === "2" ? "2기" : "1기";
 }
 
+/* 새 결과물은 한 화면에 한 질문씩 묻는 /lounge/upload/에서 올립니다. 수정은 아래 대화상자를 그대로 씁니다. */
+function uploadHref() {
+  return `${UPLOAD_PAGE}?cohort=${state.cohort}`;
+}
+
+function syncCohortUi() {
+  document.querySelectorAll("[data-cohort]").forEach((item) => {
+    const selected = item.dataset.cohort === state.cohort;
+    item.setAttribute("aria-selected", String(selected));
+    item.tabIndex = selected ? 0 : -1;
+  });
+  const upload = document.querySelector("[data-open-upload]");
+  if (upload) upload.href = uploadHref();
+}
+
 function renderEntries() {
   const grid = $("#entry-grid");
   grid.replaceChildren();
@@ -103,7 +121,7 @@ function renderEntries() {
     grid.append(h("div", { class: "empty" }, [
       h("strong", { text: "아직 올라온 결과물이 없습니다." }),
       h("p", { text: `${cohort} 빌더의 첫 결과물을 올려 보세요. 로그인 없이 등록할 수 있습니다.` }),
-      h("button", { class: "primary", type: "button", text: "결과물 올리기", onclick: () => openUpload() }),
+      h("a", { class: "primary", href: uploadHref(), text: "결과물 올리기" }),
     ]));
     return;
   }
@@ -404,11 +422,7 @@ function submitForm(event) {
       saveSecret(body.entry.id, body.editSecret);
       showSecret(body.editSecret);
       state.cohort = body.entry.cohort || state.cohort;
-      document.querySelectorAll("[data-cohort]").forEach((button) => {
-        const selected = button.dataset.cohort === state.cohort;
-        button.setAttribute("aria-selected", String(selected));
-        button.tabIndex = selected ? 0 : -1;
-      });
+      syncCohortUi();
     } else {
       setStatus(editing ? "결과물을 수정했습니다." : "결과물을 등록했습니다.");
     }
@@ -484,15 +498,14 @@ function bind() {
   document.querySelectorAll("[data-cohort]").forEach((button) => {
     button.addEventListener("click", () => {
       state.cohort = button.dataset.cohort;
-      document.querySelectorAll("[data-cohort]").forEach((item) => {
-        const selected = item === button;
-        item.setAttribute("aria-selected", String(selected));
-        item.tabIndex = selected ? 0 : -1;
-      });
+      syncCohortUi();
+      const url = new URL(location.href);
+      url.searchParams.set("cohort", state.cohort);
+      history.replaceState(null, "", url);
       loadEntries();
     });
   });
-  document.querySelector("[data-open-upload]").addEventListener("click", () => openUpload());
+  syncCohortUi();
   document.querySelector("[data-add-link]").addEventListener("click", () => {
     const count = $("#link-fields").querySelectorAll("input").length;
     if (count >= LIMITS.links) return;

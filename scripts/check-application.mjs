@@ -19,6 +19,11 @@ const sourceFiles = [
   "lounge/lounge.js",
   "lounge/settings.js",
   "lounge/placeholders.js",
+  "lounge/apply/index.html",
+  "lounge/apply/cohorts.js",
+  "lounge/apply/apply.js",
+  "lounge/upload/index.html",
+  "lounge/upload/upload.js",
 ];
 
 const contents = await Promise.all(
@@ -127,6 +132,35 @@ expect(!/type\s*=\s*["']file/i.test(loungeHtml), "연결 전 멤버 작업공간
 expect(!/\b(fetch|XMLHttpRequest|FormData)\b/.test(`${loungeScript}\n${loungeSettingsScript}\n${loungePlaceholdersScript}`), "연결 전 멤버 작업공간에 외부 요청 또는 업로드 로직이 추가되었습니다.");
 expect(loungeSettingsScript.includes("localStorage"), "작업공간의 로컬 화면 설정 저장이 없습니다.");
 
+// 2026-11 라운지 개편: 홈 첫 화면, 기수 신청, 결과물 올리기
+const applyHtml = await readFile(resolve(root, "lounge/apply/index.html"), "utf8");
+const applyScript = await readFile(resolve(root, "lounge/apply/apply.js"), "utf8");
+const cohortsScript = await readFile(resolve(root, "lounge/apply/cohorts.js"), "utf8");
+const uploadHtml = await readFile(resolve(root, "lounge/upload/index.html"), "utf8");
+const uploadScript = await readFile(resolve(root, "lounge/upload/upload.js"), "utf8");
+const kakaoProfile = config.match(/kakaoProfile:\s*"([^"]+)"/)?.[1] || "";
+const kakaoGroup = config.match(/kakaoGroup:\s*"([^"]+)"/)?.[1] || "";
+expect(loungeHtml.includes('href="/lounge/apply/"'), "라운지 홈에서 기수 신청으로 가는 링크가 없습니다.");
+expect(loungeHtml.includes('href="/lounge/upload/"'), "라운지 홈에서 결과물 올리기로 가는 링크가 없습니다.");
+expect((loungeHtml.match(/href="\/lounge\/samples\/#[a-z0-9-]+"/g) || []).length >= 3, "라운지 홈에 대표 샘플 미리보기가 3개 이상 없습니다.");
+expect(loungeHtml.includes("샘플 영상 전체 보기"), "라운지 홈에 샘플 영상 전체 보기 버튼이 없습니다.");
+expect(loungeHtml.includes("샘플용 가상 광고"), "라운지 홈의 당근 샘플에 가상 광고 표시가 없습니다.");
+expect(!loungeHtml.includes(kakaoGroup) || loungeHtml.includes('data-config-link="kakaoGroup"'), "라운지 홈의 단체방 링크가 설정값과 연결되지 않았습니다.");
+expect(/<meta\s+name=["']robots["']\s+content=["']index,follow["']/i.test(applyHtml), "기수 신청 검색 허용이 없습니다.");
+expect(applyHtml.includes('href="https://aibuilderslab.kr/lounge/apply/"'), "기수 신청 canonical 주소가 없습니다.");
+expect(source.get("sitemap.xml").includes("https://aibuilderslab.kr/lounge/apply/"), "sitemap.xml에 기수 신청 주소가 없습니다.");
+expect(kakaoProfile && applyHtml.includes(`href="${kakaoProfile}"`) && applyHtml.includes('data-config-link="kakaoProfile"'), "기수 신청의 카카오 링크가 site-config.js 값과 다릅니다.");
+expect(!/<form\b/i.test(applyHtml) && !/\b(fetch|XMLHttpRequest|FormData)\b/.test(`${applyScript}\n${cohortsScript}`), "기수 신청에 서버 폼이나 외부 요청이 추가되었습니다.");
+expect(/id:\s*"1"/.test(cohortsScript) && /id:\s*"2"/.test(cohortsScript), "기수 데이터에 1기와 2기가 없습니다.");
+expect(/<meta\s+name=["']robots["']\s+content=["']noindex,nofollow["']/i.test(uploadHtml), "결과물 올리기 화면은 검색에서 제외해야 합니다.");
+expect(!source.get("sitemap.xml").includes("/lounge/upload/"), "결과물 올리기 화면이 sitemap.xml에 들어 있습니다.");
+expect(uploadHtml.includes('name="company_website"'), "결과물 올리기에 허니팟 칸이 없습니다.");
+expect(uploadScript.includes("`${API}/entries`") && uploadScript.includes('const API = "/lounge/api"'), "결과물 올리기가 기존 API를 사용하지 않습니다.");
+expect(/imageBytes:\s*5 \* MB/.test(uploadScript) && /fileBytes:\s*20 \* MB/.test(uploadScript) && /images:\s*4/.test(uploadScript), "결과물 올리기 제한이 기존 API와 다릅니다.");
+expect(['"name"', '"cohort"', '"title"', '"summary"', '"link"', '"tools"', '"prompt"', '"image"', '"file"', '"company_website"', '"turnstileToken"'].every((field) => uploadScript.includes(field)), "결과물 올리기 필드명이 기존 API와 다릅니다.");
+expect(uploadScript.includes('"aibl-showcase-secrets"') && uploadHtml.includes("수정 코드"), "수정 코드 안내 또는 저장이 없습니다.");
+expect(showcaseHtml.includes('href="/lounge/upload/?cohort=1"'), "쇼케이스의 결과물 올리기가 새 단계 화면으로 연결되지 않았습니다.");
+
 const builtIndex = await readFile(resolve(root, "dist", "client", "index.html"), "utf8");
 const builtScript = await readFile(resolve(root, "dist", "client", "script.js"), "utf8");
 const builtInstall = await readFile(resolve(root, "dist", "client", "install", "index.html"), "utf8");
@@ -143,6 +177,10 @@ await access(resolve(root, "dist", "client", "install", "install.js"));
 await access(resolve(root, "dist", "client", "lounge", "index.html"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.css"));
 await access(resolve(root, "dist", "client", "lounge", "lounge.js"));
+await access(resolve(root, "dist", "client", "lounge", "apply", "index.html"));
+await access(resolve(root, "dist", "client", "lounge", "apply", "cohorts.js"));
+await access(resolve(root, "dist", "client", "lounge", "upload", "index.html"));
+await access(resolve(root, "dist", "client", "lounge", "upload", "upload.js"));
 await access(resolve(root, "dist", "client", "sitemap.xml"));
 await access(resolve(root, "dist", "client", "home.css"));
 await access(resolve(root, "dist", "client", "assets", "builderslab-brand-motion.mp4"));

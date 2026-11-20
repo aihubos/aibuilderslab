@@ -25,6 +25,12 @@ const requiredFiles = [
   "lounge/index.html",
   "lounge/lounge.css",
   "lounge/lounge.js",
+  "lounge/apply/index.html",
+  "lounge/apply/cohorts.js",
+  "lounge/apply/apply.js",
+  "lounge/upload/index.html",
+  "lounge/upload/upload.css",
+  "lounge/upload/upload.js",
 ];
 
 for (const file of requiredFiles) {
