@@ -54,24 +54,25 @@ export const COHORTS = Object.freeze([
   {
     id: "1",
     label: "1기",
-    // 근거: DESIGN.md 신청 마감 8월 31일이 지나 "모집 마감"으로 표시합니다. (추론, 운영자 확인 필요)
-    status: "closed",
-    summary: "각자 고른 프로젝트를 같은 제작 리듬으로 만들어 보는 4회 과정입니다.",
-    graduates: null, // TODO(운영자): 1기 수료생 수 (저장소에 기록 없음)
-    target: null, // TODO(운영자)
-    schedule: null, // TODO(운영자)
-    sessions: { count: 4, hours: 3 }, // 근거: DESIGN.md "네 번의 3시간 수업"
-    sessionsNote: "도구별 진도를 강제하지 않고 각자 선택한 프로젝트를 진행합니다.",
-    price: 80000, // 근거: DESIGN.md "정규 교육비 80,000원"
-    priceNote: "매 수업 결과물 공유 시 50% 할인 40,000원, 매 수업 후기 작성 시 20% 할인 64,000원. 할인 확인 방법과 중복 적용 여부는 신청 전에 안내합니다.",
-    capacity: null, // TODO(운영자)
-    deadline: "8월 31일",
-    flowTitle: "매 회차 3시간은 이렇게 흘러가요",
+    // 근거(2026-11-20 확인): https://lounge.ai-hub-os.com/curriculum/ · cohort1.html. 제레미 확인: "커리큘럼 사이트가 맞아"
+    status: null, // TODO(운영자): 모집 상태. 커리큘럼 사이트에 마감 여부·신청 마감일이 적혀 있지 않아 확정 전으로 둡니다.
+    summary: "4주 동안 매주 한 번, 회마다 두 가지씩 내 AI 도구를 만들어요.",
+    graduates: null, // TODO(운영자): 1기 수료생 수
+    target: "무료 설치반을 들은 분",
+    schedule: "2026년 11월 시작 · 평일 수 오전 10~12시 · 오후 14~16시 (11/11~12/2) · 주말 토 10~12시 (11/14~12/5)",
+    sessions: { count: 4, hours: 2 },
+    sessionsNote: "강사 시연을 보고, 공통 예제를 따라 한 뒤, 내 주제로 바꿉니다.",
+    price: 120000,
+    priceNote: "회당 30,000원 · 장소 대여비 포함. 후기 작성과 결과물 공유를 모두 하면 회당 15,000원을 돌려받아, 4회 모두 들으면 실제 부담은 60,000원이에요. 정규 과정에는 수강료와 별개로 Grok Premium 구독(월 ₩45,000, 세금 별도)이 필요해요.",
+    capacity: 5,
+    capacityUnit: "반별", // 커리큘럼 사이트: "반별 정원 5명"
+    deadline: null, // TODO(운영자): 신청 마감일 (커리큘럼 사이트에 없음)
+    flowTitle: "회마다 두 가지를 완성해요",
     flow: [
-      "원하는 결과와 첫 Plan 세우기",
-      "실행해 보고 오류 분석하기",
-      "기능 확장과 회귀 검수",
-      "완성 범위 확인과 다음 행동 정하기",
+      "1회 일정·할 일 비서 + 업무 자동화(블로그·SNS)",
+      "2회 나만의 지식창고(LLM Wiki) + 내 홈페이지",
+      "3회 캐릭터 시트 + 쇼츠 + 롱폼",
+      "4회 주문 자동화 + 관리 자동화(대시보드)",
     ],
     // 커리큘럼 페이지 (외부 사이트 lounge.ai-hub-os.com, 2026-11-20 200 응답 확인)
     curriculumUrl: "https://lounge.ai-hub-os.com/curriculum/cohort1.html", // 회차별 안내

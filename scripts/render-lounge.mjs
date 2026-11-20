@@ -180,9 +180,9 @@ function cohortHtml(cohort, kakao, assets) {
   const facts = [
     factRow("대상", cohort.target),
     factRow("일정", cohort.schedule),
-    factRow("진행 방식", cohort.sessions ? `${cohort.sessions.hours}시간 수업 ${cohort.sessions.count}회` : null, cohort.sessionsNote),
+    factRow("진행 방식", cohort.sessions ? `회당 ${cohort.sessions.hours}시간 수업 ${cohort.sessions.count}회` : null, cohort.sessionsNote),
     factRow("교육비", cohort.price != null ? `정규 교육비 ${won(cohort.price)}` : null, cohort.priceNote),
-    factRow("정원", cohort.capacity != null ? `${cohort.capacity}명` : null),
+    factRow("정원", cohort.capacity != null ? `${cohort.capacityUnit ? `${cohort.capacityUnit} ` : ""}${cohort.capacity}명` : null),
     factRow("신청 마감", cohort.deadline),
   ];
   const flow = cohort.flow?.length
